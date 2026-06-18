@@ -1,0 +1,294 @@
+:root {
+  --blancoPuro: #ffffff;
+  --blancoCristal: #dceaf8;
+  --gris: #c0c0c0;
+  --grisClaro: #ebebeb;
+  --celeste: #8ca5eb;
+  --azul: #040836;
+  --medio: #47606f;
+  --oscuro: #1a1a2e;
+
+  --bs-body-font-family: 'Barlow', sans-serif;
+  --bs-body-color: var(--azul);
+  --bs-body-bg: var(--blancoCristal);
+  --bs-primary: var(--azul);
+  --bs-primary-rgb: 4, 8, 54;
+  --bs-secondary: var(--medio);
+  --bs-secondary-rgb: 71, 96, 111;
+  --bs-link-color: var(--azul);
+  --bs-link-hover-color: var(--celeste);
+  --bs-border-radius: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+body.sgrsi-app {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--azul);
+  background-color: var(--blancoCristal);
+  margin: 0;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--azul);
+}
+
+
+.navbar.sgrsi-navbar {
+  background-color: var(--azul);
+  padding: 0.5rem 1rem;
+}
+
+.sgrsi-navbar .navbar-brand,
+.sgrsi-navbar .nav-link {
+  color: var(--blancoPuro);
+  font-weight: 600;
+}
+
+.sgrsi-navbar .navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sgrsi-navbar-logo {
+  display: none;
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.sgrsi-navbar .nav-link:hover,
+.sgrsi-navbar .nav-link:focus,
+.sgrsi-navbar .nav-link.active {
+  color: var(--celeste);
+}
+
+.sgrsi-navbar .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.sgrsi-navbar .navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(140, 165, 235, 0.45);
+}
+
+
+.sgrsi-login-header {
+  background-color: var(--azul);
+  color: var(--blancoPuro);
+  padding: 1rem;
+  text-align: center;
+}
+
+.sgrsi-login-header h1 {
+  color: var(--blancoPuro);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sgrsi-login-header .nombre {
+  display: none;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+
+.sgrsi-section {
+  background-color: var(--blancoPuro);
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.panelTabla {
+  width: 100%;
+  margin: auto;
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+.panelTabla table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.panelTabla th,
+.panelTabla td {
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.panelTabla th {
+  background-color: var(--grisClaro);
+  font-weight: bold;
+}
+
+.panelTabla td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.operaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.botonOperacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--blancoCristal);
+  background-color: var(--azul);
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  padding: 0.75rem 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.botonOperacion:hover,
+.botonOperacion:focus {
+  background-color: var(--celeste);
+  color: var(--azul);
+}
+
+
+footer.sgrsi-footer {
+  background-color: var(--azul);
+  color: var(--blancoCristal);
+  font-family: 'Barlow', sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 1rem 0.5rem;
+}
+
+.sgrsi-footer address {
+  font-style: normal;
+  font-size: 0.9rem;
+}
+
+.sgrsi-footer a {
+  color: var(--blancoCristal);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.sgrsi-footer a:hover {
+  color: var(--celeste);
+  text-decoration: underline;
+}
+
+
+.btn-primary {
+  --bs-btn-bg: var(--azul);
+  --bs-btn-border-color: var(--azul);
+  --bs-btn-hover-bg: var(--celeste);
+  --bs-btn-hover-border-color: var(--celeste);
+  --bs-btn-hover-color: var(--azul);
+  --bs-btn-active-bg: var(--medio);
+  --bs-btn-active-border-color: var(--medio);
+}
+
+.btn-secondary {
+  --bs-btn-bg: var(--medio);
+  --bs-btn-border-color: var(--medio);
+  --bs-btn-hover-bg: var(--celeste);
+  --bs-btn-hover-border-color: var(--celeste);
+  --bs-btn-hover-color: var(--azul);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--celeste);
+  --bs-btn-border-color: var(--celeste);
+  --bs-btn-color: var(--azul);
+  --bs-btn-hover-bg: var(--azul);
+  --bs-btn-hover-border-color: var(--azul);
+  --bs-btn-hover-color: var(--blancoPuro);
+}
+
+
+@media (min-width: 768px) {
+  body.sgrsi-app {
+    font-size: 1rem;
+  }
+
+  .sgrsi-login-header h1.siglas {
+    font-size: 1.5rem;
+  }
+
+  .sgrsi-login-header .nombre {
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  .sgrsi-navbar-logo {
+    display: inline-block;
+  }
+
+  .panelTabla td {
+    max-width: 150px;
+  }
+
+  .panelTabla table {
+    font-size: 0.875rem;
+  }
+
+  .operaciones {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .botonOperacion {
+    font-size: 1.1rem;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  body.sgrsi-app {
+    font-size: 1.125rem;
+  }
+
+  .navbar.sgrsi-navbar {
+    padding: 0.5rem 2rem;
+  }
+
+  .sgrsi-section {
+    padding: 2rem;
+  }
+
+  .panelTabla {
+    padding: 1rem;
+  }
+
+  .panelTabla td {
+    max-width: 200px;
+  }
+
+  footer.sgrsi-footer {
+    padding: 2rem;
+    font-size: 1.1rem;
+  }
+}

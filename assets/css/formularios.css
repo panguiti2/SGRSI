@@ -1,0 +1,104 @@
+.seccionFormulario {
+    color: var(--oscuro);
+    font-family: 'Barlow', sans-serif;
+    line-height: 1.6;
+}
+
+.seccionFormulario h2,
+.seccionFormulario legend {
+    color: var(--oscuro);
+    font-weight: 700;
+}
+
+.seccionFormulario label {
+    color: var(--oscuro);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+
+.seccionFormulario input:not(.form-control):not(.form-check-input),
+.seccionFormulario textarea:not(.form-control),
+.seccionFormulario select:not(.form-select) {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    color: var(--oscuro);
+    width: 100%;
+    max-width: 40rem;
+}
+
+.seccionFormulario option {
+    color: var(--oscuro);
+}
+
+.seccionFormulario input:not(.form-control):not(.form-check-input):focus,
+.seccionFormulario textarea:not(.form-control):focus,
+.seccionFormulario select:not(.form-select):focus {
+    background-color: var(--grisClaro);
+    color: var(--azul);
+}
+
+.seccionFormulario button:not(.btn):not(.btn-close) {
+    background-color: var(--azul);
+    color: var(--blancoCristal);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+}
+
+.seccionFormulario button:not(.btn):not(.btn-close):hover,
+.seccionFormulario button:not(.btn):not(.btn-close):focus {
+    background-color: var(--celeste);
+    color: var(--azul);
+}
+
+.seccionFormulario button:not(.btn):not(.btn-close):active {
+    background-color: var(--medio);
+    color: var(--blancoPuro);
+}
+
+.cajaTextarea textarea {
+    min-height: 25rem;
+}
+
+.cajaEntradaDeDatos {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+}
+
+.cajaTextarea {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.cajaCheckbox input{
+    width: auto;
+}
+
+.cajaRadio {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+
+}
+
+.cajaRadio label {
+    margin-right: 0.5rem;
+}
+
+.cajaRadio input {
+    width: auto;
+}
+
+input[type="radio"] {
+  width: 16px !important;
+  height: 16px !important;
+  transform: none !important;
+}

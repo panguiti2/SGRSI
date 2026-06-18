@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de sesión</title>
+
+    
+</head>
+
+<body>
+
+    <header>
+        <h1>SGRSI</h1>
+        <h1>Sistema de Gestión de Recursos Informáticos</h1>
+    </header>
+
+    <main>
+        <section>
+
+            <section>
+                <div>
+
+                    <h2>Ingreso al sistema</h2>
+
+                    <form id="formLogin" method="post">
+
+                        <fieldset>
+                            <legend>Inicio de sesión</legend>
+
+                            <div>
+                                <label for="cedula">Cédula</label>
+                                <input type="text" id="cedula" name="cedula"
+                                    autocomplete="username" pattern="[1-9][0-9]{7}"
+                                    title="Ingrese exactamente 8 dígitos sin puntos ni guiones" inputmode="numeric"
+                                    maxlength="8" required>
+                            </div>
+
+                            <div>
+                                <label for="clave">Contraseña</label>
+                                <input type="password" id="contraseña" name="contraseña" required>
+                            </div>
+
+                        </fieldset>
+
+                        <button type="submit">
+                            Iniciar Sesión
+                        </button>
+
+                    </form>
+
+                </div>
+            </section>
+
+        </section>
+    </main>
+
+    <footer>
+        <address>
+            <a href="http://instagram.com">@SGRSI</a>
+            <a href="tel:+29043586">+29043586</a>
+            <a href="mailto:asistentesiti@gmail.com">asistentesiti@gmail.com</a>
+        </address>
+        <p>© 2026 SGRSI</p>
+    </footer>
+
+</body>
+
+</html>

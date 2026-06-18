@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+
+</head>
+
+<body id="inicio">
+
+    <header>
+        <section>
+            <a href="tecnico.html">SGRSI</a>
+
+            <nav id="menuPrincipal">
+                <ul>
+                    <li>
+                        <a href="tecnico.html">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="solicitudes.html">Solicitudes</a>
+                    </li>
+                    <li>
+                        <a href="incidencias.html">Incidencias</a>
+                    </li>
+                    <li>
+                        <a href="metricas.html">Métricas</a>
+                    </li>
+                    <li>
+                        <a href="inventario.html">Inventario</a>
+                    </li>
+                    <li>
+                        <a href="prestamos.html">Préstamos</a>
+                    </li>
+                    <li>
+                        <a href="registrosUso.html">Registros de uso</a>
+                    </li>
+                    <li>
+                        <a href="../../index.html">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </header>
+
+    <main>
+
+        <section>
+            <section>
+                <h2>Datos de dispositivo</h2>
+                <form>
+                    <label for="ordenInventarioTecnico">Ordenar por</label>
+                    <select id="ordenInventarioTecnico">
+                        <option value="" disabled selected>Seleccione</option>
+                        <option>Id</option>
+                        <option>Recurso</option>
+                        <option>Laboratorio</option>
+                    </select>
+                    <button type="button">Ordenar</button>
+                    <button type="button">Historial modificaciones</button>
+                </form>
+            </section>
+            
+            <section>
+                <table>
+                    <caption>Listado de dispositivos registrados</caption>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Marca</th>
+                            <th>N° Dispositivo</th>
+                            <th>Laboratorio</th>
+                            <th>Taller</th>
+                            <th>Recurso</th>
+                            <th>Modificaciones</th>
+                            <th>Estado</th>
+                            <th>Ultimo cambio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>LAB01-12-M</td>
+                            <td>Genius</td>
+                            <td>12</td>
+                            <td>Lab1</td>
+                            <td>N/A</td>
+                            <td>Mouse</td>
+                            <td>N/A</td>
+                            <td>Activo</td>
+                            <td>04/06/2026 7:00</td>
+                        </tr>
+                        <tr>
+                            <td>TALL03-06-S</td>
+                            <td>ViewSonic</td>
+                            <td>06</td>
+                            <td>N/A</td>
+                            <td>Taller3</td>
+                            <td>Monitor</td>
+                            <td>N/A</td>
+                            <td>Activo</td>
+                            <td>04/06/2026 7:00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
+    </main>
+
+    <footer>
+        <address>
+            <a href="http://instagram.com">@SGRSI</a>
+            <a href="tel:+29043586">+29043586</a>
+            <a href="mailto:asistentesiti@gmail.com">asistentesiti@gmail.com</a>
+        </address>
+        <p>© 2026 SGRSI</p>
+    </footer>
+</body>
+
+</html>

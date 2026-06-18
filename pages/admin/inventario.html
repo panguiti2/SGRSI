@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+</head>
+
+<body>
+
+    <header>
+        <section>
+            <a href="admin.html">SGRSI</a>
+
+            <nav id="menuPrincipal">
+                <ul>
+                    <li>
+                        <a href="admin.html">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="gestionUsuario.html">Usuarios</a>
+                    </li>
+                    <li>
+                        <a href="incidencias.html">Incidencias</a>
+                    </li>
+                    <li>
+                        <a href="metricas.html">Métricas</a>
+                    </li>
+                    <li>
+                        <a href="inventario.html">Inventario</a>
+                    </li>
+                    <li>
+                        <a href="../../index.html">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </header>
+
+
+    <main>
+
+
+        <section>
+
+            <section>
+                <h2>Datos de dispositivo</h2>
+                <form>
+                    <label for="ordenInventarioAdmin">Ordenar por</label>
+                    <select id="ordenInventarioAdmin">
+                        <option value="" disabled selected>Seleccione</option>
+                        <option>Id</option>
+                        <option>Recurso</option>
+                        <option>Laboratorio</option>
+                    </select>
+                    <button type="submit">Ordenar</button>
+                    <button type="button">Historial</button>
+                </form>
+            </section>
+
+
+            <section>
+                <table>
+                    <caption>Listado de dispositivos registrados</caption>
+                    <thead>
+                        <tr>
+                            <th >ID</th>
+                            <th >Marca</th>
+                            <th >N° Dispositivo</th>
+                            <th >Laboratorio</th>
+                            <th >Taller</th>
+                            <th >Recurso</th>
+                            <th >Modificaciones</th>
+                            <th >Estado</th>
+                            <th >Ultimo cambio</th>
+                            <th >Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaDispositivos"></tbody>
+                </table>
+            </section>
+        </section>
+
+
+        <section>
+            <h2>Operaciones disponibles</h2>
+            <button id="btnAltaDispositivo">Alta dispositivo</button>
+        </section>
+
+    </main>
+
+
+    <dialog id="miDialogo">
+        <button id="btnCerrarAltaDispositivo"></button>
+
+        <form id="formularioAltaDispositivo">
+            <fieldset>
+                <legend>Gestión de dispositivos</legend>
+
+                <section>
+                    <div>
+                        <label for="id">ID</label>
+                        <input type="text" id="id" name="id" placeholder="Ej: LAB01-01-S" required>
+                    </div>
+
+                    <div>
+                        <label for="marca">Marca</label>
+                        <input type="text" id="marca" name="marca"
+                            placeholder="Ej: Dell, HP, Lenovo" required>
+                    </div>
+
+                    <div>
+                        <label for="numeroDispositivo">N° Dispositivo</label>
+                        <input type="text" id="numeroDispositivo" name="numeroDispositivo"
+                            placeholder="Ej: 01" required>
+                    </div>
+
+                    <div>
+                        <label for="recurso">Recurso</label>
+                        <select id="recurso" name="recurso" required>
+                            <option disabled selected>Seleccione un recurso</option>
+                            <option value="Mouse">Mouse</option>
+                            <option value="Teclado">Teclado</option>
+                            <option value="Monitor">Monitor</option>
+                            <option value="Torre">Torre</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="laboratorio">Laboratorio</label>
+                        <select id="laboratorio" required>
+                            <option value="" disabled selected>Seleccione laboratorio</option>
+                            <option value="N/a">N/A</option>
+                            <option value="Lab1">Laboratorio 1</option>
+                            <option value="Lab2">Laboratorio 2</option>
+                            <option value="Lab3">Laboratorio 3</option>
+                            <option value="Lab4">Laboratorio 4</option>
+                            <option value="Lab5">Laboratorio 5</option>
+                            <option value="Lab6">Laboratorio 6</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="taller">Taller</label>
+                        <select id="taller" required>
+                            <option value="" disabled selected>Seleccione taller</option>
+                            <option value="N/a">N/A</option>
+                            <option value="Taller1">Taller 1</option>
+                            <option value="Taller2">Taller 2</option>
+                            <option value="Taller3">Taller 3</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="modificaciones">Modificaciones</label>
+                        <select id="modificaciones" name="modificaciones" required>
+                            <option disabled selected>Seleccione una opción</option>
+                            <option value="N/a">N/A</option>
+                            <option value="Reparado">Reparado</option>
+                            <option value="Actualizado">Actualizado</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="estado">Estado</label>
+                        <select id="estado" name="estado" required>
+                            <option disabled selected>Seleccione estado</option>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                    </div>
+
+
+                    <div>
+                        <label for="ultimoCambio">Ultimo cambio</label>
+                        <input type="datetime-local" id="ultimoCambio" name="ultimoCambio"
+                            required></input>
+                    </div>
+                </section>
+
+                <button type="submit">Guardar dispositivo</button>
+            </fieldset>
+        </form>
+    </dialog>
+
+
+    <footer>
+        <address>
+            <a href="http://instagram.com">@SGRSI</a>
+            <a href="tel:+29043586">+29043586</a>
+            <a href="mailto:asistentesiti@gmail.com">asistentesiti@gmail.com</a>
+        </address>
+        <p>© 2026 SGRSI</p>
+    </footer>
+</body>
+
+</html>

@@ -1,5 +1,27 @@
+/**
+ * Controla el acceso simulado al sistema según el primer dígito de la cédula.
+ * @file
+ */
+
+/**
+ * Formulario de ingreso al sistema.
+ * @type {HTMLFormElement|null}
+ */
+
 const formularioLogin = document.getElementById("formLogin");
+
+/**
+ * Campo donde se ingresa la cédula.
+ * @type {HTMLInputElement|null}
+ */
+
 const entradaCedula = document.getElementById("cedula");
+
+/**
+ * Procesa el ingreso y redirige a la pantalla correspondiente al rol.
+ * @param {SubmitEvent} evento Evento de envío del formulario.
+ * @returns {void}
+ */
 
 formularioLogin.addEventListener("submit", function (evento) {
     evento.preventDefault();
@@ -21,4 +43,3 @@ formularioLogin.addEventListener("submit", function (evento) {
             break;
     }
 });
-

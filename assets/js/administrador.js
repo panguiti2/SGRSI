@@ -213,3 +213,259 @@ if (cuerpoTablaUsuarios) {
     actualizarTablaUsuarios();
 }
 
+const btnAltaDispositivo = document.getElementById("btnAltaDispositivo");
+const btnCerrarAltaDispositivo = document.getElementById("btnCerrarAltaDispositivo");
+const dialogAltaDispositivo = document.querySelector(".dialogAltaDispositivo");
+const formularioAltaDispositivo = document.getElementById("formularioAltaDispositivo");
+const cuerpoTablaDispositivos = document.getElementById("cuerpoTablaDispositivos");
+
+const campoId = document.getElementById("id");
+const campoMarca = document.getElementById("marca");
+const campoNumero = document.getElementById("numeroDispositivo");
+const campoRecurso = document.getElementById("recurso");
+const campoLaboratorio = document.getElementById("laboratorio");
+const campoTaller = document.getElementById("taller");
+const campoModificaciones = document.getElementById("modificaciones");
+const campoEstado = document.getElementById("estado");
+const campoUltimoCambio = document.getElementById("ultimoCambio");
+
+let dispositivoEnEdicion = false;
+
+function abrirAltaDispositivo() {
+    dialogAltaDispositivo.showModal();
+}
+
+function cerrarAltaDispositivo() {
+    limpiarFormularioAltaDispositivo();
+    dialogAltaDispositivo.close();
+}
+
+function limpiarFormularioAltaDispositivo() {
+    formularioAltaDispositivo.reset();
+    campoId.readOnly = false;
+    campoLaboratorio.disabled = false;
+    campoTaller.disabled = false;
+    campoNumero.readOnly = false;
+    campoRecurso.disabled = false;
+    dispositivoEnEdicion = false;
+}
+
+function abrirModificarDispositivo(id) {
+    const dispositivos = cargarDispositivosLocal();
+    const dispositivo = dispositivos.find(d => d.id === id);
+
+    if (!dispositivo) {
+        alert("No se encontró un dispositivo con ese ID");
+        return;
+    }
+
+    campoId.value = dispositivo.id;
+    campoMarca.value = dispositivo.marca;
+    campoNumero.value = dispositivo.numeroDispositivo;
+    campoLaboratorio.value = dispositivo.laboratorio;
+    campoTaller.value = dispositivo.taller;
+    campoRecurso.value = dispositivo.recurso;
+    campoModificaciones.value = dispositivo.modificaciones;
+    campoEstado.value = dispositivo.estado;
+    campoUltimoCambio.value = dispositivo.ultimoCambio;
+
+    campoId.readOnly = true;
+    campoLaboratorio.disabled = true;
+    campoTaller.disabled = true;
+    campoNumero.readOnly = true;
+    campoRecurso.disabled = true;
+
+    dispositivoEnEdicion = true;
+    dialogAltaDispositivo.showModal();
+}
+
+function obtenerDatosFormularioDispositivo() {
+    return {
+        id: campoId.value.trim(),
+        marca: campoMarca.value.trim(),
+        numeroDispositivo: campoNumero.value.trim(),
+        laboratorio: campoLaboratorio.value,
+        taller: campoTaller.value,
+        recurso: campoRecurso.value,
+        modificaciones: campoModificaciones.value,
+        estado: campoEstado.value,
+        ultimoCambio: campoUltimoCambio.value
+    };
+}
+
+function cargarDispositivosLocal() {
+    const data = localStorage.getItem("dispositivos");
+    return data ? JSON.parse(data) : [];
+}
+
+function actualizarDispositivosLocal(dispositivos) {
+    localStorage.setItem("dispositivos", JSON.stringify(dispositivos));
+}
+
+function guardarDispositivoLocal(dispositivo) {
+    const dispositivos = cargarDispositivosLocal();
+    const idExistente = dispositivos.some(dispositivoGuardado => {
+        return dispositivoGuardado.id === dispositivo.id;
+    });
+
+    if (idExistente) {
+        alert("Ya existe un dispositivo con ese id");
+        return;
+    }
+
+    dispositivos.push(dispositivo);
+    actualizarDispositivosLocal(dispositivos);
+}
+
+function modificarDispositivoLocal(dispositivoFormulario) {
+    const dispositivos = cargarDispositivosLocal();
+    const dispositivo = dispositivos.find(dispositivo => {
+        return dispositivo.id === dispositivoFormulario.id;
+    });
+
+    if (!dispositivo) {
+        alert("No se encontró un dispositivo con ese ID");
+        return;
+    }
+
+    dispositivo.id = dispositivoFormulario.id;
+    dispositivo.marca = dispositivoFormulario.marca;
+    dispositivo.numeroDispositivo = dispositivoFormulario.numeroDispositivo;
+    dispositivo.laboratorio = dispositivoFormulario.laboratorio;
+    dispositivo.taller = dispositivoFormulario.taller;
+    dispositivo.recurso = dispositivoFormulario.recurso;
+    dispositivo.modificaciones = dispositivoFormulario.modificaciones;
+    dispositivo.estado = dispositivoFormulario.estado;
+    dispositivo.ultimoCambio = dispositivoFormulario.ultimoCambio;
+
+    actualizarDispositivosLocal(dispositivos);
+}
+
+function eliminarDispositivoLocal(id) {
+    const dispositivos = cargarDispositivosLocal();
+
+    if (confirm("¿Estás seguro de que deseas eliminar este dispositivo?")) {
+        const nuevos = dispositivos.filter(dispositivo => {
+            return dispositivo.id !== id;
+        });
+
+        actualizarDispositivosLocal(nuevos);
+        actualizarTablaDispositivos();
+        console.log("Dispositivo eliminado");
+    } else {
+        console.log("Acción cancelada");
+    }
+}
+
+function crearCampoOperacionesDispositivo(dispositivo) {
+    const contenedor = document.createElement("div");
+    contenedor.classList.add("cajaOperaciones");
+
+    const btnModificar = document.createElement("button");
+    btnModificar.textContent = "Modificar";
+    btnModificar.classList.add("botonOperacion");
+    btnModificar.addEventListener("click", () => {
+        abrirModificarDispositivo(dispositivo.id);
+    });
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "Eliminar";
+    btnEliminar.classList.add("botonOperacion");
+    btnEliminar.addEventListener("click", () => {
+        eliminarDispositivoLocal(dispositivo.id);
+    });
+
+    contenedor.appendChild(btnModificar);
+    contenedor.appendChild(btnEliminar);
+
+    return contenedor;
+}
+
+function agregarFilaDispositivo(dispositivo) {
+    const fila = document.createElement("tr");
+
+    const campoId = document.createElement("td");
+    campoId.textContent = dispositivo.id;
+
+    const campoMarca = document.createElement("td");
+    campoMarca.textContent = dispositivo.marca;
+
+    const campoNumDispositivo = document.createElement("td");
+    campoNumDispositivo.textContent = dispositivo.numeroDispositivo;
+
+    const campoLaboratorio = document.createElement("td");
+    campoLaboratorio.textContent = dispositivo.laboratorio;
+
+    const campoTaller = document.createElement("td");
+    campoTaller.textContent = dispositivo.taller;
+
+    const campoRecurso = document.createElement("td");
+    campoRecurso.textContent = dispositivo.recurso;
+
+    const campoModificaciones = document.createElement("td");
+    campoModificaciones.textContent = dispositivo.modificaciones;
+
+    const campoEstado = document.createElement("td");
+    campoEstado.textContent = dispositivo.estado;
+
+    const campoUltimoCambio = document.createElement("td");
+    campoUltimoCambio.textContent = dispositivo.ultimoCambio;
+
+    const campoOperaciones = crearCampoOperacionesDispositivo(dispositivo);
+
+    fila.appendChild(campoId);
+    fila.appendChild(campoMarca);
+    fila.appendChild(campoNumDispositivo);
+    fila.appendChild(campoLaboratorio);
+    fila.appendChild(campoTaller);
+    fila.appendChild(campoRecurso);
+    fila.appendChild(campoModificaciones);
+    fila.appendChild(campoEstado);
+    fila.appendChild(campoUltimoCambio);
+    fila.appendChild(campoOperaciones);
+
+    cuerpoTablaDispositivos.appendChild(fila);
+}
+
+function actualizarTablaDispositivos() {
+    cuerpoTablaDispositivos.replaceChildren();
+    const dispositivos = cargarDispositivosLocal();
+
+    for (const dispositivo of dispositivos) {
+        agregarFilaDispositivo(dispositivo);
+    }
+}
+
+function gestionarDispositivo(eventoFormulario) {
+    eventoFormulario.preventDefault();
+    const dispositivo = obtenerDatosFormularioDispositivo();
+
+    if (!dispositivoEnEdicion) {
+        guardarDispositivoLocal(dispositivo);
+    } else {
+        modificarDispositivoLocal(dispositivo);
+    }
+
+    cerrarAltaDispositivo();
+    actualizarTablaDispositivos();
+}
+
+if (formularioAltaDispositivo) {
+    formularioAltaDispositivo.addEventListener("submit", gestionarDispositivo);
+}
+
+if (btnAltaDispositivo) {
+    btnAltaDispositivo.addEventListener("click", abrirAltaDispositivo);
+}
+
+if (btnCerrarAltaDispositivo) {
+    btnCerrarAltaDispositivo.addEventListener("click", cerrarAltaDispositivo);
+}
+
+if (dialogAltaDispositivo) {
+    dialogAltaDispositivo.addEventListener("cancel", limpiarFormularioAltaDispositivo);
+}
+
+if (cuerpoTablaDispositivos) {
+    actualizarTablaDispositivos();
+}

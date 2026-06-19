@@ -130,3 +130,60 @@ function gestionarSolicitud(eventoFormulario) {
 if (formularioSolicitud) {
     formularioSolicitud.addEventListener("submit", gestionarSolicitud);
 }
+
+const formularioRegistroUso = document.getElementById("formularioRegistroUso");
+
+const campoLaboratorioRegistro = document.getElementById("laboratorio");
+const campoTallerRegistro = document.getElementById("taller");
+const campoTurnoRegistro = document.getElementById("turno");
+const campoFechaHoraRegistro = document.getElementById("fechaHora");
+const campoDocenteRegistro = document.getElementById("docente");
+const campoGrupoRegistro = document.getElementById("grupo");
+const campoAsignaturaRegistro = document.getElementById("asignatura");
+
+function cargarRegistrosUsoLocal() {
+    const registrosGuardados = localStorage.getItem("registrosUso");
+    if (registrosGuardados === null) return [];
+    return JSON.parse(registrosGuardados);
+}
+
+function actualizarRegistrosUsoLocal(registros) {
+    localStorage.setItem("registrosUso", JSON.stringify(registros));
+}
+
+function obtenerDatosFormularioRegistroUso() {
+    const opcionUsoMaquinas = document.querySelector('input[name="usoMaquinas"]:checked');
+    const opcionIncidencias = document.querySelector('input[name="incidencias"]:checked');
+
+    return {
+        laboratorio: campoLaboratorioRegistro.value,
+        taller: campoTallerRegistro.value,
+        turno: campoTurnoRegistro.value,
+        fechaHora: campoFechaHoraRegistro.value,
+        docente: campoDocenteRegistro.value.trim(),
+        grupo: campoGrupoRegistro.value.trim(),
+        asignatura: campoAsignaturaRegistro.value.trim(),
+        usoMaquinas: opcionUsoMaquinas.value,
+        incidencias: opcionIncidencias.value
+    };
+}
+
+function guardarRegistroUsoLocal(registro) {
+    const registros = cargarRegistrosUsoLocal();
+    registro.id = registros.length + 1;
+    registros.push(registro);
+    actualizarRegistrosUsoLocal(registros);
+}
+
+function gestionarRegistroUso(eventoFormulario) {
+    eventoFormulario.preventDefault();
+    const registro = obtenerDatosFormularioRegistroUso();
+
+    guardarRegistroUsoLocal(registro);
+    formularioRegistroUso.reset();
+    alert("Registro de uso guardado correctamente");
+}
+
+if (formularioRegistroUso) {
+    formularioRegistroUso.addEventListener("submit", gestionarRegistroUso);
+}

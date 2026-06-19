@@ -213,11 +213,109 @@ if (cuerpoTablaPrestamos) {
 }
 
 const cuerpoTablaIncidenciasTecnico = document.getElementById("cuerpoTablaIncidencias");
+const dialogAsignarIncidencia = document.querySelector(".dialogAsignarIncidencia");
+const formularioAsignarIncidencia = document.getElementById("formularioAsignarIncidencia");
+const btnCerrarAsignarIncidencia = document.getElementById("btnCerrarAsignarIncidencia");
+const campoVencimientoAsignacion = document.getElementById("vencimientoIncidencia");
+const campoUrgenciaAsignacion = document.getElementById("urgenciaIncidencia");
+const campoTecnicoAsignacion = document.getElementById("tecnicoIncidencia");
+
+let incidenciaEnAsignacion = null;
 
 function cargarIncidenciasTecnicoLocal() {
     const incidenciasGuardadas = localStorage.getItem("incidencias");
     if (incidenciasGuardadas === null) return [];
     return JSON.parse(incidenciasGuardadas);
+}
+
+function actualizarIncidenciasTecnicoLocal(incidencias) {
+    localStorage.setItem("incidencias", JSON.stringify(incidencias));
+}
+
+function abrirAsignarIncidencia(id) {
+    const incidencias = cargarIncidenciasTecnicoLocal();
+    const incidencia = incidencias.find(incidenciaGuardada => incidenciaGuardada.id === id);
+
+    if (incidencia === undefined) {
+        alert("No se encontró la incidencia");
+        return;
+    }
+
+    incidenciaEnAsignacion = id;
+    campoVencimientoAsignacion.value = "";
+    campoUrgenciaAsignacion.value = "";
+    campoTecnicoAsignacion.value = "";
+
+    if (incidencia.vencimiento !== "Sin asignar") {
+        campoVencimientoAsignacion.value = incidencia.vencimiento;
+    }
+
+    if (incidencia.urgencia !== "Sin asignar") {
+        campoUrgenciaAsignacion.value = incidencia.urgencia;
+    }
+
+    if (incidencia.tecnico !== undefined && incidencia.tecnico !== "Sin asignar") {
+        campoTecnicoAsignacion.value = incidencia.tecnico;
+    }
+    dialogAsignarIncidencia.showModal();
+}
+
+function cerrarAsignarIncidencia() {
+    incidenciaEnAsignacion = null;
+    formularioAsignarIncidencia.reset();
+    dialogAsignarIncidencia.close();
+}
+
+function modificarIncidenciaTecnicoLocal(eventoFormulario) {
+    eventoFormulario.preventDefault();
+    const incidencias = cargarIncidenciasTecnicoLocal();
+    const incidencia = incidencias.find(incidenciaGuardada => {
+        return incidenciaGuardada.id === incidenciaEnAsignacion;
+    });
+
+    if (incidencia === undefined) {
+        alert("No se encontró la incidencia");
+        return;
+    }
+
+    incidencia.vencimiento = campoVencimientoAsignacion.value;
+    incidencia.urgencia = campoUrgenciaAsignacion.value;
+    incidencia.tecnico = campoTecnicoAsignacion.value.trim();
+
+    actualizarIncidenciasTecnicoLocal(incidencias);
+    cerrarAsignarIncidencia();
+    actualizarTablaIncidenciasTecnico();
+}
+
+function eliminarIncidenciaTecnicoLocal(id) {
+    const incidencias = cargarIncidenciasTecnicoLocal();
+
+    if (confirm("¿Estás seguro de que deseas eliminar esta incidencia?")) {
+        const nuevasIncidencias = incidencias.filter(incidencia => incidencia.id !== id);
+        actualizarIncidenciasTecnicoLocal(nuevasIncidencias);
+        actualizarTablaIncidenciasTecnico();
+    }
+}
+
+function crearCampoOperacionesIncidenciaTecnico(incidencia) {
+    const campoOperaciones = document.createElement("td");
+
+    const btnModificar = document.createElement("button");
+    btnModificar.type = "button";
+    btnModificar.textContent = "Modificar";
+    btnModificar.classList.add("botonOperacion");
+    btnModificar.addEventListener("click", () => abrirAsignarIncidencia(incidencia.id));
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.type = "button";
+    btnEliminar.textContent = "Eliminar";
+    btnEliminar.classList.add("botonOperacion");
+    btnEliminar.addEventListener("click", () => eliminarIncidenciaTecnicoLocal(incidencia.id));
+
+    campoOperaciones.appendChild(btnModificar);
+    campoOperaciones.appendChild(btnEliminar);
+
+    return campoOperaciones;
 }
 
 function agregarFilaIncidenciaTecnico(incidencia) {
@@ -274,6 +372,14 @@ function agregarFilaIncidenciaTecnico(incidencia) {
     const campoUrgenciaIncidencia = document.createElement("td");
     campoUrgenciaIncidencia.textContent = incidencia.urgencia;
 
+    const campoTecnicoIncidencia = document.createElement("td");
+    campoTecnicoIncidencia.textContent = "Sin asignar";
+    if (incidencia.tecnico !== undefined) {
+        campoTecnicoIncidencia.textContent = incidencia.tecnico;
+    }
+
+    const campoOperacionesIncidencia = crearCampoOperacionesIncidenciaTecnico(incidencia);
+
     fila.appendChild(campoIdIncidencia);
     fila.appendChild(campoLaboratorioIncidencia);
     fila.appendChild(campoTallerIncidencia);
@@ -291,6 +397,8 @@ function agregarFilaIncidenciaTecnico(incidencia) {
     fila.appendChild(campoVencimientoIncidencia);
     fila.appendChild(campoEstadoIncidencia);
     fila.appendChild(campoUrgenciaIncidencia);
+    fila.appendChild(campoTecnicoIncidencia);
+    fila.appendChild(campoOperacionesIncidencia);
 
     cuerpoTablaIncidenciasTecnico.appendChild(fila);
 }
@@ -306,4 +414,186 @@ function actualizarTablaIncidenciasTecnico() {
 
 if (cuerpoTablaIncidenciasTecnico) {
     actualizarTablaIncidenciasTecnico();
+}
+
+if (formularioAsignarIncidencia) {
+    formularioAsignarIncidencia.addEventListener("submit", modificarIncidenciaTecnicoLocal);
+}
+
+if (btnCerrarAsignarIncidencia) {
+    btnCerrarAsignarIncidencia.addEventListener("click", cerrarAsignarIncidencia);
+}
+
+if (dialogAsignarIncidencia) {
+    dialogAsignarIncidencia.addEventListener("cancel", cerrarAsignarIncidencia);
+}
+
+const cuerpoTablaSolicitudesTecnico = document.getElementById("cuerpoTablaSolicitudes");
+const dialogAsignarSolicitud = document.querySelector(".dialogAsignarSolicitud");
+const formularioAsignarSolicitud = document.getElementById("formularioAsignarSolicitud");
+const btnCerrarAsignarSolicitud = document.getElementById("btnCerrarAsignarSolicitud");
+const campoEstadoAsignacionSolicitud = document.getElementById("estadoSolicitud");
+
+let solicitudEnAsignacion = null;
+
+function cargarSolicitudesTecnicoLocal() {
+    const solicitudesGuardadas = localStorage.getItem("solicitudes");
+    if (solicitudesGuardadas === null) return [];
+    return JSON.parse(solicitudesGuardadas);
+}
+
+function actualizarSolicitudesTecnicoLocal(solicitudes) {
+    localStorage.setItem("solicitudes", JSON.stringify(solicitudes));
+}
+
+function abrirAsignarSolicitud(id) {
+    const solicitudes = cargarSolicitudesTecnicoLocal();
+    const solicitud = solicitudes.find(solicitudGuardada => solicitudGuardada.id === id);
+
+    if (solicitud === undefined) {
+        alert("No se encontró la solicitud");
+        return;
+    }
+
+    solicitudEnAsignacion = id;
+    campoEstadoAsignacionSolicitud.value = "";
+    if (solicitud.estado !== "Sin asignar") {
+        campoEstadoAsignacionSolicitud.value = solicitud.estado;
+    }
+    dialogAsignarSolicitud.showModal();
+}
+
+function cerrarAsignarSolicitud() {
+    solicitudEnAsignacion = null;
+    formularioAsignarSolicitud.reset();
+    dialogAsignarSolicitud.close();
+}
+
+function modificarSolicitudTecnicoLocal(eventoFormulario) {
+    eventoFormulario.preventDefault();
+    const solicitudes = cargarSolicitudesTecnicoLocal();
+    const solicitud = solicitudes.find(solicitudGuardada => {
+        return solicitudGuardada.id === solicitudEnAsignacion;
+    });
+
+    if (solicitud === undefined) {
+        alert("No se encontró la solicitud");
+        return;
+    }
+
+    solicitud.estado = campoEstadoAsignacionSolicitud.value;
+
+    actualizarSolicitudesTecnicoLocal(solicitudes);
+    cerrarAsignarSolicitud();
+    actualizarTablaSolicitudesTecnico();
+}
+
+function eliminarSolicitudTecnicoLocal(id) {
+    const solicitudes = cargarSolicitudesTecnicoLocal();
+
+    if (confirm("¿Estás seguro de que deseas eliminar esta solicitud?")) {
+        const nuevasSolicitudes = solicitudes.filter(solicitud => solicitud.id !== id);
+        actualizarSolicitudesTecnicoLocal(nuevasSolicitudes);
+        actualizarTablaSolicitudesTecnico();
+    }
+}
+
+function crearCampoOperacionesSolicitudTecnico(solicitud) {
+    const campoOperaciones = document.createElement("td");
+
+    const btnModificar = document.createElement("button");
+    btnModificar.type = "button";
+    btnModificar.textContent = "Modificar";
+    btnModificar.classList.add("botonOperacion");
+    btnModificar.addEventListener("click", () => abrirAsignarSolicitud(solicitud.id));
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.type = "button";
+    btnEliminar.textContent = "Eliminar";
+    btnEliminar.classList.add("botonOperacion");
+    btnEliminar.addEventListener("click", () => eliminarSolicitudTecnicoLocal(solicitud.id));
+
+    campoOperaciones.appendChild(btnModificar);
+    campoOperaciones.appendChild(btnEliminar);
+
+    return campoOperaciones;
+}
+
+function agregarFilaSolicitudTecnico(solicitud) {
+    const fila = document.createElement("tr");
+
+    const campoIdSolicitud = document.createElement("td");
+    campoIdSolicitud.textContent = solicitud.id;
+
+    const campoLaboratorioSolicitud = document.createElement("td");
+    campoLaboratorioSolicitud.textContent = solicitud.laboratorio;
+
+    const campoTurnoSolicitud = document.createElement("td");
+    campoTurnoSolicitud.textContent = solicitud.turno;
+
+    const campoDocenteSolicitud = document.createElement("td");
+    campoDocenteSolicitud.textContent = solicitud.docente;
+
+    const campoEmailSolicitud = document.createElement("td");
+    campoEmailSolicitud.textContent = solicitud.email;
+
+    const campoFechaHoraSolicitud = document.createElement("td");
+    campoFechaHoraSolicitud.textContent = solicitud.fechaHora;
+
+    const campoSoftwareSolicitud = document.createElement("td");
+    campoSoftwareSolicitud.textContent = solicitud.software;
+
+    const campoTodasMaquinasSolicitud = document.createElement("td");
+    campoTodasMaquinasSolicitud.textContent = solicitud.todasMaquinas;
+
+    const campoTipoServicioSolicitud = document.createElement("td");
+    campoTipoServicioSolicitud.textContent = solicitud.tipoServicio;
+
+    const campoDescripcionSolicitud = document.createElement("td");
+    campoDescripcionSolicitud.textContent = solicitud.descripcion;
+
+    const campoEstadoSolicitud = document.createElement("td");
+    campoEstadoSolicitud.textContent = solicitud.estado;
+
+    const campoOperacionesSolicitud = crearCampoOperacionesSolicitudTecnico(solicitud);
+
+    fila.appendChild(campoIdSolicitud);
+    fila.appendChild(campoLaboratorioSolicitud);
+    fila.appendChild(campoTurnoSolicitud);
+    fila.appendChild(campoDocenteSolicitud);
+    fila.appendChild(campoEmailSolicitud);
+    fila.appendChild(campoFechaHoraSolicitud);
+    fila.appendChild(campoSoftwareSolicitud);
+    fila.appendChild(campoTodasMaquinasSolicitud);
+    fila.appendChild(campoTipoServicioSolicitud);
+    fila.appendChild(campoDescripcionSolicitud);
+    fila.appendChild(campoEstadoSolicitud);
+    fila.appendChild(campoOperacionesSolicitud);
+
+    cuerpoTablaSolicitudesTecnico.appendChild(fila);
+}
+
+function actualizarTablaSolicitudesTecnico() {
+    cuerpoTablaSolicitudesTecnico.replaceChildren();
+    const solicitudes = cargarSolicitudesTecnicoLocal();
+
+    for (const solicitud of solicitudes) {
+        agregarFilaSolicitudTecnico(solicitud);
+    }
+}
+
+if (cuerpoTablaSolicitudesTecnico) {
+    actualizarTablaSolicitudesTecnico();
+}
+
+if (formularioAsignarSolicitud) {
+    formularioAsignarSolicitud.addEventListener("submit", modificarSolicitudTecnicoLocal);
+}
+
+if (btnCerrarAsignarSolicitud) {
+    btnCerrarAsignarSolicitud.addEventListener("click", cerrarAsignarSolicitud);
+}
+
+if (dialogAsignarSolicitud) {
+    dialogAsignarSolicitud.addEventListener("cancel", cerrarAsignarSolicitud);
 }

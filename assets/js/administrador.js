@@ -469,3 +469,99 @@ if (dialogAltaDispositivo) {
 if (cuerpoTablaDispositivos) {
     actualizarTablaDispositivos();
 }
+
+const cuerpoTablaIncidenciasAdmin = document.getElementById("cuerpoTablaIncidencias");
+
+function cargarIncidenciasAdminLocal() {
+    const incidenciasGuardadas = localStorage.getItem("incidencias");
+    if (incidenciasGuardadas === null) return [];
+    return JSON.parse(incidenciasGuardadas);
+}
+
+function agregarFilaIncidenciaAdmin(incidencia) {
+    const fila = document.createElement("tr");
+
+    const campoIdIncidencia = document.createElement("td");
+    campoIdIncidencia.textContent = incidencia.id;
+
+    const campoLaboratorioIncidencia = document.createElement("td");
+    campoLaboratorioIncidencia.textContent = incidencia.laboratorio;
+
+    const campoTallerIncidencia = document.createElement("td");
+    campoTallerIncidencia.textContent = incidencia.taller;
+
+    const campoTurnoIncidencia = document.createElement("td");
+    campoTurnoIncidencia.textContent = incidencia.turno;
+
+    const campoFechaHoraIncidencia = document.createElement("td");
+    campoFechaHoraIncidencia.textContent = incidencia.fechaHora;
+
+    const campoDocenteIncidencia = document.createElement("td");
+    campoDocenteIncidencia.textContent = incidencia.docente;
+
+    const campoGrupoIncidencia = document.createElement("td");
+    campoGrupoIncidencia.textContent = incidencia.grupo;
+
+    const campoAsignaturaIncidencia = document.createElement("td");
+    campoAsignaturaIncidencia.textContent = incidencia.asignatura;
+
+    const campoReportaAlumnoIncidencia = document.createElement("td");
+    campoReportaAlumnoIncidencia.textContent = incidencia.reportaAlumno;
+
+    const campoAlumnoIncidencia = document.createElement("td");
+    campoAlumnoIncidencia.textContent = incidencia.alumno;
+
+    const campoMaquinaIncidencia = document.createElement("td");
+    campoMaquinaIncidencia.textContent = incidencia.maquina;
+
+    const campoRecursoIncidencia = document.createElement("td");
+    campoRecursoIncidencia.textContent = incidencia.recurso;
+
+    const campoTipoIncidencia = document.createElement("td");
+    campoTipoIncidencia.textContent = incidencia.tipo;
+
+    const campoDescripcionIncidencia = document.createElement("td");
+    campoDescripcionIncidencia.textContent = incidencia.descripcion;
+
+    const campoVencimientoIncidencia = document.createElement("td");
+    campoVencimientoIncidencia.textContent = incidencia.vencimiento;
+
+    const campoEstadoIncidencia = document.createElement("td");
+    campoEstadoIncidencia.textContent = incidencia.estado;
+
+    const campoUrgenciaIncidencia = document.createElement("td");
+    campoUrgenciaIncidencia.textContent = incidencia.urgencia;
+
+    fila.appendChild(campoIdIncidencia);
+    fila.appendChild(campoLaboratorioIncidencia);
+    fila.appendChild(campoTallerIncidencia);
+    fila.appendChild(campoTurnoIncidencia);
+    fila.appendChild(campoFechaHoraIncidencia);
+    fila.appendChild(campoDocenteIncidencia);
+    fila.appendChild(campoGrupoIncidencia);
+    fila.appendChild(campoAsignaturaIncidencia);
+    fila.appendChild(campoReportaAlumnoIncidencia);
+    fila.appendChild(campoAlumnoIncidencia);
+    fila.appendChild(campoMaquinaIncidencia);
+    fila.appendChild(campoRecursoIncidencia);
+    fila.appendChild(campoTipoIncidencia);
+    fila.appendChild(campoDescripcionIncidencia);
+    fila.appendChild(campoVencimientoIncidencia);
+    fila.appendChild(campoEstadoIncidencia);
+    fila.appendChild(campoUrgenciaIncidencia);
+
+    cuerpoTablaIncidenciasAdmin.appendChild(fila);
+}
+
+function actualizarTablaIncidenciasAdmin() {
+    cuerpoTablaIncidenciasAdmin.replaceChildren();
+    const incidencias = cargarIncidenciasAdminLocal();
+
+    for (const incidencia of incidencias) {
+        agregarFilaIncidenciaAdmin(incidencia);
+    }
+}
+
+if (cuerpoTablaIncidenciasAdmin) {
+    actualizarTablaIncidenciasAdmin();
+}

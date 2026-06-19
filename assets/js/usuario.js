@@ -58,6 +58,24 @@
  */
 
 /**
+ * Obtiene un identificador mayor a todos los registros existentes.
+ * @param {Array<{id: number}>} registros Lista de registros guardados.
+ * @returns {number} Siguiente identificador disponible.
+ */
+
+function obtenerSiguienteId(registros) {
+    let ultimoId = 0;
+
+    for (const registro of registros) {
+        if (registro.id > ultimoId) {
+            ultimoId = registro.id;
+        }
+    }
+
+    return ultimoId + 1;
+}
+
+/**
  * Formulario de reporte de incidencias.
  * @type {HTMLFormElement|null}
  */
@@ -195,7 +213,7 @@ function obtenerDatosFormularioIncidencia() {
 
 function guardarIncidenciaLocal(incidencia) {
     const incidencias = cargarIncidenciasLocal();
-    incidencia.id = incidencias.length + 1;
+    incidencia.id = obtenerSiguienteId(incidencias);
     incidencias.push(incidencia);
     actualizarIncidenciasLocal(incidencias);
 }
@@ -357,7 +375,7 @@ function obtenerDatosFormularioSolicitud() {
 
 function guardarSolicitudLocal(solicitud) {
     const solicitudes = cargarSolicitudesLocal();
-    solicitud.id = solicitudes.length + 1;
+    solicitud.id = obtenerSiguienteId(solicitudes);
     solicitudes.push(solicitud);
     actualizarSolicitudesLocal(solicitudes);
 }
@@ -482,7 +500,7 @@ function obtenerDatosFormularioRegistroUso() {
 
 function guardarRegistroUsoLocal(registro) {
     const registros = cargarRegistrosUsoLocal();
-    registro.id = registros.length + 1;
+    registro.id = obtenerSiguienteId(registros);
     registros.push(registro);
     actualizarRegistrosUsoLocal(registros);
 }

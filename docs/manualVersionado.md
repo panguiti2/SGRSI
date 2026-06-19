@@ -21,8 +21,9 @@ Se establece el siguiente flujo obligatorio:
 3. Publicación de cambios en el repositorio remoto
 4. Creación de Pull Request hacia `main`
 5. Revisión por pares obligatoria
-6. Generación de etiqueta de versión
-7. Fusión final del código
+6. Fusión final del código
+7. Sincronización de la rama asignada con `main`
+8. Generación de la etiqueta sobre el commit funcional
 
 ---
 
@@ -37,9 +38,9 @@ Se establece la siguiente política de ramas:
 ### Prohibiciones
 
 - Se prohíben los commits directos sobre `main`.
-- Se prohíbe mezclar múltiples módulos en una misma rama.
+- Se prohíbe mezclar cambios nuevos de múltiples módulos en un mismo commit o Pull Request.
 
-La rama fija de un integrante puede reutilizarse para distintos módulos durante el proyecto, pero solo puede contener el trabajo de un módulo por vez. Después de fusionar un Pull Request, la rama debe sincronizarse nuevamente con `main` antes de comenzar el siguiente módulo.
+La rama fija de un integrante puede reutilizarse para distintos módulos durante el proyecto. Su historial conservará los merges anteriores, pero cada nuevo Pull Request debe contener trabajo de un solo módulo. Después de fusionarlo, la rama debe sincronizarse nuevamente con `main` antes de comenzar el siguiente issue.
 
 ### Módulos del proyecto
 
@@ -84,7 +85,7 @@ git pull origin main
 
 ### PASO 1: Buenas Prácticas al Registrar Commits
 
-Cada *commit* realizado en una rama suma de manera directa al contador de la versión final.
+Cada commit funcional final aprobado y etiquetado aumenta el contador acumulado del módulo al que pertenece. Los commits intermedios de corrección y los commits de merge creados por GitHub no aumentan este contador por sí solos.
 
 Se establecen las siguientes reglas estrictas:
 
@@ -98,7 +99,7 @@ Se establecen las siguientes reglas estrictas:
 
 ### PASO 2: Envío a Revisión por Pares (Pull Request)
 
-Una vez concluido el desarrollo del módulo funcional y verificado de forma local que cumple con los criterios de aceptación, se deben seguir los siguientes pasos:
+Una vez concluido el desarrollo del issue y verificado de forma local que cumple con los criterios de aceptación, se deben seguir los siguientes pasos:
 
 1. Subir todos los commits pendientes desde el entorno local hacia la rama remota en GitHub:
 
@@ -120,54 +121,101 @@ El revisor asignado inspeccionará los cambios en la pestaña *Files changed* de
 
 Si el revisor solicita correcciones, optimizaciones o refactorizaciones, los cambios requeridos deben realizarse en el entorno de desarrollo local.
 
-Los nuevos commits de corrección deben registrarse y subirse utilizando el comando estándar (`git push origin tu-nombre-rama`). El contador de commits en el PR aumentará de forma natural, lo cual constituye el comportamiento esperado.
+Los nuevos commits de corrección deben registrarse y subirse utilizando el comando estándar (`git push origin tu-nombre-rama`). El contador visual de commits del PR puede aumentar, pero no se utiliza para calcular directamente el tercer número de la etiqueta.
 
 Una vez que el código cumpla con los estándares técnicos, el revisor registrará su veredicto mediante el botón **Approve** (Aprobar).
 
 ---
 
-### PASO 4: Generar la Etiqueta de Versión Institucional (Tag)
+### PASO 4: Aprobar y Fusionar el Pull Request
 
-El formato de versión obligatorio se rige por la nomenclatura `vVersiónPrincipal.Módulo.CantCommits`.
+Una vez que el Pull Request se encuentre formalmente aprobado, se encuentra habilitada su integración a `main`.
 
-Una vez que el Pull Request se encuentre formalmente **APROBADO**, pero **ANTES de ejecutar la fusión (Merge)**, se debe abrir la terminal en el equipo local sobre la rama de trabajo y ejecutar de manera exacta el siguiente bloque de comandos:
+1. Acceder al Pull Request en GitHub.
 
-#### Definiciones
+2. Verificar que el revisor haya registrado la aprobación.
 
-- **Versión Principal:** etapa global del sistema. Se utiliza `0` durante el desarrollo inicial y `1` a partir de la primera versión estable aprobada.
-- **Módulo:** identificador del componente desarrollado.
-- **Cantidad de Commits:** número de commits exclusivos de la rama respecto a `main`.
+3. Seleccionar obligatoriamente la opción **Create a merge commit**.
 
-```bash
-# 1. Sincronizar la información del historial con el servidor remoto
-git fetch origin
+4. Confirmar que el Pull Request y su issue asociado queden cerrados.
 
-# 2. Configurar las variables de la entrega (reemplazar con los números asignados al proyecto)
-VERSION_PRINCIPAL="1"
-MODULO="3"
+#### Prohibición de Squash
 
-# 3. El sistema calcula automáticamente los commits exclusivos en esta rama aislada
-COMMITS=$(git rev-list --count origin/main..HEAD)
-TAG_NAME="v$VERSION_PRINCIPAL.$MODULO.$COMMITS"
-
-# 4. Registrar la etiqueta anotada en el historial local y desplegarla en GitHub
-git tag -a "$TAG_NAME" -m "Módulo $MODULO aprobado por revisor con $COMMITS commits propios."
-git push origin "$TAG_NAME"
-```
+Queda prohibido utilizar **Squash and merge**, porque comprime los commits funcionales e impide identificar correctamente el commit que debe recibir la etiqueta.
 
 ---
 
-### PASO 5: Ejecución Correcta del Merge
+### PASO 5: Sincronizar la Rama Después del Merge
 
-Con la etiqueta de versión debidamente registrada y visible en la pestaña *Tags* de GitHub, se encuentra habilitada la integración del código al tronco común.
+Después de completar el merge, se debe actualizar la rama fija antes de comenzar otro issue:
 
-1. Acceder a la interfaz web del Pull Request en GitHub.
+```bash
+git fetch origin
+git checkout <nombre_rama_integrante>
+git pull origin main
+git status
+git log --oneline -5
+```
 
-2. Desplegar las opciones del botón verde de fusión y seleccionar obligatoriamente una de las siguientes dos opciones:
+El historial debe mostrar primero el commit de merge y, debajo, el commit funcional realizado en la rama. La etiqueta debe apuntar al commit funcional, no al commit de merge.
 
-   - **"Create a merge commit"**
-   - **"Rebase and merge"**
+---
 
-3. **PROHIBICIÓN EXPLÍCITA:** Queda estrictamente denegado el uso de la opción **"Squash and merge"**. Este mecanismo comprime y destruye los commits individuales, convirtiéndolos en un único registro en la rama principal, lo cual invalida por completo la coherencia del número de versión (`CantCommits`) registrado en el paso anterior.
+### PASO 6: Generar la Etiqueta de Versión Institucional (Tag)
+
+El formato obligatorio es `vVersiónPrincipal.Módulo.CantidadAcumulada`.
+
+#### Definiciones
+
+- **Versión Principal:** se utiliza `1` por corresponder a la primera entrega estable del proyecto.
+- **Módulo:** identificador del componente desarrollado.
+- **Cantidad Acumulada:** número consecutivo de commits funcionales finales etiquetados dentro del módulo. Cada nueva entrega aprobada del módulo aumenta este valor en uno.
+
+El contador no se calcula con `git rev-list origin/main..HEAD`, porque la rama ya fue fusionada y sincronizada. En su lugar, se revisan las etiquetas existentes del módulo y se utiliza el siguiente número disponible.
+
+#### Procedimiento
+
+1. Consultar las etiquetas existentes del módulo:
+
+```bash
+git tag --list "v1.<modulo>.*" --sort=version:refname
+```
+
+2. Identificar el último número utilizado y aumentarlo en uno. Si no existe ninguna etiqueta para el módulo, comenzar en `1`.
+
+3. Identificar en `git log --oneline -5` el hash del commit funcional ubicado debajo del merge.
+
+4. Crear la etiqueta anotada indicando explícitamente ese hash:
+
+```bash
+git tag -a v1.<modulo>.<siguiente_numero> <hash_commit_funcional> -m "Versión 1.<modulo>.<siguiente_numero> - <descripción breve>"
+git push origin v1.<modulo>.<siguiente_numero>
+git tag
+```
+
+#### Ejemplo
+
+Si el último commit versionado de Recursos tiene la etiqueta `v1.1.3`, el siguiente commit aprobado del mismo módulo recibe `v1.1.4`:
+
+```bash
+git tag -a v1.1.4 757c082 -m "Versión 1.1.4 - inventario técnico"
+git push origin v1.1.4
+```
+
+La etiqueta histórica `v0.0.3` pertenece a una etapa anterior a este procedimiento. No debe utilizarse como referencia para nuevas versiones ni modificarse después de haber sido publicada.
+
+---
+
+### PASO 7: Verificación Final
+
+Después de publicar la etiqueta, se debe comprobar:
+
+```bash
+git status
+git log --oneline -5
+git tag
+```
+
+La rama debe estar sincronizada con `main`, el commit funcional debe conservarse en el historial y la etiqueta debe aparecer en GitHub. Las etiquetas publicadas no se eliminan ni se mueven, salvo autorización expresa del responsable del proyecto.
 
 ---

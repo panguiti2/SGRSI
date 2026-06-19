@@ -597,3 +597,71 @@ if (btnCerrarAsignarSolicitud) {
 if (dialogAsignarSolicitud) {
     dialogAsignarSolicitud.addEventListener("cancel", cerrarAsignarSolicitud);
 }
+
+const cuerpoTablaRegistrosUso = document.getElementById("cuerpoTablaRegistrosUso");
+
+function cargarRegistrosUsoTecnicoLocal() {
+    const registrosGuardados = localStorage.getItem("registrosUso");
+    if (registrosGuardados === null) return [];
+    return JSON.parse(registrosGuardados);
+}
+
+function agregarFilaRegistroUsoTecnico(registro) {
+    const fila = document.createElement("tr");
+
+    const campoIdRegistro = document.createElement("td");
+    campoIdRegistro.textContent = registro.id;
+
+    const campoLaboratorioRegistro = document.createElement("td");
+    campoLaboratorioRegistro.textContent = registro.laboratorio;
+
+    const campoTallerRegistro = document.createElement("td");
+    campoTallerRegistro.textContent = registro.taller;
+
+    const campoTurnoRegistro = document.createElement("td");
+    campoTurnoRegistro.textContent = registro.turno;
+
+    const campoFechaHoraRegistro = document.createElement("td");
+    campoFechaHoraRegistro.textContent = registro.fechaHora;
+
+    const campoDocenteRegistro = document.createElement("td");
+    campoDocenteRegistro.textContent = registro.docente;
+
+    const campoGrupoRegistro = document.createElement("td");
+    campoGrupoRegistro.textContent = registro.grupo;
+
+    const campoAsignaturaRegistro = document.createElement("td");
+    campoAsignaturaRegistro.textContent = registro.asignatura;
+
+    const campoUsoMaquinasRegistro = document.createElement("td");
+    campoUsoMaquinasRegistro.textContent = registro.usoMaquinas;
+
+    const campoIncidenciasRegistro = document.createElement("td");
+    campoIncidenciasRegistro.textContent = registro.incidencias;
+
+    fila.appendChild(campoIdRegistro);
+    fila.appendChild(campoLaboratorioRegistro);
+    fila.appendChild(campoTallerRegistro);
+    fila.appendChild(campoTurnoRegistro);
+    fila.appendChild(campoFechaHoraRegistro);
+    fila.appendChild(campoDocenteRegistro);
+    fila.appendChild(campoGrupoRegistro);
+    fila.appendChild(campoAsignaturaRegistro);
+    fila.appendChild(campoUsoMaquinasRegistro);
+    fila.appendChild(campoIncidenciasRegistro);
+
+    cuerpoTablaRegistrosUso.appendChild(fila);
+}
+
+function actualizarTablaRegistrosUsoTecnico() {
+    cuerpoTablaRegistrosUso.replaceChildren();
+    const registros = cargarRegistrosUsoTecnicoLocal();
+
+    for (const registro of registros) {
+        agregarFilaRegistroUsoTecnico(registro);
+    }
+}
+
+if (cuerpoTablaRegistrosUso) {
+    actualizarTablaRegistrosUsoTecnico();
+}

@@ -532,6 +532,12 @@ function agregarFilaIncidenciaAdmin(incidencia) {
     const campoUrgenciaIncidencia = document.createElement("td");
     campoUrgenciaIncidencia.textContent = incidencia.urgencia;
 
+    const campoTecnicoIncidencia = document.createElement("td");
+    campoTecnicoIncidencia.textContent = "Sin asignar";
+    if (incidencia.tecnico !== undefined) {
+        campoTecnicoIncidencia.textContent = incidencia.tecnico;
+    }
+
     fila.appendChild(campoIdIncidencia);
     fila.appendChild(campoLaboratorioIncidencia);
     fila.appendChild(campoTallerIncidencia);
@@ -549,6 +555,7 @@ function agregarFilaIncidenciaAdmin(incidencia) {
     fila.appendChild(campoVencimientoIncidencia);
     fila.appendChild(campoEstadoIncidencia);
     fila.appendChild(campoUrgenciaIncidencia);
+    fila.appendChild(campoTecnicoIncidencia);
 
     cuerpoTablaIncidenciasAdmin.appendChild(fila);
 }

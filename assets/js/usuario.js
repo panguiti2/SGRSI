@@ -42,7 +42,8 @@ function obtenerDatosFormularioIncidencia() {
         descripcion: campoDescripcionIncidencia.value.trim(),
         vencimiento: "Sin asignar",
         estado: "Pendiente",
-        urgencia: "Sin asignar"
+        urgencia: "Sin asignar",
+        tecnico: "Sin asignar"
     };
 }
 
@@ -64,4 +65,68 @@ function gestionarIncidencia(eventoFormulario) {
 
 if (formularioIncidencia) {
     formularioIncidencia.addEventListener("submit", gestionarIncidencia);
+}
+
+const formularioSolicitud = document.getElementById("formularioSolicitud");
+
+const campoLaboratorioSolicitud = document.getElementById("laboratorio");
+const campoTallerSolicitud = document.getElementById("taller");
+const campoTurnoSolicitud = document.getElementById("turno");
+const campoDocenteSolicitud = document.getElementById("docente");
+const campoAsignaturaSolicitud = document.getElementById("asignatura");
+const campoEmailSolicitud = document.getElementById("email");
+const campoFechaHoraSolicitud = document.getElementById("fechaHora");
+const campoTipoServicioSolicitud = document.getElementById("tipoServicio");
+const campoSoftwareSolicitud = document.getElementById("software");
+const campoPrioridadSolicitud = document.getElementById("prioridad");
+const campoDescripcionSolicitud = document.getElementById("descripcion");
+
+function cargarSolicitudesLocal() {
+    const solicitudesGuardadas = localStorage.getItem("solicitudes");
+    if (solicitudesGuardadas === null) return [];
+    return JSON.parse(solicitudesGuardadas);
+}
+
+function actualizarSolicitudesLocal(solicitudes) {
+    localStorage.setItem("solicitudes", JSON.stringify(solicitudes));
+}
+
+function obtenerDatosFormularioSolicitud() {
+    const opcionTodasMaquinas = document.querySelector('input[name="todasMaquinas"]:checked');
+
+    return {
+        laboratorio: campoLaboratorioSolicitud.value,
+        taller: campoTallerSolicitud.value,
+        turno: campoTurnoSolicitud.value,
+        docente: campoDocenteSolicitud.value.trim(),
+        asignatura: campoAsignaturaSolicitud.value.trim(),
+        email: campoEmailSolicitud.value.trim(),
+        fechaHora: campoFechaHoraSolicitud.value,
+        tipoServicio: campoTipoServicioSolicitud.value,
+        software: campoSoftwareSolicitud.value.trim(),
+        todasMaquinas: opcionTodasMaquinas.value,
+        prioridad: campoPrioridadSolicitud.value,
+        descripcion: campoDescripcionSolicitud.value.trim(),
+        estado: "Sin asignar"
+    };
+}
+
+function guardarSolicitudLocal(solicitud) {
+    const solicitudes = cargarSolicitudesLocal();
+    solicitud.id = solicitudes.length + 1;
+    solicitudes.push(solicitud);
+    actualizarSolicitudesLocal(solicitudes);
+}
+
+function gestionarSolicitud(eventoFormulario) {
+    eventoFormulario.preventDefault();
+    const solicitud = obtenerDatosFormularioSolicitud();
+
+    guardarSolicitudLocal(solicitud);
+    formularioSolicitud.reset();
+    alert("Solicitud registrada correctamente");
+}
+
+if (formularioSolicitud) {
+    formularioSolicitud.addEventListener("submit", gestionarSolicitud);
 }

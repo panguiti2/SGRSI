@@ -90,6 +90,8 @@
                             <th >Vencimiento</th>
                             <th >Estado</th>
                             <th >Urgencia</th>
+                            <th >Técnico asignado</th>
+                            <th >Operaciones</th>
                         </tr>
                     </thead>
 
@@ -98,6 +100,43 @@
             </section>
 
     </main>
+
+    <dialog class="dialogAsignarIncidencia seccionFormulario w-100 p-0 rounded-3 border-0"
+        style="max-width: 500px;">
+        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAsignarIncidencia"
+            type="button" aria-label="Cerrar"></button>
+
+        <form id="formularioAsignarIncidencia" class="p-4">
+            <fieldset>
+                <legend class="h4 mb-4">Asignar incidencia</legend>
+
+                <section class="row g-3 mb-4">
+                    <div class="col-12">
+                        <label for="vencimientoIncidencia" class="form-label">Vencimiento</label>
+                        <input type="datetime-local" id="vencimientoIncidencia" class="form-control" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="urgenciaIncidencia" class="form-label">Urgencia</label>
+                        <select id="urgenciaIncidencia" class="form-select" required>
+                            <option value="" disabled selected>Seleccione urgencia</option>
+                            <option value="ALTA">Alta</option>
+                            <option value="MEDIA">Media</option>
+                            <option value="BAJA">Baja</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="tecnicoIncidencia" class="form-label">Técnico asignado</label>
+                        <input type="text" id="tecnicoIncidencia" class="form-control" required>
+                    </div>
+                </section>
+
+                <button type="submit" class="btn btn-primary w-100">Guardar asignación</button>
+            </fieldset>
+        </form>
+    </dialog>
+
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">
         <address class="d-flex flex-column flex-md-row justify-content-center gap-2 gap-md-3 text-center mb-2">
             <a href="http://instagram.com" class="text-light text-decoration-none">@SGRSI</a>

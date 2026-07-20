@@ -7,12 +7,10 @@ if (!isset($_SESSION["cedula"])) {
     exit;
 }
 
-if (!isset($_SESSION["administrador"]) || $_SESSION["administrador"] !== true) {
+if (!isset($_SESSION["solicitante"]) || $_SESSION["solicitante"] !== true) {
     header("Location: login.php?error=no_autorizado");
     exit;
 }
 
-header("Location: pages/admin/admin.php");
+header("Location: pages/solicitante/user.php");
 exit;
-
-?>

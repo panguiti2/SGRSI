@@ -1,3 +1,8 @@
+<?php
+$rolRequerido = "tecnico";
+require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
+verificarAcceso($rolRequerido);
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -14,7 +19,7 @@
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="tecnico.html"><img src="../../assets/img/logoITI.png" alt="Logo ITI"
+            <a class="navbar-brand fw-bold" href="tecnico.php"><img src="../../assets/img/logoITI.png" alt="Logo ITI"
                     class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
@@ -24,15 +29,15 @@
 
             <nav class="collapse navbar-collapse" id="menuPrincipal" aria-label="Navegación principal">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="tecnico.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="solicitudes.html">Solicitudes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="incidencias.html">Incidencias</a></li>
-                    <li class="nav-item"><a class="nav-link" href="metricas.html">Métricas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="inventario.html">Inventario</a></li>
-                    <li class="nav-item"><a class="nav-link" href="prestamos.html">Préstamos</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="registrosUso.html"
+                    <li class="nav-item"><a class="nav-link" href="tecnico.php">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="solicitudes.php">Solicitudes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="incidencias.php">Incidencias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="metricas.php">Métricas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="inventario.php">Inventario</a></li>
+                    <li class="nav-item"><a class="nav-link" href="prestamos.php">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="registrosUso.php"
                             aria-current="page">Registros de uso</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../../index.html">Cerrar sesión</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../cerrarSesion.php">Cerrar sesión</a></li>
                 </ul>
             </nav>
         </section>

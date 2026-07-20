@@ -1,21 +1,27 @@
+<?php
+$rolRequerido = "tecnico";
+require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
+verificarAcceso($rolRequerido);
+?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Incidencias</title>
+    <title>Inventario</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/global.css">
-    
+
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="Admin.html"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="tecnico.php"><img src="../../assets/img/logoITI.png" alt="Logo ITI"
+                    class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -25,22 +31,28 @@
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="Admin.html">Inicio</a>
+                        <a class="nav-link" href="tecnico.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="gestionUsuario.html">Usuarios</a>
+                        <a class="nav-link" href="solicitudes.php">Solicitudes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="incidencias.html">Incidencias</a>
+                        <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="metricas.html">Métricas</a>
+                        <a class="nav-link" href="metricas.php">Métricas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="inventario.html">Inventario</a>
+                        <a class="nav-link active" href="inventario.php">Inventario</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../index.html">Cerrar Sesión</a>
+                        <a class="nav-link" href="prestamos.php">Préstamos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="registrosUso.php">Registros de uso</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -49,48 +61,39 @@
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
 
-        <section class="bg-white rounded mb-4 p-3 p-md-4 panelTabla">
+        <section class="bg-white rounded mb-4 p-3 p-md-4">
             <section class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                <h2 class="h4 m-0">Incidencias</h2>
+                <h2 class="h4 m-0">Datos de dispositivo</h2>
                 <form class="d-flex flex-column flex-sm-row gap-2">
-                    <label class="visually-hidden" for="ordenIncidenciasAdmin">Ordenar por</label>
-                    <select class="form-select form-select-sm" id="ordenIncidenciasAdmin">
+                    <label class="visually-hidden" for="ordenInventarioTecnico">Ordenar por</label>
+                    <select class="form-select form-select-sm" id="ordenInventarioTecnico">
                         <option value="" disabled selected>Seleccione</option>
-                        <option>Fecha</option>
-                        <option>Estado</option>
-                        <option>Urgencia</option>
+                        <option>Id</option>
+                        <option>Recurso</option>
+                        <option>Laboratorio</option>
                     </select>
                     <button class="btn btn-primary btn-sm" type="button">Ordenar</button>
-                    <button class="btn btn-outline-secondary btn-sm" type="button">Ver historial</button>
+                    <button class="btn btn-secondary btn-sm" type="button">Historial modificaciones</button>
                 </form>
             </section>
-
+            
             <section class="table-responsive panelTabla">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
+                    <caption class="d-none d-md-table-caption">Listado de dispositivos registrados</caption>
                     <thead class="table-light">
                         <tr>
-                            <th >ID</th>
-                            <th >Laboratorio</th>
-                            <th >Taller</th>
-                            <th >Turno</th>
-                            <th >Fecha y hora</th>
-                            <th >Docente</th>
-                            <th >Grupo</th>
-                            <th >Asignatura</th>
-                            <th >Reporta alumno?</th>
-                            <th >Alumno</th>
-                            <th >Máquina</th>
-                            <th >Recurso</th>
-                            <th >Tipo</th>
-                            <th >Descripción</th>
-                            <th >Vencimiento</th>
-                            <th >Estado</th>
-                            <th >Urgencia</th>
-                            <th >Técnico asignado</th>
+                            <th>ID</th>
+                            <th>Marca</th>
+                            <th>N° Dispositivo</th>
+                            <th>Laboratorio</th>
+                            <th>Taller</th>
+                            <th>Recurso</th>
+                            <th>Modificaciones</th>
+                            <th>Estado</th>
+                            <th>Ultimo cambio</th>
                         </tr>
                     </thead>
-
-                    <tbody id="cuerpoTablaIncidencias"></tbody>
+                    <tbody id="cuerpoTablaInventarioTecnico"></tbody>
                 </table>
             </section>
         </section>
@@ -107,10 +110,9 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/administrador.js"></script>
+    <script src="../../assets/js/tecnico.js"></script>
 </body>
 
 </html>
-
 
 

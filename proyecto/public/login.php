@@ -2,20 +2,20 @@
 
 session_start();
 
+if (isset($_SESSION["cedula"])) {
+    if (!empty($_SESSION["administrador"])) {
+        header("Location: administrador.php");
+        exit;
+    }
 
-if (isset($_SESSION["rol"])) {
-    switch ($_SESSION["rol"]) {
-        case "administrador":
-            header("Location: administrador.php");
-            exit;
+    if (!empty($_SESSION["tecnico"])) {
+        header("Location: tecnico.php");
+        exit;
+    }
 
-        case "tecnico":
-            header("Location: tecnico.php");
-            exit;
-
-        case "solicitante":
-            header("Location: solicitante.php");
-            exit;
+    if (!empty($_SESSION["solicitante"])) {
+        header("Location: solicitante.php");
+        exit;
     }
 }
 

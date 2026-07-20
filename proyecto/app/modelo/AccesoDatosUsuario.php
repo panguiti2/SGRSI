@@ -23,8 +23,6 @@ class AccesoDatosUsuario {
     {
         $sql = "
             SELECT
-                u.nombre,
-                u.apellido,
                 u.cedula,
                 u.claveHash,
                 u.activo,
@@ -37,7 +35,7 @@ class AccesoDatosUsuario {
                 CASE
                     WHEN l.cedula IS NOT NULL THEN 1
                     ELSE 0
-                END AS logistica
+                END AS tecnico,
 
                 CASE
                     WHEN s.cedula IS NOT NULL THEN 1
@@ -49,7 +47,7 @@ class AccesoDatosUsuario {
             LEFT JOIN ADMINISTRADOR AS a
                 ON a.cedula = u.cedula
 
-            LEFT JOIN LOGISTICA AS l
+            LEFT JOIN TECNICO AS l
                 ON l.cedula = u.cedula
 
             LEFT JOIN SOLICITANTE AS s
@@ -69,8 +67,6 @@ class AccesoDatosUsuario {
         }
 
         return new Usuario(
-            $datos["nombre"],
-            $datos["apellido"],
             $datos["cedula"],
             $datos["claveHash"],
             (bool) $datos["activo"],

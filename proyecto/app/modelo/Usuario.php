@@ -3,20 +3,26 @@
 class Usuario
 {
     private string $cedula;
-    private string $nombre;
-    private string $clave;
-    private string $rol;
+    private string $claveHash;
+    private bool $activo;
+    private bool $administrador;
+    private bool $tecnico;
+    private bool $solicitante;
 
     public function __construct(
         string $cedula,
-        string $nombre,
-        string $clave,
-        string $rol
+        string $claveHash,
+        bool $activo,
+        bool $administrador,
+        bool $tecnico,
+        bool $solicitante
     ) {
         $this->cedula = $cedula;
-        $this->nombre = $nombre;
-        $this->clave = $clave;
-        $this->rol = $rol;
+        $this->claveHash = $claveHash;
+        $this->activo = $activo;
+        $this->administrador = $administrador;
+        $this->tecnico = $tecnico;
+        $this->solicitante = $solicitante;
     }
 
     public function getCedula(): string
@@ -24,33 +30,28 @@ class Usuario
         return $this->cedula;
     }
 
-    public function getNombre(): string
+    public function getClaveHash(): string
     {
-        return $this->nombre;
+        return $this->claveHash;
     }
 
-    public function getClave(): string
+    public function estaActivo(): bool
     {
-        return $this->clave;
-    }
-
-    public function getRol(): string
-    {
-        return $this->rol;
+        return $this->activo;
     }
 
     public function esAdministrador(): bool
     {
-        return $this->rol === "administrador";
+        return $this->administrador;
     }
 
     public function esTecnico(): bool
     {
-        return $this->rol === "tecnico";
+        return $this->tecnico;
     }
 
     public function esSolicitante(): bool
     {
-        return $this->rol === "solicitante";
+        return $this->solicitante;
     }
 }

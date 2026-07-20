@@ -91,7 +91,7 @@ verificarAcceso($rolRequerido);
             <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaUsuario" type="button"
                 aria-label="Cerrar"></button>
 
-            <form action="Admin.php" method="post" id="formularioAltaUsuario" class="p-4">
+            <form action="admin.php" method="post" id="formularioAltaUsuario" class="p-4">
                 <fieldset>
                     <legend class="h4 mb-4">Gestión de usuarios</legend>
 

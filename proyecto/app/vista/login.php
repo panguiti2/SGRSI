@@ -23,8 +23,8 @@ $error = $mensajesError[$codigoError] ?? "";
     <title>Inicio de sesión</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../../app/assets/css/global.css">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/login.css">
 
     
 </head>
@@ -95,7 +95,6 @@ $error = $mensajesError[$codigoError] ?? "";
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/login.js"></script>
 </body>
 
 </html>

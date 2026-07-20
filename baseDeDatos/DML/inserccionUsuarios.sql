@@ -1,10 +1,10 @@
--- Contraseña de todos los usuarios de prueba: password
+
 INSERT INTO USUARIO (cedula, claveHash, activo) VALUES
-    ('11111111', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', TRUE),
-    ('22222222', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', TRUE),
-    ('33333333', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', TRUE),
-    ('44444444', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', TRUE),
-    ('55555555', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', FALSE);
+    ('11111111', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', TRUE),
+    ('22222222', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', TRUE),
+    ('33333333', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', TRUE),
+    ('44444444', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', TRUE),
+    ('55555555', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', FALSE);
 
 INSERT INTO ADMINISTRADOR (cedula) VALUES
     ('11111111'),

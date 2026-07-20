@@ -1,4 +1,4 @@
--- Consulta probada en phpMyAdmin para recuperar un usuario por cédula.
+
 SELECT
     u.cedula,
     u.claveHash,

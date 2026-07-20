@@ -1,4 +1,4 @@
--- Consulta preparada utilizada desde PHP por AccesoDatosUsuario.
+
 SELECT
     u.cedula,
     u.claveHash,

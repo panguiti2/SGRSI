@@ -8,6 +8,7 @@ class ConectorPDO
     private string $baseDatos;
 
     private ?PDO $conexion;
+    
 
 
     /**

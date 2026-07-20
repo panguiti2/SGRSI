@@ -8,7 +8,7 @@ class ConectorPDO
     private string $baseDatos;
 
     private ?PDO $conexion;
-    
+
 
 
     /**
@@ -20,10 +20,10 @@ class ConectorPDO
      * @param PDO $baseDatos Nombre de la base de datos a la que se desea conectar. PRECONDICION: No debe ser una cadena vacía.
      */
     public function __construct( string $servidor, string $usuario, string $clave, string $baseDatos) {
-        $this->servidor = $servidor;
-        $this->usuario = $usuario;
-        $this->clave = $clave;
-        $this->baseDatos = $baseDatos;
+        $this->servidor =$servidor;
+        $this->usuario =$usuario;
+        $this->clave =$clave;
+        $this->baseDatos =$baseDatos;
 
         $this->conexion = null;
     }

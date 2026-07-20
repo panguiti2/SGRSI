@@ -26,3 +26,5 @@ session_destroy();
 // Redirige al login.
 header("Location: login.php");
 exit;
+
+?>

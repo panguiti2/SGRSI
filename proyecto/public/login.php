@@ -3,11 +3,6 @@
 session_start();
 
 if (isset($_SESSION["cedula"])) {
-    if (!empty($_SESSION["administrador"]) && !empty($_SESSION["tecnico"])) {
-        header("Location: panelRoles.php");
-        exit;
-    }
-
     if (!empty($_SESSION["administrador"])) {
         header("Location: administrador.php");
         exit;

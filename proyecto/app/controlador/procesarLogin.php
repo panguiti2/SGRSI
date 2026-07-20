@@ -43,9 +43,7 @@ $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["tecnico"] = $usuario->esTecnico();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
 
-if ($_SESSION["administrador"] && $_SESSION["tecnico"]) {
-    header("Location: panelRoles.php");
-} elseif ($_SESSION["administrador"]) {
+if ($_SESSION["administrador"]) {
     header("Location: administrador.php");
 } elseif ($_SESSION["tecnico"]) {
     header("Location: tecnico.php");

@@ -8,12 +8,10 @@ INSERT INTO USUARIO (cedula, claveHash, activo) VALUES
 
 INSERT INTO ADMINISTRADOR (cedula) VALUES
     ('11111111'),
-    ('33333333'),
     ('55555555');
 
 INSERT INTO TECNICO (cedula) VALUES
-    ('22222222'),
-    ('33333333');
+    ('22222222');
 
 INSERT INTO SOLICITANTE (cedula) VALUES
     ('33333333');

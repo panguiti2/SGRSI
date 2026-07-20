@@ -5,15 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/global.css">
+    
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="Admin.html"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="user.html"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -23,18 +25,16 @@
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="Admin.html">Inicio</a>
+                        <a class="nav-link active" href="user.html">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="gestionUsuario.html">Usuarios</a>
-                    </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="incidencias.html">Incidencias</a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="metricas.html">Métricas</a>
+                        <a class="nav-link" href="solicitudes.html">Solicitudes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="inventario.html">Inventario</a>
+                        <a class="nav-link" href="incidencias.html">Incidencias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="registroUso.html">Registro de Uso</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../../index.html">Cerrar Sesión</a>
@@ -58,9 +58,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/administrador.js"></script>
 </body>
 
 </html>
-
-

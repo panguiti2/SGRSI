@@ -18,83 +18,31 @@ $error = $mensajesError[$codigoError] ?? "";
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de sesión</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../app/assets/css/global.css">
+    <link rel="stylesheet" href="">
 
-    <title>Inicio de sesión | SGRSI</title>
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="assets/css/global.css">
-    <link rel="stylesheet" href="assets/css/login.css">
-
+    
 </head>
 
-<body id="inicio">
+<body class="d-flex flex-column min-vh-100 sgrsi-app">
 
-<header class="barraNavegacion">
+    <header class="sgrsi-login-header">
+        <h1 class="siglas">SGRSI</h1>
+        <h1 class="nombre">Sistema de Gestión de Recursos Informáticos</h1>
+    </header>
 
-    <img src="assets/img/imagen_generica.png"
-         alt="Logo del SGRSI"
-         class="logo">
+    <main class="flex-grow-1 sgrsi-login-main p-2 p-md-3">
+        <section class="seccionLogin container">
 
-    <h1>SGRSI</h1>
+            <section class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-5">
 
-    <nav>
-
-        <button class="btnMenu" id="btnMenu" type="button">
-            <img src="assets/img/list.svg"
-                 alt="Abrir menú"
-                 class="iconoMenu">
-        </button>
-
-        <button class="btnCerrarMenu" id="btnCerrarMenu" type="button">
-            <img src="assets/img/x.svg"
-                 alt="Cerrar menú"
-                 class="iconoMenu">
-        </button>
-
-        <ul class="listaNavegacion">
-
-            <li>
-                <a href="index.php" class="btnNavegacion">
-                    Inicio
-                </a>
-            </li>
-
-            <li>
-                <a href="sobreNosotros.php" class="btnNavegacion">
-                    Sobre nosotros
-                </a>
-            </li>
-
-            <li>
-                <a href="contacto.php" class="btnNavegacion">
-                    Contacto
-                </a>
-            </li>
-
-            <li>
-                <a href="login.php" class="btnNavegacion">
-                    Ingresar
-                </a>
-            </li>
-
-        </ul>
-
-    </nav>
-
-</header>
-
-<main>
-
-    <section class="seccionLogin">
-
-        <h2>Ingreso al sistema</h2>
+                    <h2 class="text-center mb-4">Ingreso al sistema</h2>
 
         <?php if ($error !== ""): ?>
 
@@ -104,84 +52,50 @@ $error = $mensajesError[$codigoError] ?? "";
 
         <?php endif; ?>
 
-        <form action="procesarLogin.php" method="post">
+        <form id="formLogin" action="procesarLogin.php" method="post" class="card p-3 p-md-4 shadow-sm" >
+                    
 
-            <fieldset>
+                        <fieldset>
+                            <legend class="text-center">Inicio de sesión</legend>
 
-                <legend>Inicio de sesión</legend>
+                            <div class="mb-3 cajaEntradaDeDatos">
+                                <label for="cedula" class="form-label">Cédula</label>
+                                <input type="text" id="cedula" name="cedula" class="form-control"
+                                    autocomplete="username" pattern="[1-9][0-9]{7}"
+                                    title="Ingrese exactamente 8 dígitos sin puntos ni guiones" inputmode="numeric"
+                                    maxlength="8" required>
+                            </div>
 
-                <div class="cajaEntradaDeDatos">
+                            <div class="mb-3 cajaEntradaDeDatos">
+                                <label for="clave" class="form-label">Contraseña</label>
+                                <input type="password" id="clave" name="clave" class="form-control" autocomplete="current-password" required >
+                            </div>
 
-                    <label for="cedula">Cédula</label>
+                        </fieldset>
 
-                    <input
-                        type="text"
-                        id="cedula"
-                        name="cedula"
-                        pattern="[1-9][0-9]{7}"
-                        maxlength="8"
-                        autocomplete="username"
-                        required>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">
+                            Iniciar Sesión
+                        </button>
 
-                </div>
-
-                <div class="cajaEntradaDeDatos">
-
-                    <label for="clave">
-                        Contraseña
-                    </label>
-
-                    <input
-                        type="password"
-                        id="clave"
-                        name="clave"
-                        autocomplete="current-password"
-                        required>
+                    </form>
 
                 </div>
+            </section>
 
-            </fieldset>
+        </section>
+    </main>
 
-            <button type="submit">
-                Iniciar sesión
-            </button>
+    <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">
+        <address class="d-flex flex-column flex-md-row justify-content-center gap-2 gap-md-3 text-center mb-2">
+            <a href="http://instagram.com" class="text-light text-decoration-none">@SGRSI</a>
+            <a href="tel:+29043586" class="text-light text-decoration-none">+29043586</a>
+            <a href="mailto:asistentesiti@gmail.com" class="text-light text-decoration-none">asistentesiti@gmail.com</a>
+        </address>
+        <p class="text-center mb-0">© 2026 SGRSI</p>
+    </footer>
 
-        </form>
-
-    </section>
-
-</main>
-
-<a href="#inicio" class="btnSubir">
-
-    <i class="bi bi-caret-up-fill"></i>
-
-</a>
-
-<footer>
-
-    <address>
-
-        <a href="http://instagram.com">
-            @SGRSSI
-        </a>
-
-        <a href="tel:+59829043586">
-            2904 3586
-        </a>
-
-        <a href="mailto:asistentesiti@gmail.com">
-            asistentesiti@gmail.com
-        </a>
-
-    </address>
-
-    <p>© 2026 SGRSI</p>
-
-</footer>
-
-<script src="assets/js/barraNavegacion.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/login.js"></script>
 </body>
 
 </html>

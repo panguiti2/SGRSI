@@ -11,7 +11,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-
 $cedula = trim($_POST["cedula"] ?? "");
 $clave = $_POST["clave"] ?? "";
 
@@ -20,12 +19,16 @@ if ($cedula === "" || $clave === "") {
     exit;
 }
 
+
+/** @var ConectorPDO $conectorPDO */
 $conectorPDO = new ConectorPDO("localhost", "root", "", "test");
 $conexion = $conectorPDO->establecerConexion();
 
+/** @var AccesoDatosUsuario $accesoDatosUsuario */
 $accesoDatosUsuario = new AccesoDatosUsuario($conexion);
 $login = new Login($accesoDatosUsuario);
 
+/** @var Usuario|null $usuario */
 $usuario = $login->autenticar($cedula, $clave);
 $conectorPDO->desconectar();
 
@@ -36,7 +39,6 @@ if ($usuario === null) {
 
 session_start();
 session_regenerate_id(true);
-
 
 $_SESSION["cedula"] = $usuario->getCedula();
 $_SESSION["administrador"] = $usuario->esAdministrador();

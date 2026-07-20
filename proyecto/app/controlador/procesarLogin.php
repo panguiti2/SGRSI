@@ -7,8 +7,7 @@ require_once __DIR__ . "/../modelo/Login.php";
 
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    $mensaje = "Acceso Denegado: Petición incorrecta";
-    header("Location: login.php?" . "error=" . $mensaje);
+    header("Location: login.php?error=peticion");
     exit;
 }
 
@@ -16,20 +15,22 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 $cedula = trim($_POST["cedula"] ?? "");
 $clave = $_POST["clave"] ?? "";
 
+if ($cedula === "" || $clave === "") {
+    header("Location: login.php?error=credenciales");
+    exit;
+}
 
 $conectorPDO = new ConectorPDO ("localhost", "leandro", "123", "test");
 $conexion = $conectorPDO->establecerConexion();
 
-    $accesoDatosUsuario = new AccesoDatosUsuario($conexion);
-    $login = new Login($accesoDatosUsuario);
-
-$conectorPDO->desconectar();
+$accesoDatosUsuario = new AccesoDatosUsuario($conexion);
+$login = new Login($accesoDatosUsuario);
 
 $usuario = $login->autenticar($cedula, $clave);
+$conectorPDO->desconectar();
 
 if ($usuario === null) {
-  $mensaje = "Acceso Denegado: La cédula o la contraseña son incorrectas.";
-    header("Location: login.php?" . "error=" . $mensaje);
+    header("Location: login.php?error=" . $login->getCodigoError());
     exit;
 }
 
@@ -38,27 +39,22 @@ session_regenerate_id(true);
 
 
 $_SESSION["cedula"] = $usuario->getCedula();
-$_SESSION["nombre"] = $usuario->getNombre();
-$_SESSION["rol"] = $usuario->getRol();
+$_SESSION["administrador"] = $usuario->esAdministrador();
+$_SESSION["tecnico"] = $usuario->esTecnico();
+$_SESSION["solicitante"] = $usuario->esSolicitante();
 
-
-switch ($usuario->getRol()) {
-    case "administrador":
-        header("Location: ../../public/admin.php");
-        exit;
-
-    case "tecnico":
-        header("Location: ../../public/tecnico.php");
-        exit;
-
-    case "solicitante":
-        header("Location: ../../public/solicitante.php");
-        exit;
-
-    default:
-        session_destroy();
-
-        $mensaje = "Acceso Denegado: El usuario no tiene un rol válido.";
-        header("Location: login.php?" . "error=" . $mensaje);
-        exit;
+if ($_SESSION["administrador"] && $_SESSION["tecnico"]) {
+    header("Location: panelRoles.php");
+} elseif ($_SESSION["administrador"]) {
+    header("Location: administrador.php");
+} elseif ($_SESSION["tecnico"]) {
+    header("Location: tecnico.php");
+} elseif ($_SESSION["solicitante"]) {
+    header("Location: solicitante.php");
+} else {
+    $_SESSION = [];
+    session_destroy();
+    header("Location: login.php?error=sin_roles");
 }
+
+exit;

@@ -1,3 +1,8 @@
+<?php
+$rolRequerido = "solicitante";
+require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
+verificarAcceso($rolRequerido);
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -16,7 +21,7 @@
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="user.html"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="user.php"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -26,19 +31,19 @@
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="user.html">Inicio</a>
+                        <a class="nav-link" href="user.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="solicitudes.html">Solicitudes</a>
+                        <a class="nav-link active" href="solicitudes.php">Solicitudes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="incidencias.html">Incidencias</a>
+                        <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registroUso.html">Registro de Uso</a>
+                        <a class="nav-link" href="registroUso.php">Registro de Uso</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../index.html">Cerrar Sesión</a>
+                        <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>

@@ -1,21 +1,26 @@
+<?php
+$rolRequerido = "tecnico";
+require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
+verificarAcceso($rolRequerido);
+?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Metricas y Reportes</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/global.css">
-    
+   
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="user.html"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="tecnico.php"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -25,19 +30,28 @@
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="user.html">Inicio</a>
+                        <a class="nav-link" href="tecnico.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="solicitudes.html">Solicitudes</a>
+                        <a class="nav-link" href="solicitudes.php">Solicitudes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="incidencias.html">Incidencias</a>
+                        <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registroUso.html">Registro de Uso</a>
+                        <a class="nav-link active" href="metricas.php">Métricas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../index.html">Cerrar Sesión</a>
+                        <a class="nav-link" href="inventario.php">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="prestamos.php">Préstamos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="registrosUso.php">Registros de uso</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -45,7 +59,7 @@
     </header>
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
-        <h1 class="h3 text-center text-md-start">BIENVENIDO A SGRSI</h1>
+        <h1 class="h3 text-center text-md-start">Métricas y reportes</h1>
     </main>
 
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">
@@ -58,7 +72,9 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/tecnico.js"></script>
 </body>
 
 </html>
+
 

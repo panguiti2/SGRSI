@@ -1,5 +1,7 @@
 CREATE TABLE USUARIO (
     cedula CHAR(8) NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
     claveHash VARCHAR(255) NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
 

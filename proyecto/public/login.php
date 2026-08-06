@@ -1,14 +1,13 @@
 <?php
 
 session_start();
-
-if (isset($_SESSION["cedula"])) {
+/*if (isset($_SESSION["cedula"])) {
     if (!empty($_SESSION["administrador"])) {
         header("Location: administrador.php");
         exit;
     }
 
-    if (!empty($_SESSION["tecnico"])) {
+ /+   if (!empty($_SESSION["tecnico"])) {
         header("Location: tecnico.php");
         exit;
     }
@@ -17,6 +16,6 @@ if (isset($_SESSION["cedula"])) {
         header("Location: solicitante.php");
         exit;
     }
-}
+}*/
 
 require_once __DIR__ . "/../app/vista/login.php";

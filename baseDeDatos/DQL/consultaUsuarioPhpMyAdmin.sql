@@ -45,3 +45,35 @@ LEFT JOIN SOLICITANTE AS s ON s.cedula = u.cedula
 WHERE a.cedula IS NULL
   AND t.cedula IS NULL
   AND s.cedula IS NULL;
+
+
+SELECT
+    u.cedula,
+    u.nombre,
+    u.apellido,
+
+    CASE
+        WHEN a.cedula IS NOT NULL THEN 1
+        ELSE 0
+    END AS administrador,
+
+    CASE
+        WHEN t.cedula IS NOT NULL THEN 1
+        ELSE 0
+    END AS tecnico,
+
+    CASE
+        WHEN s.cedula IS NOT NULL THEN 1
+        ELSE 0
+    END AS solicitante
+
+FROM USUARIO AS u
+
+LEFT JOIN ADMINISTRADOR AS a
+    ON a.cedula = u.cedula
+
+LEFT JOIN TECNICO AS t
+    ON t.cedula = u.cedula
+
+LEFT JOIN SOLICITANTE AS s
+    ON s.cedula = u.cedula

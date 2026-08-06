@@ -20,15 +20,12 @@ if ($cedula === "" || $clave === "") {
 }
 
 
-/** @var ConectorPDO $conectorPDO */
 $conectorPDO = new ConectorPDO("localhost", "root", "", "test");
 $conexion = $conectorPDO->establecerConexion();
 
-/** @var AccesoDatosUsuario $accesoDatosUsuario */
 $accesoDatosUsuario = new AccesoDatosUsuario($conexion);
 $login = new Login($accesoDatosUsuario);
 
-/** @var Usuario|null $usuario */
 $usuario = $login->autenticar($cedula, $clave);
 $conectorPDO->desconectar();
 

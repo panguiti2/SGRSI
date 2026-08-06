@@ -12,7 +12,5 @@ if (!isset($_SESSION["administrador"]) || $_SESSION["administrador"] !== true) {
     exit;
 }
 
-header("Location: pages/admin/admin.php");
-exit;
 
-?>
+require_once __DIR__ . "/../app/vista/admin/admin.php";

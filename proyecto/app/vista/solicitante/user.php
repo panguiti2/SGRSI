@@ -1,3 +1,8 @@
+<?php
+$rolRequerido = "solicitante";
+require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
+verificarAcceso($rolRequerido);
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -7,7 +12,7 @@
     <title>Inicio</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/global.css">
     
 </head>
 
@@ -15,7 +20,7 @@
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="user.html"><img src="assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="user.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -25,19 +30,19 @@
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="user.html">Inicio</a>
+                        <a class="nav-link active" href="user.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="solicitudes.html">Solicitudes</a>
+                        <a class="nav-link" href="solicitudes.php">Solicitudes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="incidencias.html">Incidencias</a>
+                        <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registroUso.html">Registro de Uso</a>
+                        <a class="nav-link" href="registroUso.php">Registro de Uso</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../index.html">Cerrar Sesión</a>
+                        <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -61,3 +66,4 @@
 </body>
 
 </html>
+

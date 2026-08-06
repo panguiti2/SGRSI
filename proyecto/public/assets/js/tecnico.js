@@ -361,9 +361,9 @@ if (dialogPrestamos) {
     dialogPrestamos.addEventListener("cancel", limpiarFormularioPrestamo);
 }
 
-if (cuerpoTablaPrestamos) {
-    actualizarTablaPrestamos();
-}
+//if (cuerpoTablaPrestamos) {
+ //   actualizarTablaPrestamos();
+//}
 
 /**
  * Cuerpo de la tabla técnica de incidencias.
@@ -656,9 +656,9 @@ function actualizarTablaIncidenciasTecnico() {
     }
 }
 
-if (cuerpoTablaIncidenciasTecnico) {
-    actualizarTablaIncidenciasTecnico();
-}
+//if (cuerpoTablaIncidenciasTecnico) {
+ //   actualizarTablaIncidenciasTecnico();
+//}
 
 if (formularioAsignarIncidencia) {
     formularioAsignarIncidencia.addEventListener("submit", modificarIncidenciaTecnicoLocal);
@@ -907,9 +907,9 @@ function actualizarTablaSolicitudesTecnico() {
     }
 }
 
-if (cuerpoTablaSolicitudesTecnico) {
-    actualizarTablaSolicitudesTecnico();
-}
+//if (cuerpoTablaSolicitudesTecnico) {
+  //  actualizarTablaSolicitudesTecnico();
+//}
 
 if (formularioAsignarSolicitud) {
     formularioAsignarSolicitud.addEventListener("submit", modificarSolicitudTecnicoLocal);
@@ -1008,9 +1008,9 @@ function actualizarTablaRegistrosUsoTecnico() {
     }
 }
 
-if (cuerpoTablaRegistrosUso) {
-    actualizarTablaRegistrosUsoTecnico();
-}
+//if (cuerpoTablaRegistrosUso) {
+ //   actualizarTablaRegistrosUsoTecnico();
+//}
 
 /**
  * Cuerpo de la tabla técnica de inventario.
@@ -1093,6 +1093,6 @@ function actualizarTablaInventarioTecnico() {
     }
 }
 
-if (cuerpoTablaInventarioTecnico) {
-    actualizarTablaInventarioTecnico();
-}
+//if (cuerpoTablaInventarioTecnico) {
+//  actualizarTablaInventarioTecnico();
+//}

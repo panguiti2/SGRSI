@@ -9,19 +9,18 @@ verificarAcceso($rolRequerido);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario</title>
+    <title>Inicio</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/global.css">
-
+    <link rel="stylesheet" href="./assets/css/global.css">
+   
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="tecnico.php"><img src="../../assets/img/logoITI.png" alt="Logo ITI"
-                    class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="tecnico.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -31,7 +30,7 @@ verificarAcceso($rolRequerido);
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="tecnico.php">Inicio</a>
+                        <a class="nav-link active" href="tecnico.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="solicitudes.php">Solicitudes</a>
@@ -43,7 +42,7 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="metricas.php">Métricas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="inventario.php">Inventario</a>
+                        <a class="nav-link" href="inventario.php">Inventario</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="prestamos.php">Préstamos</a>
@@ -60,44 +59,7 @@ verificarAcceso($rolRequerido);
     </header>
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
-
-        <section class="bg-white rounded mb-4 p-3 p-md-4">
-            <section class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                <h2 class="h4 m-0">Datos de dispositivo</h2>
-                <form class="d-flex flex-column flex-sm-row gap-2">
-                    <label class="visually-hidden" for="ordenInventarioTecnico">Ordenar por</label>
-                    <select class="form-select form-select-sm" id="ordenInventarioTecnico">
-                        <option value="" disabled selected>Seleccione</option>
-                        <option>Id</option>
-                        <option>Recurso</option>
-                        <option>Laboratorio</option>
-                    </select>
-                    <button class="btn btn-primary btn-sm" type="button">Ordenar</button>
-                    <button class="btn btn-secondary btn-sm" type="button">Historial modificaciones</button>
-                </form>
-            </section>
-            
-            <section class="table-responsive panelTabla">
-                <table class="table table-bordered table-hover table-sm mb-0 small">
-                    <caption class="d-none d-md-table-caption">Listado de dispositivos registrados</caption>
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Marca</th>
-                            <th>N° Dispositivo</th>
-                            <th>Laboratorio</th>
-                            <th>Taller</th>
-                            <th>Recurso</th>
-                            <th>Modificaciones</th>
-                            <th>Estado</th>
-                            <th>Ultimo cambio</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cuerpoTablaInventarioTecnico"></tbody>
-                </table>
-            </section>
-        </section>
-
+        <h1 class="h3 text-center text-md-start">BIENVENIDO A SGRSI</h1>
     </main>
 
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">
@@ -110,7 +72,7 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/tecnico.js"></script>
+    <script src="../../../public/assets/js/tecnico.js"></script>
 </body>
 
 </html>

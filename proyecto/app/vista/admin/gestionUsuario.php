@@ -13,15 +13,15 @@ verificarAcceso($rolRequerido);
 
   
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/global.css">
-    <link rel="stylesheet" href="../../assets/css/formularios.css">
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/formularios.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="Admin.php"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="administrador.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -31,10 +31,11 @@ verificarAcceso($rolRequerido);
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="Admin.php">Inicio</a>
+                        <a class="nav-link" href="administrador.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="gestionUsuario.php">Usuarios</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
@@ -45,7 +46,7 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="inventario.php">Inventario</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -70,6 +71,31 @@ verificarAcceso($rolRequerido);
                         </tr>
                     </thead>
                     <tbody id="cuerpoTablaUsuarios">
+                        <?php foreach ($usuarios as $usuario): ?>
+                            <?php
+                                if ($usuario["administrador"] == 1) {
+                                    $rol = "Administrador";
+                                } elseif ($usuario["tecnico"] == 1) {
+                                    $rol = "Técnico";
+                                } elseif ($usuario["solicitante"] == 1) {
+                                    $rol = "Solicitante";
+                                } else {
+                                    $rol = "Sin rol";
+                                }
+                            ?>
+                            <tr>
+                                <td><?= htmlspecialchars($usuario["cedula"]) ?></td>
+                                <td><?= htmlspecialchars($usuario["nombre"]) ?></td>
+                                <td><?= htmlspecialchars($usuario["apellido"]) ?></td>
+                                <td><?= htmlspecialchars($rol) ?></td>
+                                <td>
+                                    <div class="cajaOperaciones">
+                                        <button type="button" class="btnOperacion btnModificar">Modificar</button>
+                                        <button type="button" class="btnOperacion btnEliminar">Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </section>
@@ -91,7 +117,7 @@ verificarAcceso($rolRequerido);
             <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaUsuario" type="button"
                 aria-label="Cerrar"></button>
 
-            <form action="admin.php" method="post" id="formularioAltaUsuario" class="p-4">
+            <form action="gestionUsuario.php" method="post" id="formularioAltaUsuario" class="p-4">
                 <fieldset>
                     <legend class="h4 mb-4">Gestión de usuarios</legend>
 
@@ -147,7 +173,7 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/administrador.js"></script>
+    <script src="./assets/js/administrador.js"></script>
 </body>
 
 </html>

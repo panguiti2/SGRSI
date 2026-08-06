@@ -123,6 +123,8 @@ function cerrarAltaUsuario() {
  * @returns {void}
  */
 
+// La tabla de usuarios se carga desde PHP y MySQL, no desde localStorage.
+if (false) {
 function abrirModificarUsuario(cedula) {
     usuarioEnEdicion = true;
     const usuarios = cargarUsuariosGuardadosLocal();
@@ -350,6 +352,7 @@ function gestionarUsuario(eventoFormulario) {
 if (formularioAltaUsuario) {
     formularioAltaUsuario.addEventListener("submit", gestionarUsuario);
 }
+}
 
 if (btnAltaUsuario) {
     btnAltaUsuario.addEventListener("click", abrirAltaUsuario);
@@ -363,9 +366,9 @@ if (dialogAltaUsuario) {
     dialogAltaUsuario.addEventListener("cancel", limpiarFormularioAltaUsuario);
 }
 
-if (cuerpoTablaUsuarios) {
-    actualizarTablaUsuarios();
-}
+//if (cuerpoTablaUsuarios) {
+ //   actualizarTablaUsuarios();
+//}
 
 /**
  * Botón para abrir el alta de dispositivos.
@@ -773,9 +776,9 @@ if (dialogAltaDispositivo) {
     dialogAltaDispositivo.addEventListener("cancel", limpiarFormularioAltaDispositivo);
 }
 
-if (cuerpoTablaDispositivos) {
-    actualizarTablaDispositivos();
-}
+//if (cuerpoTablaDispositivos) {
+//    actualizarTablaDispositivos();
+//}
 
 /**
  * Cuerpo de la tabla de incidencias del administrador.
@@ -895,6 +898,6 @@ function actualizarTablaIncidenciasAdmin() {
     }
 }
 
-if (cuerpoTablaIncidenciasAdmin) {
-    actualizarTablaIncidenciasAdmin();
-}
+//if (cuerpoTablaIncidenciasAdmin) {
+ //   actualizarTablaIncidenciasAdmin();
+// }

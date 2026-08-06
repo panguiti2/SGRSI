@@ -12,5 +12,4 @@ if (!isset($_SESSION["tecnico"]) || $_SESSION["tecnico"] !== true) {
     exit;
 }
 
-header("Location: pages/tecnico/tecnico.php");
-exit;
+require_once __DIR__ . "/../app/vista/tecnico/tecnico.php";

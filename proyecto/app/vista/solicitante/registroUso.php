@@ -9,19 +9,17 @@ verificarAcceso($rolRequerido);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitudes</title>
-
+    <title>Registro de Uso</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/global.css">
-    <link rel="stylesheet" href="../../assets/css/formularios.css">
-
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/formularios.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="user.php"><img src="../../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="user.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -34,13 +32,13 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="user.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="solicitudes.php">Solicitudes</a>
+                        <a class="nav-link" href="solicitudes.php">Solicitudes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registroUso.php">Registro de Uso</a>
+                        <a class="nav-link active" href="registroUso.php">Registro de Uso</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
@@ -51,16 +49,13 @@ verificarAcceso($rolRequerido);
     </header>
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
-
-        <section class="seccionFormulario bg-white rounded p-3 p-md-4 mb-4">
-            <button class="btn btn-outline-primary w-100 w-md-auto mb-3">Mis solicitudes</button>
-
-            <form id="formularioSolicitud">
+        <section class="seccionRegistroUso seccionFormulario bg-white rounded p-3 p-md-4">
+            <form id="formularioRegistroUso">
                 <fieldset>
-                    <legend class="h4 mb-4">Solicitar servicio</legend>
+                    <legend class="h4 mb-4">Registro de uso de laboratorio</legend>
 
-                    <section class="row g-3 mb-4 ">
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                    <section class="row g-3">
+                        <div class="col-12 col-md-6">
                             <label for="laboratorio" class="form-label">Laboratorio</label>
                             <select id="laboratorio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione laboratorio</option>
@@ -74,7 +69,7 @@ verificarAcceso($rolRequerido);
                             </select>
                         </div>
 
-                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                         <div class="col-12 col-md-6">
                             <label for="taller" class="form-label">Taller</label>
                             <select id="taller" class="form-select" required>
                                 <option value="" disabled selected>Seleccione taller</option>
@@ -84,6 +79,7 @@ verificarAcceso($rolRequerido);
                                 <option value="TALLER3">Taller 3</option>
                             </select>
                         </div>
+                               
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="turno" class="form-label">Turno</label>
@@ -96,9 +92,21 @@ verificarAcceso($rolRequerido);
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                            <label for="fechaHora" class="form-label">Fecha y hora</label>
+                            <input type="datetime-local" id="fechaHora" class="form-control" required>
+                        </div>
+
+                        
+                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="docente" class="form-label">Docente</label>
-                            <input type="text" id="docente" name="docente" class="form-control" required
-                                placeholder="Ingrese su nombre">
+                            <input type="text" id="docente" class="form-control"
+                                placeholder="Ingrese el nombre del docente" required>
+                        </div>
+
+                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                            <label for="grupo" class="form-label">Grupo</label>
+                            <input type="text" id="grupo" name="grupo" class="form-control"
+                                placeholder="Nombre del grupo" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -107,72 +115,46 @@ verificarAcceso($rolRequerido);
                                 placeholder="Nombre de la asignatura" required>
                         </div>
 
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="email" class="form-label">Correo electrónico</label>
-                            <input type="email" id="email" name="email" class="form-control"
-                                placeholder="ejemplo@correo.com" required>
-                        </div>
 
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="fechaHora" class="form-label">Fecha y hora solicitada</label>
-                            <input type="datetime-local" id="fechaHora" name="fechaHora" class="form-control" required>
-                        </div>
-
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="tipoServicio" class="form-label">Tipo de servicio</label>
-                            <select id="tipoServicio" name="tipoServicio" class="form-select" required>
-                                <option value="" disabled selected>Seleccione</option>
-                                <option value="INSTALACION">Instalación de software</option>
-                                <option value="ACTUALIZACION">Actualización</option>
-                                <option value="CONFIGURACION">Configuración</option>
-                                <option value="OTRO">Otro</option>
-                            </select>
-                        </div>
-
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="software" class="form-label">Programa/App</label>
-                            <input type="text" id="software" name="software" class="form-control"
-                                placeholder="Ej: Scratch, GeoGebra, VS Code">
-                        </div>
-
-                        <div class="col-12 cajaRadio">
-                            <label class="form-label d-block">¿En todas las máquinas?</label>
+                        <div class="col-12 col-md-6 cajaRadio">
+                            <label class="form-label d-block">¿Se usaron máquinas?</label>
                             <section class="d-flex gap-3">
-                                <div class="form-check">
-                                    <input type="radio" name="todasMaquinas" value="SI" class="form-check-input"
-                                        id="todasSi" required>
-                                    <label class="form-check-label" for="todasSi">Sí</label>
+                                <div class="form-check cajaRadio">
+                                    <input type="radio" name="usoMaquinas" value="SI" class="form-check-input"
+                                        id="usoSi" required>
+                                    <label class="form-check-label" for="usoSi">Sí</label>
                                 </div>
-                                <div class="form-check">
-                                    <input type="radio" name="todasMaquinas" value="NO" class="form-check-input"
-                                        id="todasNo">
-                                    <label class="form-check-label" for="todasNo">No</label>
+                                <div class="form-check cajaRadio">
+                                    <input type="radio" name="usoMaquinas" value="NO" class="form-check-input"
+                                        id="usoNo">
+                                    <label class="form-check-label" for="usoNo">No</label>
                                 </div>
                             </section>
                         </div>
 
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="prioridad" class="form-label">Prioridad</label>
-                            <select id="prioridad" name="prioridad" class="form-select">
-                                <option value="NORMAL">Normal</option>
-                                <option value="URGENTE">Urgente</option>
-                            </select>
-                        </div>
-
-                        <div class="col-12 cajaTextarea">
-                            <label for="descripcion" class="form-label">Descripción / uso en clase</label>
-                            <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
-                                placeholder="Describa su solicitud.."></textarea>
+                        <div class="col-12 col-md-6 cajaRadio">
+                            <label class="form-label d-block">¿Se registraron incidencias?</label>
+                            <section class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input type="radio" name="incidencias" value="SI" class="form-check-input"
+                                        id="incSi" required>
+                                    <label class="form-check-label" for="incSi">Sí</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" name="incidencias" value="NO" class="form-check-input"
+                                        id="incNo">
+                                    <label class="form-check-label" for="incNo">No</label>
+                                </div>
+                            </section>
                         </div>
 
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary w-100">Solicitar servicio</button>
+                            <button type="submit" class="btn btn-primary w-100">Guardar</button>
                         </div>
                     </section>
                 </fieldset>
             </form>
         </section>
-
     </main>
 
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">

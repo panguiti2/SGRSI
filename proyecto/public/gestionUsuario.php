@@ -7,10 +7,9 @@ if (!isset($_SESSION["cedula"])) {
     exit;
 }
 
-if (!isset($_SESSION["solicitante"]) || $_SESSION["solicitante"] !== true) {
+if (!isset($_SESSION["administrador"]) || $_SESSION["administrador"] !== true) {
     header("Location: login.php?error=no_autorizado");
     exit;
 }
 
-require_once __DIR__ . "/../app/vista/solicitante/user.php";
-exit;
+require_once __DIR__ . "/../app/controlador/cargarUsuario.php";

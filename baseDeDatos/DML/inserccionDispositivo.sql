@@ -9,39 +9,41 @@ INSERT INTO LABORATORIO (idLab, nombre) VALUES
 ('LAB05', 'Laboratorio 5'),
 ('LAB06', 'Laboratorio 6');
 
-INSERT INTO DISPOSITIVO (idLab, numeroDispositivo, Modificaciones, estado) VALUES
-('TALL01', 'PC001', 2, TRUE),
-('TALL01', 'PC002', 1, TRUE),
-('TALL01', 'PC003', 0, FALSE),
+INSERT INTO DISPOSITIVO
+(idLab, numeroDispositivo, Modificaciones, estado)
+VALUES
+('TALL01', 'PC001', 'Reparado', TRUE),
+('TALL01', 'PC002', 'Actualizado', TRUE),
+('TALL01', 'PC003', 'Reparado', FALSE),
 
-('TALL02', 'PC004', 3, TRUE),
-('TALL02', 'PC005', 1, TRUE),
-('TALL02', 'PC006', 2, FALSE),
+('TALL02', 'PC004', 'Actualizado', TRUE),
+('TALL02', 'PC005', 'Reparado', TRUE),
+('TALL02', 'PC006', 'Actualizado', FALSE),
 
-('TALL03', 'PC007', 0, TRUE),
-('TALL03', 'PC008', 4, TRUE),
-('TALL03', 'PC009', 1, TRUE),
+('TALL03', 'PC007', 'Reparado', TRUE),
+('TALL03', 'PC008', 'Actualizado', TRUE),
+('TALL03', 'PC009', 'Reparado', TRUE),
 
-('LAB01', 'PC010', 2, TRUE),
-('LAB01', 'PC011', 0, TRUE),
-('LAB01', 'PC012', 3, FALSE),
+('LAB01', 'PC010', 'Actualizado', TRUE),
+('LAB01', 'PC011', 'Reparado', TRUE),
+('LAB01', 'PC012', 'Actualizado', FALSE),
 
-('LAB02', 'PC013', 1, TRUE),
-('LAB02', 'PC014', 2, TRUE),
-('LAB02', 'PC015', 0, TRUE),
+('LAB02', 'PC013', 'Reparado', TRUE),
+('LAB02', 'PC014', 'Actualizado', TRUE),
+('LAB02', 'PC015', 'Reparado', TRUE),
 
-('LAB03', 'PC016', 3, TRUE),
-('LAB03', 'PC017', 1, FALSE),
-('LAB03', 'PC018', 2, TRUE),
+('LAB03', 'PC016', 'Actualizado', TRUE),
+('LAB03', 'PC017', 'Reparado', FALSE),
+('LAB03', 'PC018', 'Reparado', TRUE),
 
-('LAB04', 'PC019', 0, TRUE),
-('LAB04', 'PC020', 2, TRUE),
-('LAB04', 'PC021', 1, FALSE),
+('LAB04', 'PC019', 'Actualizado', TRUE),
+('LAB04', 'PC020', 'Reparado', TRUE),
+('LAB04', 'PC021', 'Actualizado', FALSE),
 
-('LAB05', 'PC022', 4, TRUE),
-('LAB05', 'PC023', 1, TRUE),
-('LAB05', 'PC024', 0, TRUE),
+('LAB05', 'PC022', 'Reparado', TRUE),
+('LAB05', 'PC023', 'Actualizado', TRUE),
+('LAB05', 'PC024', 'Reparado', TRUE),
 
-('LAB06', 'PC025', 2, TRUE),
-('LAB06', 'PC026', 3, TRUE),
-('LAB06', 'PC027', 0, FALSE);
+('LAB06', 'PC025', 'Actualizado', TRUE),
+('LAB06', 'PC026', 'Reparado', TRUE),
+('LAB06', 'PC027', 'Actualizado', FALSE);

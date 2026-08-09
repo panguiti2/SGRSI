@@ -1,36 +1,24 @@
-CREATE TABLE DISPOSITIVO (
-    id CHAR(8) NOT NULL,
+CREATE TABLE LABORATORIO (
+    idLab CHAR(8) NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
 
-    CONSTRAINT pk_dispositivo
-        PRIMARY KEY (id)
+    CONSTRAINT pk_laboratorio
+        PRIMARY KEY (idLab)
 );
 
-CREATE TABLE COMPONENTE (
-    id CHAR(8) NOT NULL,
-    idDispositivo CHAR(8) NOT NULL,
-    marca VARCHAR(255) NOT NULL,
-    modelo VARCHAR(255) NOT NULL,
+CREATE TABLE DISPOSITIVO (
+    idLab CHAR(8) NOT NULL,
+    numeroDispositivo CHAR(8) NOT NULL,
+    Modificaciones VARCHAR(255) NOT NULL,
+    ultimoCambio TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     estado BOOLEAN NOT NULL DEFAULT TRUE,
 
-    CONSTRAINT pk_componente
-        PRIMARY KEY (id, idDispositivo)
+    CONSTRAINT pk_dispositivo
+        PRIMARY KEY (idLab, numeroDispositivo)
 );
 
 
-CREATE TABLE TIPOCOMPONENTE (
-    nombre VARCHAR(255) NOT NULL,
-    idComponente CHAR(8) NOT NULL,
-
-    CONSTRAINT pk_tipocomponente
-        PRIMARY KEY (idComponente, nombre)
-);
-
-ALTER TABLE TIPOCOMPONENTE
-    ADD CONSTRAINT fk_tipocomponente_componente
-    FOREIGN KEY (idComponente)
-    REFERENCES COMPONENTE (id, idDispositivo);
-
-ALTER TABLE COMPONENTE
-    ADD CONSTRAINT fk_componente_dispositivo
-    FOREIGN KEY (idDispositivo)
-    REFERENCES DISPOSITIVO (id);
+ALTER TABLE DISPOSITIVO
+    ADD CONSTRAINT fk_dispositivo_laboratorio
+    FOREIGN KEY (idLab)
+    REFERENCES LABORATORIO (idLab);

@@ -1,13 +1,14 @@
 SELECT
-    d.id AS idDispositivo,
-    c.id AS idComponente,
-    tc.nombre AS tipoComponente,
-    c.marca,
-    c.modelo,
-    c.estado
+    d.idLab,
+    l.nombre AS laboratorio,
+    d.numeroDispositivo,
+    d.Modificaciones AS modificaciones,
+    CASE
+        WHEN d.estado = TRUE THEN 'Activo'
+        ELSE 'Inactivo'
+    END AS estado,
+    d.ultimoCambio
 FROM DISPOSITIVO AS d
-LEFT JOIN COMPONENTE AS c
-    ON c.idDispositivo = d.id
-LEFT JOIN TIPOCOMPONENTE AS tc
-    ON tc.idComponente = c.id
-WHERE d.id = :id;
+INNER JOIN LABORATORIO AS l
+    ON l.idLab = d.idLab
+ORDER BY d.idLab, d.numeroDispositivo;

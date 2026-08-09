@@ -20,7 +20,7 @@ verificarAcceso($rolRequerido);
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="Admin.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="administrador.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -30,7 +30,7 @@ verificarAcceso($rolRequerido);
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="Admin.php">Inicio</a>
+                        <a class="nav-link" href="administrador.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="gestionUsuario.php">Usuarios</a>
@@ -65,7 +65,6 @@ verificarAcceso($rolRequerido);
                     <select class="form-select form-select-sm" id="ordenInventarioAdmin">
                         <option value="" disabled selected>Seleccione</option>
                         <option>Id</option>
-                        <option>Recurso</option>
                         <option>Laboratorio</option>
                     </select>
                     <button class="btn btn-primary btn-sm" type="submit">Ordenar</button>
@@ -79,19 +78,33 @@ verificarAcceso($rolRequerido);
                     <caption class="d-none d-md-table-caption">Listado de dispositivos registrados</caption>
                     <thead class="table-light">
                         <tr>
-                            <th >ID</th>
-                            <th >Marca</th>
-                            <th >N° Dispositivo</th>
                             <th >Laboratorio</th>
-                            <th >Taller</th>
-                            <th >Recurso</th>
+                            <th >N° Dispositivo</th>
                             <th >Modificaciones</th>
                             <th >Estado</th>
                             <th >Ultimo cambio</th>
                             <th >Operaciones</th>
                         </tr>
                     </thead>
-                    <tbody id="cuerpoTablaDispositivos"></tbody>
+                    <tbody id="cuerpoTablaDispositivos">
+                     <?php foreach ($dispositivos as $dispositivo): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($dispositivo["idLab"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["numeroDispositivo"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["modificaciones"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["estado"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["ultimoCambio"]) ?></td>
+                                <td>
+                                    <div class="cajaOperaciones">
+                                        <button type="button" class="btnOperacion btnModificar">Modificar</button>
+                                        <button type="button" class="btnOperacion btnEliminar">Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+
+
+                    </tbody>
                 </table>
             </section>
         </section>
@@ -119,12 +132,6 @@ verificarAcceso($rolRequerido);
                         <input type="text" id="id" name="id" class="form-control" placeholder="Ej: LAB01-01-S" required>
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <label for="marca" class="form-label">Marca</label>
-                        <input type="text" id="marca" name="marca" class="form-control"
-                            placeholder="Ej: Dell, HP, Lenovo" required>
-                    </div>
-
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="numeroDispositivo" class="form-label">N° Dispositivo</label>
                         <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
@@ -132,38 +139,19 @@ verificarAcceso($rolRequerido);
                     </div>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                        <label for="recurso" class="form-label">Recurso</label>
-                        <select id="recurso" name="recurso" class="form-select" required>
-                            <option disabled selected>Seleccione un recurso</option>
-                            <option value="Mouse">Mouse</option>
-                            <option value="Teclado">Teclado</option>
-                            <option value="Monitor">Monitor</option>
-                            <option value="Torre">Torre</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="laboratorio" class="form-label">Laboratorio</label>
                         <select id="laboratorio" class="form-select" required>
                             <option value="" disabled selected>Seleccione laboratorio</option>
                             <option value="N/a">N/A</option>
+                            <option value="Taller1">Taller 1</option>
+                            <option value="Taller2">Taller 2</option>
+                            <option value="Taller3">Taller 3</option>
                             <option value="Lab1">Laboratorio 1</option>
                             <option value="Lab2">Laboratorio 2</option>
                             <option value="Lab3">Laboratorio 3</option>
                             <option value="Lab4">Laboratorio 4</option>
                             <option value="Lab5">Laboratorio 5</option>
                             <option value="Lab6">Laboratorio 6</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                        <label for="taller" class="form-label">Taller</label>
-                        <select id="taller" class="form-select" required>
-                            <option value="" disabled selected>Seleccione taller</option>
-                            <option value="N/a">N/A</option>
-                            <option value="Taller1">Taller 1</option>
-                            <option value="Taller2">Taller 2</option>
-                            <option value="Taller3">Taller 3</option>
                         </select>
                     </div>
 
@@ -210,7 +198,7 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/administrador.js"></script>
+    <script src="./assets/js/administrador.js"></script>
 </body>
 
 </html>

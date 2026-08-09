@@ -491,12 +491,12 @@ function limpiarFormularioAltaDispositivo() {
     formularioAltaDispositivo.reset();
     campoId.readOnly = false;
     campoLaboratorio.disabled = false;
-    campoTaller.disabled = false;
     campoNumero.readOnly = false;
-    campoRecurso.disabled = false;
     dispositivoEnEdicion = false;
 }
 
+// La tabla de dispositivos se carga desde PHP y MySQL, no desde localStorage.
+if (false) {
 /**
  * Carga un dispositivo en el formulario para modificarlo.
  * @param {string} id Identificador del dispositivo.
@@ -762,6 +762,13 @@ function gestionarDispositivo(eventoFormulario) {
 
 if (formularioAltaDispositivo) {
     formularioAltaDispositivo.addEventListener("submit", gestionarDispositivo);
+}
+}
+
+if (formularioAltaDispositivo) {
+    formularioAltaDispositivo.addEventListener("submit", eventoFormulario => {
+        eventoFormulario.preventDefault();
+    });
 }
 
 if (btnAltaDispositivo) {

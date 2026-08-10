@@ -6,7 +6,6 @@ class ConectorPDO
     private string $usuario;
     private string $clave;
     private string $baseDatos;
-
     private ?PDO $conexion;
 
 
@@ -49,6 +48,7 @@ class ConectorPDO
 
         return $this->conexion;
     }
+
     /**
      * Cierra la conexión con la base de datos.
      * POSTCONDICION: El atributo $conexion queda con valor NULL.

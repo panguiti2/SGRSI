@@ -117,7 +117,7 @@ verificarAcceso($rolRequerido);
             <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaUsuario" type="button"
                 aria-label="Cerrar"></button>
 
-            <form action="gestionUsuario.php" method="post" id="formularioAltaUsuario" class="p-4">
+            <form action="procesarAltaUsuario.php" method="post" id="formularioAltaUsuario" class="p-4">
                 <fieldset>
                     <legend class="h4 mb-4">Gestión de usuarios</legend>
 
@@ -145,12 +145,25 @@ verificarAcceso($rolRequerido);
                             </div>
 
                             <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                                <label for="contraseña" class="form-label">Contraseña</label>
+                                <input type="password" id="contraseña" name="contraseña" class="form-control"
+                                    placeholder="Ingrese la clave" autocomplete="new-password" required>
+                            </div>
+
+
+                             <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                                <label for="confirmarContraseña" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" id="confirmarContraseña" name="confirmarContraseña" class="form-control"
+                                    placeholder="Confirme la clave" autocomplete="new-password" required>
+                            </div>
+
+                            <div class="col-12 col-md-6 cajaEntradaDeDatos">
                                 <label for="cargo" class="form-label">Cargo</label>
                                 <select name="cargo" id="cargo" class="form-select" required>
                                     <option value="" disabled selected>Seleccione un cargo</option>
-                                    <option value="Funcionario/Docente">Funcionario/Docente</option>
-                                    <option value="Asistente/Tecnico">Asistente/Tecnico</option>
-                                    <option value="Administrativo">Administrativo</option>
+                                    <option value="Funcionario/Docente">Solicitante</option>
+                                    <option value="Asistente/Tecnico">Tecnico</option>
+                                    <option value="Administrativo">Administrador</option>
                                 </select>
                             </div>
                         </section>

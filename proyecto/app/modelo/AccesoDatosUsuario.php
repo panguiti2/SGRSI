@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Clase que simula una recuperación de credenciales correspondientes a la base de datos.
+ * Clase que simula una recuperación de datos de usuarios correspondientes a la base de datos.
  */
 class AccesoDatosUsuario {
     private PDO $conexion;
@@ -76,6 +76,10 @@ class AccesoDatosUsuario {
         );
     }
 
+/**
+ * Lista todos los usuarios registrados en la base de datos junto con sus roles.
+ * @return array lista de usuarios con sus roles.
+ */
 public function listarUsuarios (): array {
         $sql = "
             SELECT

@@ -126,12 +126,6 @@ verificarAcceso($rolRequerido);
             <fieldset>
                 <legend class="h4 mb-4">Gestión de dispositivos</legend>
 
-                <section class="row g-3 mb-4">
-                    <div class="col-12 col-md-6">
-                        <label for="id" class="form-label">ID</label>
-                        <input type="text" id="id" name="id" class="form-control" placeholder="Ej: LAB01-01-S" required>
-                    </div>
-
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="numeroDispositivo" class="form-label">N° Dispositivo</label>
                         <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"

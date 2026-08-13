@@ -14,4 +14,4 @@ if ($_SESSION["tecnico"] !== true) {
     exit;
 }
 
-require_once RUTA_CONTROLADOR . "/cargarPrestamos.php";
+require_once RUTA_CONTROLADOR . "/procesarAltaPrestamo.php";

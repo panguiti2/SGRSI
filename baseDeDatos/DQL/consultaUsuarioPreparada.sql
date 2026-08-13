@@ -2,7 +2,7 @@
 SELECT
     u.cedula,
     u.claveHash,
-    u.activo,
+    u.estado AS activo,
     CASE WHEN a.cedula IS NOT NULL THEN 1 ELSE 0 END AS administrador,
     CASE WHEN t.cedula IS NOT NULL THEN 1 ELSE 0 END AS tecnico,
     CASE WHEN s.cedula IS NOT NULL THEN 1 ELSE 0 END AS solicitante
@@ -42,3 +42,4 @@ LEFT JOIN TECNICO AS t
 
 LEFT JOIN SOLICITANTE AS s
     ON s.cedula = u.cedula
+ORDER BY u.cedula;

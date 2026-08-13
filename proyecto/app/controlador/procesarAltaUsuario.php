@@ -1,48 +1,55 @@
 
 <?php
 
+require_once __DIR__ . "/../../config/config.php";
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosUsuario.php";
 
-
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: administrador.php?error=peticion" );
+    header("Location: gestionUsuario.php?error=peticion" );
     exit;
 }
 
 $cedula = trim($_POST["cedula"] ?? "");
 $nombre = trim($_POST["nombre"] ?? "");
 $apellido = trim($_POST["apellido"] ?? "");
+$contrasena = $_POST["contrasena"] ?? "";
+$confirmarContrasena = $_POST["confirmarContrasena"] ?? "";
+$rol = trim($_POST["rol"] ?? "");
 
-$contraseña = $_POST["contraseña"] ?? "";
-$confirmarContraseña = $_POST["confirmarContraseña"] ?? "";
-
-$cargo = trim($_POST["cargo"] ?? "");
-
-if ($cedula === "" || $nombre === "" || $apellido === "" || $contraseña === "" || $confirmarContraseña === "" || $cargo === "" ) {
-    header("Location: administrador.php?error=campos_vacios");
+if ($cedula === "" || $nombre === "" || $apellido === "" || $contrasena === "" || $confirmarContrasena === "" || $rol === "" ) {
+    header("Location: gestionUsuario.php?error=campos_vacios");
     exit;
 }
 
 if (!preg_match("/^[1-9][0-9]{7}$/", $cedula)) {
-    header("Location: administrador.php?error=cedula_incorrecta");
+    header("Location: gestionUsuario.php?error=cedula_incorrecta");
     exit;
 }
 
-if (strlen($contraseña) < 12) {
-    header("Location: administrador.php?error=contraseña_corta");
+if (strlen($contrasena) < 12) {
+    header("Location: gestionUsuario.php?error=contraseña_corta");
     exit;
 }
 
-if ($contraseña !== $confirmarContraseña) {
-    header("Location: administrador.php?error=contraseña");
+if ($contrasena !== $confirmarContrasena) {
+    header("Location: gestionUsuario.php?error=contraseña");
     exit;
 }
 
-$claveHash = password_hash($contraseña, PASSWORD_DEFAULT);
+$rolesPermitidos = ["administrador", "tecnico", "solicitante"];
+
+if (!in_array($rol, $rolesPermitidos, true)) {
+    header("Location: gestionUsuario.php?error=rol_incorrecto");
+    exit;
+}
+
+$claveHash = password_hash($contrasena, PASSWORD_DEFAULT);
 
 
 $conectorPDO = new ConectorPDO("localhost", "root", "", "test");
@@ -50,26 +57,23 @@ $conectorPDO = new ConectorPDO("localhost", "root", "", "test");
 $conexion = $conectorPDO->establecerConexion();
 
 if ($conexion === null) {
-    header("Location: administrador.php?error=conexion");
+    header("Location: gestionUsuario.php?error=conexion");
     exit;
 }
 
 $altaDatosUsuario = new AltaDatosUsuario($conexion);
 
-$resultado = $altaDatosUsuario->registrarUsuario($cedula, $nombre, $apellido, $claveHash, $cargo);
+$resultado = $altaDatosUsuario->registrarUsuario($cedula, $nombre, $apellido, $claveHash, $rol);
 
 $conectorPDO->desconectar();
 
 
 if (!$resultado) {
-    $mensaje = "No se pudo registrar el empleado.";
-
-    header("Location: administrador.php?error=" . urlencode($mensaje));
+    header("Location: gestionUsuario.php?error=error_usuario");
     exit;
 }
 
-$mensaje = "Usuario ingresado exitosamente.";
-header("Location: administrador.php?resultado=" . urlencode($mensaje));
+header("Location: gestionUsuario.php?exito=usuario");
 exit;
 
 ?>

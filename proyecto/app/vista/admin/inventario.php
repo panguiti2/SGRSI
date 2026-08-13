@@ -2,6 +2,21 @@
 $rolRequerido = "administrador";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "peticion" => "La petición no es válida.",
+    "campos_vacios" => "Debe completar todos los campos del dispositivo.",
+    "datos_incorrectos" => "Los datos del dispositivo no son válidos.",
+    "conexion" => "No se pudo establecer conexión con la base de datos.",
+    "error_dispositivo" => "No se pudo registrar el dispositivo.",
+    "exito" => "El dispositivo se registró exitosamente."
+];
+
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se registró exitosamente." : "";
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -55,6 +70,14 @@ verificarAcceso($rolRequerido);
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
 
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+
 
         <section class="bg-white rounded mb-4 p-3 p-md-4">
 
@@ -64,7 +87,6 @@ verificarAcceso($rolRequerido);
                     <label class="visually-hidden" for="ordenInventarioAdmin">Ordenar por</label>
                     <select class="form-select form-select-sm" id="ordenInventarioAdmin">
                         <option value="" disabled selected>Seleccione</option>
-                        <option>Id</option>
                         <option>Laboratorio</option>
                     </select>
                     <button class="btn btn-primary btn-sm" type="submit">Ordenar</button>
@@ -89,7 +111,7 @@ verificarAcceso($rolRequerido);
                     <tbody id="cuerpoTablaDispositivos">
                      <?php foreach ($dispositivos as $dispositivo): ?>
                             <tr>
-                                <td><?= htmlspecialchars($dispositivo["idLab"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["laboratorio"]) ?></td>
                                 <td><?= htmlspecialchars($dispositivo["numeroDispositivo"]) ?></td>
                                 <td><?= htmlspecialchars($dispositivo["modificaciones"]) ?></td>
                                 <td><?= htmlspecialchars($dispositivo["estado"]) ?></td>
@@ -122,38 +144,37 @@ verificarAcceso($rolRequerido);
         style="max-width: 600px;">
         <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaDispositivo"></button>
 
-        <form id="formularioAltaDispositivo" class="p-4">
+        <form action="procesarAltaDispositivo.php" method="post" id="formularioAltaDispositivo" class="p-4">
             <fieldset>
                 <legend class="h4 mb-4">Gestión de dispositivos</legend>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="numeroDispositivo" class="form-label">N° Dispositivo</label>
                         <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
-                            placeholder="Ej: 01" required>
+                            placeholder="Ej: PC01" required>
                     </div>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="laboratorio" class="form-label">Laboratorio</label>
-                        <select id="laboratorio" class="form-select" required>
+                        <select id="idLab" name="idLab" class="form-select" required>
                             <option value="" disabled selected>Seleccione laboratorio</option>
-                            <option value="N/a">N/A</option>
-                            <option value="Taller1">Taller 1</option>
-                            <option value="Taller2">Taller 2</option>
-                            <option value="Taller3">Taller 3</option>
-                            <option value="Lab1">Laboratorio 1</option>
-                            <option value="Lab2">Laboratorio 2</option>
-                            <option value="Lab3">Laboratorio 3</option>
-                            <option value="Lab4">Laboratorio 4</option>
-                            <option value="Lab5">Laboratorio 5</option>
-                            <option value="Lab6">Laboratorio 6</option>
+                            <option value="TALL01">Taller 1</option>
+                            <option value="TALL02">Taller 2</option>
+                            <option value="TALL03">Taller 3</option>
+                            <option value="LAB01">Laboratorio 1</option>
+                            <option value="LAB02">Laboratorio 2</option>
+                            <option value="LAB03">Laboratorio 3</option>
+                            <option value="LAB04">Laboratorio 4</option>
+                            <option value="LAB05">Laboratorio 5</option>
+                            <option value="LAB06">Laboratorio 6</option>
                         </select>
                     </div>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="modificaciones" class="form-label">Modificaciones</label>
                         <select id="modificaciones" name="modificaciones" class="form-select" required>
-                            <option disabled selected>Seleccione una opción</option>
-                            <option value="N/a">N/A</option>
+                            <option value="" disabled selected>Seleccione una opción</option>
+                            <option value="N/A">N/A</option>
                             <option value="Reparado">Reparado</option>
                             <option value="Actualizado">Actualizado</option>
                         </select>
@@ -163,8 +184,8 @@ verificarAcceso($rolRequerido);
                         <label for="estado" class="form-label">Estado</label>
                         <select id="estado" name="estado" class="form-select" required>
                             <option disabled selected>Seleccione estado</option>
-                            <option value="Activo">Activo</option>
-                            <option value="Inactivo">Inactivo</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
                         </select>
                     </div>
 

@@ -68,8 +68,6 @@ verificarAcceso($rolRequerido);
                     <label class="visually-hidden" for="ordenInventarioTecnico">Ordenar por</label>
                     <select class="form-select form-select-sm" id="ordenInventarioTecnico">
                         <option value="" disabled selected>Seleccione</option>
-                        <option>Id</option>
-                        <option>Recurso</option>
                         <option>Laboratorio</option>
                     </select>
                     <button class="btn btn-primary btn-sm" type="button">Ordenar</button>
@@ -82,12 +80,8 @@ verificarAcceso($rolRequerido);
                     <caption class="d-none d-md-table-caption">Listado de dispositivos registrados</caption>
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th>Marca</th>
                             <th>N° Dispositivo</th>
                             <th>Laboratorio</th>
-                            <th>Taller</th>
-                            <th>Recurso</th>
                             <th>Modificaciones</th>
                             <th>Estado</th>
                             <th>Ultimo cambio</th>

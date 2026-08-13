@@ -3,21 +3,6 @@ $rolRequerido = "administrador";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
 
-$codigoError = $_GET["error"] ?? "";
-$mensajesError = [
-    "credenciales" => "La cédula o la contraseña son incorrectas.",
-    "peticion" => "La petición de ingreso no es válida.",
-    "contraseña" => "Las contraseñas ingresadas no coinciden.",
-    "campos_vacios" => "No se pudo registrar el empleado: existen campos vacíos.",
-    "cedula_incorrecta" => "No se pudo registrar el empleado: cédula incorrecta.",
-    "contraseña_corta" => "La contraseña debe contener al menos 12 caracteres.",
-    "conexion" => "No se pudo establecer conexión con la base de datos.",
-    "error_dispositivo" => "No se pudo registrar el dispositivo.",
-    "exito" => "El dispositivo se registró exitosamente."
-];
-
-$error = $mensajesError[$codigoError] ?? "";
-
 ?>
 
 

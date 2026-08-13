@@ -1,5 +1,5 @@
 
-INSERT INTO USUARIO (cedula, nombre, apellido, claveHash, activo) VALUES
+INSERT INTO USUARIO (cedula, nombre, apellido, claveHash, estado ) VALUES
     ('11111111', 'John', 'Doe', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', TRUE),
     ('22222222', 'Jane', 'Smith', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', TRUE),
     ('33333333', 'Bob', 'Johnson', '$2y$10$9wMFbjtXvc0NVodPXH9vrORiNnNnJfZLV8Dr3qhVTbLFm9uYHeXtK', TRUE),

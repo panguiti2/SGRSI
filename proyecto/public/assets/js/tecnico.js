@@ -124,6 +124,8 @@ function cerrarAltaPrestamo() {
  * @returns {void}
  */
 
+// Los préstamos se cargan y registran con PHP y PDO, no con localStorage.
+if (false) {
 function abrirModificarPrestamo(cedulaSolicitante) {
     prestamoEnEdicion = true;
     const prestamos = cargarPrestamosGuardadosLocal();
@@ -345,8 +347,6 @@ function actualizarTablaPrestamos() {
     }
 }
 
-if (formularioPrestamos) {
-    formularioPrestamos.addEventListener("submit", gestionarPrestamo);
 }
 
 if (btnRegistrarPrestamo) {
@@ -1077,6 +1077,4 @@ function actualizarTablaInventarioTecnico() {
     }
 }
 
-//if (cuerpoTablaInventarioTecnico) {
-//  actualizarTablaInventarioTecnico();
-//}
+// La tabla de inventario técnico se carga desde PHP y MySQL, sin acciones de gestión.

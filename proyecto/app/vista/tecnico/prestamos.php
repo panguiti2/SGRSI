@@ -2,6 +2,17 @@
 $rolRequerido = "tecnico";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "peticion" => "La petición no es válida.",
+    "campos_vacios" => "Debe completar todos los campos del préstamo.",
+    "datos_incorrectos" => "Los datos del préstamo no son válidos.",
+    "error_prestamo" => "No se pudo registrar el préstamo."
+];
+
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registró exitosamente." : "";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -61,6 +72,14 @@ verificarAcceso($rolRequerido);
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
 
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+
         <section class="bg-white rounded mb-4 p-3 p-md-4">
             <section class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
                 <h2 class="h4 m-0">Préstamos</h2>
@@ -75,13 +94,23 @@ verificarAcceso($rolRequerido);
                             <th >CI</th>
                             <th >Turno</th>
                             <th >Nombre</th>
-                            <th >Máquina</th>
+                            <th >Laptop</th>
                             <th >Retiro</th>
                             <th >Devolución</th>
-                            <th >Operaciones</th>
                         </tr>
                     </thead>
-                    <tbody id="cuerpoTablaPrestamos"></tbody>
+                    <tbody id="cuerpoTablaPrestamos">
+                        <?php foreach ($prestamos as $prestamo): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($prestamo["cedulaSolicitante"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["turno"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["nombreSolicitante"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["numeroLaptop"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["fechaRetiro"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["fechaDevolucion"]) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
             </section>
         </section>
@@ -90,7 +119,7 @@ verificarAcceso($rolRequerido);
             <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarRegistarPrestamo" type="button"
                 aria-label="Cerrar"></button>
 
-            <form class="formPrestamo p-4" id="formularioPrestamos">
+            <form action="procesarAltaPrestamo.php" method="post" class="formPrestamo p-4" id="formularioPrestamos">
                 <fieldset>
                     <legend class="h4 mb-4">Solicitud de Préstamo de Equipo</legend>
 
@@ -118,8 +147,8 @@ verificarAcceso($rolRequerido);
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="maquina" class="form-label">N° de máquina</label>
-                            <input type="number" id="maquina" name="maquina" class="form-control" required>
+                            <label for="numeroLaptop" class="form-label">N° de laptop</label>
+                            <input type="text" id="numeroLaptop" name="numeroLaptop" class="form-control" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">

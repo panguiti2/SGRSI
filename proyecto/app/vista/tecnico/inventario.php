@@ -87,7 +87,17 @@ verificarAcceso($rolRequerido);
                             <th>Ultimo cambio</th>
                         </tr>
                     </thead>
-                    <tbody id="cuerpoTablaInventarioTecnico"></tbody>
+                    <tbody id="cuerpoTablaInventarioTecnico">
+                        <?php foreach ($dispositivos as $dispositivo): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($dispositivo["numeroDispositivo"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["laboratorio"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["modificaciones"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["estado"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["ultimoCambio"]) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
             </section>
         </section>

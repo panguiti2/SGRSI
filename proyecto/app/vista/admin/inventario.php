@@ -140,13 +140,16 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
     </main>
 
 
-    <dialog class=" dialogAltaDispositivo seccionFormulario w-100 p-0 rounded-3 border-0" id="miDialogo"
+    <dialog class="dialogAltaDispositivo seccionFormulario w-100 p-0 rounded-3 border-0" id="miDialogo"
         style="max-width: 600px;">
-        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaDispositivo"></button>
+        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaDispositivo" type="button"
+            aria-label="Cerrar"></button>
 
         <form action="procesarAltaDispositivo.php" method="post" id="formularioAltaDispositivo" class="p-4">
             <fieldset>
                 <legend class="h4 mb-4">Gestión de dispositivos</legend>
+
+                <section class="row g-3 mb-4">
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="numeroDispositivo" class="form-label">N° Dispositivo</label>

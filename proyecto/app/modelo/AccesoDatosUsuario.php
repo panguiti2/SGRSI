@@ -25,7 +25,7 @@ class AccesoDatosUsuario {
             SELECT
                 u.cedula,
                 u.claveHash,
-                u.activo,
+                u.estado AS activo,
 
                 CASE
                     WHEN a.cedula IS NOT NULL THEN 1

@@ -3,7 +3,7 @@ CREATE TABLE USUARIO (
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
     claveHash VARCHAR(255) NOT NULL,
-    activo BOOLEAN NOT NULL DEFAULT TRUE,
+    estado BOOLEAN NOT NULL DEFAULT TRUE,
 
     CONSTRAINT pk_usuario
         PRIMARY KEY (cedula)

@@ -2,6 +2,24 @@
 $rolRequerido = "administrador";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "credenciales" => "La cédula o la contraseña son incorrectas.",
+    "peticion" => "La petición de ingreso no es válida.",
+    "contraseña" => "Las contraseñas ingresadas no coinciden.",
+    "campos_vacios" => "No se pudo registrar el empleado: existen campos vacíos.",
+    "cedula_incorrecta" => "No se pudo registrar el empleado: cédula incorrecta.",
+    "contraseña_corta" => "La contraseña debe contener al menos 12 caracteres.",
+    "rol_incorrecto" => "Debe seleccionar un rol válido.",
+    "conexion" => "No se pudo establecer conexión con la base de datos.",
+    "error_usuario" => "No se pudo registrar el usuario.",
+    "exito" => "El usuario se registró exitosamente."
+];
+
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró exitosamente." : "";
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -54,6 +72,14 @@ verificarAcceso($rolRequerido);
     </header>
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
+
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
 
         <section class="bg-white rounded mb-4 p-3 p-md-4 seccionTablaEmpleados">
             <h2 class="h4 mb-3">Datos de usuarios</h2>
@@ -145,25 +171,25 @@ verificarAcceso($rolRequerido);
                             </div>
 
                             <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                                <label for="contraseña" class="form-label">Contraseña</label>
-                                <input type="password" id="contraseña" name="contraseña" class="form-control"
+                                <label for="contrasena" class="form-label">Contraseña</label>
+                                <input type="password" id="contrasena" name="contrasena" class="form-control"
                                     placeholder="Ingrese la clave" autocomplete="new-password" required>
                             </div>
 
 
                              <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                                <label for="confirmarContraseña" class="form-label">Confirmar Contraseña</label>
-                                <input type="password" id="confirmarContraseña" name="confirmarContraseña" class="form-control"
+                                <label for="confirmarContrasena" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" id="confirmarContrasena" name="confirmarContrasena" class="form-control"
                                     placeholder="Confirme la clave" autocomplete="new-password" required>
                             </div>
 
                             <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                                <label for="cargo" class="form-label">Cargo</label>
-                                <select name="cargo" id="cargo" class="form-select" required>
+                                <label for="rol" class="form-label">Rol</label>
+                                <select name="rol" id="rol" class="form-select" required>
                                     <option value="" disabled selected>Seleccione un cargo</option>
-                                    <option value="Funcionario/Docente">Solicitante</option>
-                                    <option value="Asistente/Tecnico">Tecnico</option>
-                                    <option value="Administrativo">Administrador</option>
+                                    <option value="solicitante">Solicitante</option>
+                                    <option value="tecnico">Técnico</option>
+                                    <option value="administrador">Administrador</option>
                                 </select>
                             </div>
                         </section>

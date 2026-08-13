@@ -23,6 +23,7 @@ class AccesoDatosDispositivo {
         $sql = "
             SELECT
                 d.idLab,
+                l.nombre AS laboratorio,
                 d.numeroDispositivo,
                 d.Modificaciones AS modificaciones,
                 d.ultimoCambio,

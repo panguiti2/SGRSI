@@ -1039,23 +1039,11 @@ function cargarInventarioTecnicoLocal() {
 function agregarFilaInventarioTecnico(dispositivo) {
     const fila = document.createElement("tr");
 
-    const campoIdDispositivo = document.createElement("td");
-    campoIdDispositivo.textContent = dispositivo.id;
-
-    const campoMarcaDispositivo = document.createElement("td");
-    campoMarcaDispositivo.textContent = dispositivo.marca;
-
     const campoNumeroDispositivo = document.createElement("td");
     campoNumeroDispositivo.textContent = dispositivo.numeroDispositivo;
 
     const campoLaboratorioDispositivo = document.createElement("td");
     campoLaboratorioDispositivo.textContent = dispositivo.laboratorio;
-
-    const campoTallerDispositivo = document.createElement("td");
-    campoTallerDispositivo.textContent = dispositivo.taller;
-
-    const campoRecursoDispositivo = document.createElement("td");
-    campoRecursoDispositivo.textContent = dispositivo.recurso;
 
     const campoModificacionesDispositivo = document.createElement("td");
     campoModificacionesDispositivo.textContent = dispositivo.modificaciones;
@@ -1066,12 +1054,8 @@ function agregarFilaInventarioTecnico(dispositivo) {
     const campoUltimoCambioDispositivo = document.createElement("td");
     campoUltimoCambioDispositivo.textContent = dispositivo.ultimoCambio;
 
-    fila.appendChild(campoIdDispositivo);
-    fila.appendChild(campoMarcaDispositivo);
     fila.appendChild(campoNumeroDispositivo);
     fila.appendChild(campoLaboratorioDispositivo);
-    fila.appendChild(campoTallerDispositivo);
-    fila.appendChild(campoRecursoDispositivo);
     fila.appendChild(campoModificacionesDispositivo);
     fila.appendChild(campoEstadoDispositivo);
     fila.appendChild(campoUltimoCambioDispositivo);

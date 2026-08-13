@@ -43,11 +43,11 @@ $_SESSION["tecnico"] = $usuario->esTecnico();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
 
 if ($_SESSION["administrador"]) {
-    header("Location: administrador.php");
+    header("Location: admin/inicio.php");
 } elseif ($_SESSION["tecnico"]) {
-    header("Location: tecnico.php");
+    header("Location: tecnico/inicio.php");
 } elseif ($_SESSION["solicitante"]) {
-    header("Location: solicitante.php");
+    header("Location: solicitante/inicio.php");
 } else {
     $_SESSION = [];
     session_destroy();

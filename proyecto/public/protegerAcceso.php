@@ -1,6 +1,6 @@
 <?php
 
-function verificarAcceso(string $rolRequerido): void
+function cargarVistaProtegida(string $rol, string $vista): void
 {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
@@ -11,8 +11,10 @@ function verificarAcceso(string $rolRequerido): void
         exit;
     }
 
-    if (!isset($_SESSION[$rolRequerido]) || $_SESSION[$rolRequerido] !== true) {
+    if ($_SESSION[$rol] !== true) {
         header("Location: ../login.php?error=no_autorizado");
         exit;
     }
+
+    require_once $vista;
 }

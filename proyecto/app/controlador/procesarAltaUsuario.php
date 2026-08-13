@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: gestionUsuario.php?error=peticion" );
+    header("Location: usuarios.php?error=peticion" );
     exit;
 }
 
@@ -23,29 +23,29 @@ $confirmarContrasena = $_POST["confirmarContrasena"] ?? "";
 $rol = trim($_POST["rol"] ?? "");
 
 if ($cedula === "" || $nombre === "" || $apellido === "" || $contrasena === "" || $confirmarContrasena === "" || $rol === "" ) {
-    header("Location: gestionUsuario.php?error=campos_vacios");
+    header("Location: usuarios.php?error=campos_vacios");
     exit;
 }
 
 if (!preg_match("/^[1-9][0-9]{7}$/", $cedula)) {
-    header("Location: gestionUsuario.php?error=cedula_incorrecta");
+    header("Location: usuarios.php?error=cedula_incorrecta");
     exit;
 }
 
 if (strlen($contrasena) < 12) {
-    header("Location: gestionUsuario.php?error=contraseña_corta");
+    header("Location: usuarios.php?error=contraseña_corta");
     exit;
 }
 
 if ($contrasena !== $confirmarContrasena) {
-    header("Location: gestionUsuario.php?error=contraseña");
+    header("Location: usuarios.php?error=contraseña");
     exit;
 }
 
 $rolesPermitidos = ["administrador", "tecnico", "solicitante"];
 
 if (!in_array($rol, $rolesPermitidos, true)) {
-    header("Location: gestionUsuario.php?error=rol_incorrecto");
+    header("Location: usuarios.php?error=rol_incorrecto");
     exit;
 }
 
@@ -57,7 +57,7 @@ $conectorPDO = new ConectorPDO("localhost", "root", "", "test");
 $conexion = $conectorPDO->establecerConexion();
 
 if ($conexion === null) {
-    header("Location: gestionUsuario.php?error=conexion");
+    header("Location: usuarios.php?error=conexion");
     exit;
 }
 
@@ -69,11 +69,11 @@ $conectorPDO->desconectar();
 
 
 if (!$resultado) {
-    header("Location: gestionUsuario.php?error=error_usuario");
+    header("Location: usuarios.php?error=error_usuario");
     exit;
 }
 
-header("Location: gestionUsuario.php?exito=usuario");
+header("Location: usuarios.php?exito=usuario");
 exit;
 
 ?>

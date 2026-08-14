@@ -18,4 +18,4 @@ session_start();
     }
 }*/
 
-require_once __DIR__ . "/../app/vista/login.php";
+require_once RUTA_VISTA . "/login.php";

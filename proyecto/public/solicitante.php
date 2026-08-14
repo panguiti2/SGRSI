@@ -12,5 +12,5 @@ if (!isset($_SESSION["solicitante"]) || $_SESSION["solicitante"] !== true) {
     exit;
 }
 
-require_once __DIR__ . "/../app/vista/solicitante/user.php";
+require_once RUTA_VISTA . "/user.php";
 exit;

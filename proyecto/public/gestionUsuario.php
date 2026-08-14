@@ -12,4 +12,4 @@ if (!isset($_SESSION["administrador"]) || $_SESSION["administrador"] !== true) {
     exit;
 }
 
-require_once __DIR__ . "/../app/controlador/cargarUsuarios.php";
+require_once RUTA_CONTROLADOR . "/cargarUsuarios.php";

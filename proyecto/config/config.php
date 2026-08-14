@@ -8,3 +8,4 @@ define("RUTA_CONTROLADOR", RUTA_APP . "/controlador");
 define("RUTA_VISTA", RUTA_APP . "/vista");
 
 define("RUTA_PUBLIC", RUTA_RAIZ . "/public");
+define("RUTA_CONFIG" , RUTA_RAIZ . "/config");

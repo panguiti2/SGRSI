@@ -12,4 +12,4 @@ if (!isset($_SESSION["tecnico"]) || $_SESSION["tecnico"] !== true) {
     exit;
 }
 
-require_once __DIR__ . "/../app/vista/tecnico/tecnico.php";
+require_once RUTA_VISTA . "/tecnico.php";

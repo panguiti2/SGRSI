@@ -13,4 +13,4 @@ if (!isset($_SESSION["administrador"]) || $_SESSION["administrador"] !== true) {
 }
 
 
-require_once __DIR__ . "/../app/vista/admin/admin.php";
+require_once RUTA_VISTA . "/admin.php";

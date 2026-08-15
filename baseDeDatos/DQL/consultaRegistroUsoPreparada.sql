@@ -1,0 +1,1 @@
+SELECT idRegistro, cedulaSolicitante, laboratorio, turno, fechaHora, docente, grupo, asignatura, usoMaquinas, huboIncidencias FROM REGISTRO_USO WHERE cedulaSolicitante = :cedulaSolicitante ORDER BY fechaHora DESC;

@@ -516,6 +516,4 @@ function gestionarRegistroUso(eventoFormulario) {
     alert("Registro de uso guardado correctamente");
 }
 
-if (formularioRegistroUso) {
-    formularioRegistroUso.addEventListener("submit", gestionarRegistroUso);
-}
+// El alta de registros de uso se procesa con PHP y PDO.

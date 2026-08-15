@@ -82,14 +82,42 @@ verificarAcceso($rolRequerido);
                         </tr>
                     </thead>
 
-                    <tbody id="cuerpoTablaSolicitudes"></tbody>
+                    <tbody id="cuerpoTablaSolicitudes">
+                        <?php foreach ($solicitudes as $solicitud): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["laboratorio"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["turno"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["docente"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["email"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["fechaHora"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["software"] ?? "") ?></td>
+                                <td><?= $solicitud["todasMaquinas"] ? "Sí" : "No" ?></td>
+                                <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["descripcion"] ?? "") ?></td>
+                                <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
+                                <td>
+                                    <form action="procesarEstadoSolicitud.php" method="post" class="d-flex gap-2">
+                                        <input type="hidden" name="idSolicitud" value="<?= htmlspecialchars($solicitud["idSolicitud"]) ?>">
+                                        <select name="estado" class="form-select form-select-sm" required>
+                                            <?php foreach (["PENDIENTE", "EN PROCESO", "RESUELTO"] as $estado): ?>
+                                                <option value="<?= $estado ?>" <?= $solicitud["estado"] === $estado ? "selected" : "" ?>><?= $estado ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
             </section>
         </section>
 
     </main>
 
-    <dialog class="dialogAsignarSolicitud seccionFormulario w-100 p-0 rounded-3 border-0"
+    <!-- El estado se gestiona en cada fila cargada desde MySQL. El diálogo local anterior queda desactivado. -->
+    <dialog class="dialogAsignarSolicitud seccionFormulario w-100 p-0 rounded-3 border-0" hidden
         style="max-width: 500px;">
         <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAsignarSolicitud"
             type="button" aria-label="Cerrar"></button>

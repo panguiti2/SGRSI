@@ -911,9 +911,7 @@ function actualizarTablaSolicitudesTecnico() {
   //  actualizarTablaSolicitudesTecnico();
 //}
 
-if (formularioAsignarSolicitud) {
-    formularioAsignarSolicitud.addEventListener("submit", modificarSolicitudTecnicoLocal);
-}
+// Las solicitudes y sus estados se cargan y actualizan con PHP y PDO.
 
 if (btnCerrarAsignarSolicitud) {
     btnCerrarAsignarSolicitud.addEventListener("click", cerrarAsignarSolicitud);

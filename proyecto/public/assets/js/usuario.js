@@ -395,9 +395,7 @@ function gestionarSolicitud(eventoFormulario) {
     alert("Solicitud registrada correctamente");
 }
 
-if (formularioSolicitud) {
-    formularioSolicitud.addEventListener("submit", gestionarSolicitud);
-}
+// La alta de solicitudes se procesa con PHP y PDO; se desactiva el envío a localStorage.
 
 /**
  * Formulario de registros de uso.

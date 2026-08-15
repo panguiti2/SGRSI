@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . "/../modelo/ConectorPDO.php";
-require_once __DIR__ . "/../modelo/AccesoDatosDispositivo.php";
+require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
 
 $conectorPDO = new ConectorPDO ("localhost", "root", "", "test");
 $conexion = $conectorPDO->establecerConexion();
@@ -11,4 +11,4 @@ $dispositivos = $accesoDatosDispositivo->listarDispositivos();
 
 $conectorPDO->desconectar();
 
-require_once __DIR__ . "/../vista/admin/inventario.php";
+require_once RUTA_VISTA . "/inventario.php";

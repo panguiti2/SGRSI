@@ -233,9 +233,7 @@ function gestionarIncidencia(eventoFormulario) {
     alert("Incidencia registrada correctamente");
 }
 
-if (formularioIncidencia) {
-    formularioIncidencia.addEventListener("submit", gestionarIncidencia);
-}
+// La alta de incidencias se procesa con PHP y PDO; se desactiva el envío a localStorage.
 
 /**
  * Formulario de solicitudes de servicio.

@@ -660,9 +660,7 @@ function actualizarTablaIncidenciasTecnico() {
  //   actualizarTablaIncidenciasTecnico();
 //}
 
-if (formularioAsignarIncidencia) {
-    formularioAsignarIncidencia.addEventListener("submit", modificarIncidenciaTecnicoLocal);
-}
+// Las incidencias se cargan y asignan con PHP y PDO.
 
 if (btnCerrarAsignarIncidencia) {
     btnCerrarAsignarIncidencia.addEventListener("click", cerrarAsignarIncidencia);

@@ -52,44 +52,27 @@ verificarAcceso($rolRequerido);
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
         <section class="seccionFormulario bg-white rounded p-3 p-md-4">
-            <form id="formularioIncidencia">
+            <form action="procesarAltaIncidencia.php" method="post" id="formularioIncidencia">
                 <fieldset>
                     <legend class="h4 mb-4">Reportar incidencia</legend>
 
                     <section class="row g-3 mb-4">
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="laboratorio" class="form-label">Laboratorio</label>
-                            <select id="laboratorio" class="form-select" required>
+                            <select id="laboratorio" name="laboratorio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione laboratorio</option>
                                 <option value="N/A">N/A</option>
-                                <option value="Lab1">Laboratorio 1</option>
-                                <option value="Lab2">Laboratorio 2</option>
-                                <option value="Lab3">Laboratorio 3</option>
-                                <option value="Lab4">Laboratorio 4</option>
-                                <option value="Lab5">Laboratorio 5</option>
-                                <option value="Lab6">Laboratorio 6</option>
+                                <option value="LAB1">Laboratorio 1</option><option value="LAB2">Laboratorio 2</option>
+                                <option value="LAB3">Laboratorio 3</option><option value="LAB4">Laboratorio 4</option>
+                                <option value="LAB5">Laboratorio 5</option><option value="LAB6">Laboratorio 6</option>
                             </select>
                         </div>
-
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="taller" class="form-label">Taller</label>
-                            <select id="taller" class="form-select" required>
-                                <option value="" disabled selected>Seleccione taller</option>
-                                <option value="N/A">N/A</option>
-                                <option value="Taller1">Taller 1</option>
-                                <option value="Taller2">Taller 2</option>
-                                <option value="Taller3">Taller 3</option>
-                            </select>
-                        </div>
-
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="turno" class="form-label">Turno</label>
                             <select id="turno" name="turno" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
-                                <option value="Matutino">Matutino</option>
-                                <option value="Vespertino">Vespertino</option>
-                                <option value="Nocturno">Nocturno</option>
+                                <option value="MATUTINO">Matutino</option><option value="VESPERTINO">Vespertino</option><option value="NOCTURNO">Nocturno</option>
                             </select>
                         </div>
 
@@ -121,12 +104,12 @@ verificarAcceso($rolRequerido);
                             <label class="form-label d-block">¿Reportó alumno?</label>
                             <section class="d-flex gap-3">
                                 <div class="form-check">
-                                    <input type="radio" name="incidencias" value="si" class="form-check-input"
+                                    <input type="radio" name="reportoAlumno" value="SI" class="form-check-input"
                                         id="alumSi" required>
                                     <label class="form-check-label" for="alumSi">Sí</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="radio" name="incidencias" value="no" class="form-check-input"
+                                    <input type="radio" name="reportoAlumno" value="NO" class="form-check-input"
                                         id="alumNo">
                                     <label class="form-check-label" for="alumNo">No</label>
                                 </div>
@@ -161,13 +144,9 @@ verificarAcceso($rolRequerido);
                             <label for="tipoIncidencia" class="form-label">Tipo de incidencia</label>
                             <select id="tipoIncidencia" name="tipoIncidencia" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
-                                <option value="No_Funciona">No funciona</option>
-                                <option value="Lento">Funcionamiento lento</option>
-                                <option value="Sin_Conexion">Sin conexión</option>
-                                <option value="Daño_Fisico">Daño físico</option>
-                                <option value="Software">Problema de software</option>
-                                <option value="Periferico">Falla de periférico</option>
-                                <option value="Otro">Otro</option>
+                                <option value="NO_FUNCIONA">No funciona</option><option value="LENTO">Funcionamiento lento</option>
+                                <option value="SIN_CONEXION">Sin conexión</option><option value="DANO_FISICO">Daño físico</option>
+                                <option value="SOFTWARE">Problema de software</option><option value="PERIFERICO">Falla de periférico</option><option value="OTRO">Otro</option>
                             </select>
                         </div>
 
@@ -184,6 +163,10 @@ verificarAcceso($rolRequerido);
                 </fieldset>
             </form>
         </section>
+        <section class="bg-white rounded p-3 p-md-4 mt-4 panelTabla"><h2 class="h4">Mis incidencias</h2>
+            <section class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th>ID</th><th>Laboratorio</th><th>Fecha</th><th>Recurso</th><th>Tipo</th><th>Estado</th></tr></thead><tbody>
+            <?php foreach ($incidencias as $incidencia): ?><tr><td><?= htmlspecialchars($incidencia["idIncidencia"]) ?></td><td><?= htmlspecialchars($incidencia["laboratorio"]) ?></td><td><?= htmlspecialchars($incidencia["fechaHora"]) ?></td><td><?= htmlspecialchars($incidencia["recurso"]) ?></td><td><?= htmlspecialchars($incidencia["tipoIncidencia"]) ?></td><td><?= htmlspecialchars($incidencia["estado"]) ?></td></tr><?php endforeach; ?>
+            </tbody></table></section></section>
     </main>
 
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">

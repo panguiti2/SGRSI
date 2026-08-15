@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Clase que simula una recuperación de datos de usuarios correspondientes a la base de datos.
+ * Clase de acceso a datos de usuarios.
  */
 class AccesoDatosUsuario {
     private PDO $conexion;
@@ -25,7 +25,7 @@ class AccesoDatosUsuario {
             SELECT
                 u.cedula,
                 u.claveHash,
-                u.activo,
+                u.estado AS activo,
 
                 CASE
                     WHEN a.cedula IS NOT NULL THEN 1
@@ -111,7 +111,9 @@ public function listarUsuarios (): array {
     ON t.cedula = u.cedula
 
     LEFT JOIN SOLICITANTE AS s
-    ON s.cedula = u.cedula" ;
+    ON s.cedula = u.cedula
+
+    ORDER BY u.cedula";
 
         $consulta = $this->conexion->query($sql);
 

@@ -42,20 +42,17 @@ class AltaDatosUsuario
 
             $consultaUsuario->execute(["cedula" => $cedula, "nombre" => $nombre, "apellido" => $apellido, "claveHash" => $claveHash]);
 
-            switch ($rol) {
-                case "Administrador":
-                    $sqlRol = "INSERT INTO ADMINISTRADOR (cedula) VALUES (:cedula)";
-                    break;
-                case "Tecnico":
-                    $sqlRol = "INSERT INTO TECNICO (cedula) VALUES (:cedula)";
-                    break;
-                case "Solicitante":
-                    $sqlRol = "INSERT INTO TECNICO (cedula) VALUES (:cedula)";
-                    break;     
-                default:
-                    $this->conexion->rollBack();
-                    return false;
+            $tablasRol = [
+                "administrador" => "ADMINISTRADOR",
+                "tecnico" => "TECNICO",
+                "solicitante" => "SOLICITANTE"
+            ];
+
+            if (!isset($tablasRol[$rol])) {
+                throw new InvalidArgumentException("Rol no válido.");
             }
+
+            $sqlRol = "INSERT INTO " . $tablasRol[$rol] . " (cedula) VALUES (:cedula)";
             
             $consultaRol = $this->conexion->prepare($sqlRol);
 
@@ -73,7 +70,10 @@ class AltaDatosUsuario
                 //Deshace los cambios causados por la excepción
                 $this->conexion->rollBack();
             }
-
+                    /*
+                    echo $error->getMessage();
+                    exit;
+                    */
             return false;
         }
     }

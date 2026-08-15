@@ -11,15 +11,15 @@ verificarAcceso($rolRequerido);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Uso</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/global.css">
-    <link rel="stylesheet" href="./assets/css/formularios.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/formularios.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="user.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="inicio.php"><img src="../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -29,7 +29,7 @@ verificarAcceso($rolRequerido);
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="user.php">Inicio</a>
+                        <a class="nav-link" href="inicio.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="solicitudes.php">Solicitudes</a>
@@ -41,7 +41,7 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link active" href="registroUso.php">Registro de Uso</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -167,7 +167,7 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/usuario.js"></script>
+    <script src="../assets/js/usuario.js"></script>
 </body>
 
 </html>

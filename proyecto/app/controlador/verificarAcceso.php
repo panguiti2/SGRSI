@@ -7,12 +7,12 @@ function verificarAcceso(string $rolRequerido): void
     }
 
     if (!isset($_SESSION["cedula"])) {
-        header("Location: login.php?error=sin_sesion");
+        header("Location: ../login.php?error=sin_sesion");
         exit;
     }
 
     if (!isset($_SESSION[$rolRequerido]) || $_SESSION[$rolRequerido] !== true) {
-        header("Location: login.php?error=no_autorizado");
+        header("Location: ../login.php?error=no_autorizado");
         exit;
     }
 }

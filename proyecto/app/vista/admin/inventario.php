@@ -2,6 +2,21 @@
 $rolRequerido = "administrador";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "peticion" => "La petición no es válida.",
+    "campos_vacios" => "Debe completar todos los campos del dispositivo.",
+    "datos_incorrectos" => "Los datos del dispositivo no son válidos.",
+    "conexion" => "No se pudo establecer conexión con la base de datos.",
+    "error_dispositivo" => "No se pudo registrar el dispositivo.",
+    "exito" => "El dispositivo se registró exitosamente."
+];
+
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se registró exitosamente." : "";
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,15 +27,15 @@ verificarAcceso($rolRequerido);
     <title>Inventario</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/global.css">
-    <link rel="stylesheet" href="./assets/css/formularios.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/formularios.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="administrador.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="inicio.php"><img src="../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -30,10 +45,10 @@ verificarAcceso($rolRequerido);
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="administrador.php">Inicio</a>
+                        <a class="nav-link" href="inicio.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="gestionUsuario.php">Usuarios</a>
+                        <a class="nav-link" href="usuarios.php">Usuarios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="incidencias.php">Incidencias</a>
@@ -45,7 +60,7 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link active" href="inventario.php">Inventario</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="cerrarSesion.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -54,6 +69,14 @@ verificarAcceso($rolRequerido);
 
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
+
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
 
 
         <section class="bg-white rounded mb-4 p-3 p-md-4">
@@ -64,7 +87,6 @@ verificarAcceso($rolRequerido);
                     <label class="visually-hidden" for="ordenInventarioAdmin">Ordenar por</label>
                     <select class="form-select form-select-sm" id="ordenInventarioAdmin">
                         <option value="" disabled selected>Seleccione</option>
-                        <option>Id</option>
                         <option>Laboratorio</option>
                     </select>
                     <button class="btn btn-primary btn-sm" type="submit">Ordenar</button>
@@ -89,7 +111,7 @@ verificarAcceso($rolRequerido);
                     <tbody id="cuerpoTablaDispositivos">
                      <?php foreach ($dispositivos as $dispositivo): ?>
                             <tr>
-                                <td><?= htmlspecialchars($dispositivo["idLab"]) ?></td>
+                                <td><?= htmlspecialchars($dispositivo["laboratorio"]) ?></td>
                                 <td><?= htmlspecialchars($dispositivo["numeroDispositivo"]) ?></td>
                                 <td><?= htmlspecialchars($dispositivo["modificaciones"]) ?></td>
                                 <td><?= htmlspecialchars($dispositivo["estado"]) ?></td>
@@ -118,42 +140,44 @@ verificarAcceso($rolRequerido);
     </main>
 
 
-    <dialog class=" dialogAltaDispositivo seccionFormulario w-100 p-0 rounded-3 border-0" id="miDialogo"
+    <dialog class="dialogAltaDispositivo seccionFormulario w-100 p-0 rounded-3 border-0" id="miDialogo"
         style="max-width: 600px;">
-        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaDispositivo"></button>
+        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaDispositivo" type="button"
+            aria-label="Cerrar"></button>
 
-        <form id="formularioAltaDispositivo" class="p-4">
+        <form action="procesarAltaDispositivo.php" method="post" id="formularioAltaDispositivo" class="p-4">
             <fieldset>
                 <legend class="h4 mb-4">Gestión de dispositivos</legend>
+
+                <section class="row g-3 mb-4">
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="numeroDispositivo" class="form-label">N° Dispositivo</label>
                         <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
-                            placeholder="Ej: 01" required>
+                            placeholder="Ej: PC01" required>
                     </div>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="laboratorio" class="form-label">Laboratorio</label>
-                        <select id="laboratorio" class="form-select" required>
+                        <select id="idLab" name="idLab" class="form-select" required>
                             <option value="" disabled selected>Seleccione laboratorio</option>
-                            <option value="N/a">N/A</option>
-                            <option value="Taller1">Taller 1</option>
-                            <option value="Taller2">Taller 2</option>
-                            <option value="Taller3">Taller 3</option>
-                            <option value="Lab1">Laboratorio 1</option>
-                            <option value="Lab2">Laboratorio 2</option>
-                            <option value="Lab3">Laboratorio 3</option>
-                            <option value="Lab4">Laboratorio 4</option>
-                            <option value="Lab5">Laboratorio 5</option>
-                            <option value="Lab6">Laboratorio 6</option>
+                            <option value="TALL01">Taller 1</option>
+                            <option value="TALL02">Taller 2</option>
+                            <option value="TALL03">Taller 3</option>
+                            <option value="LAB01">Laboratorio 1</option>
+                            <option value="LAB02">Laboratorio 2</option>
+                            <option value="LAB03">Laboratorio 3</option>
+                            <option value="LAB04">Laboratorio 4</option>
+                            <option value="LAB05">Laboratorio 5</option>
+                            <option value="LAB06">Laboratorio 6</option>
                         </select>
                     </div>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="modificaciones" class="form-label">Modificaciones</label>
                         <select id="modificaciones" name="modificaciones" class="form-select" required>
-                            <option disabled selected>Seleccione una opción</option>
-                            <option value="N/a">N/A</option>
+                            <option value="" disabled selected>Seleccione una opción</option>
+                            <option value="N/A">N/A</option>
                             <option value="Reparado">Reparado</option>
                             <option value="Actualizado">Actualizado</option>
                         </select>
@@ -163,8 +187,8 @@ verificarAcceso($rolRequerido);
                         <label for="estado" class="form-label">Estado</label>
                         <select id="estado" name="estado" class="form-select" required>
                             <option disabled selected>Seleccione estado</option>
-                            <option value="Activo">Activo</option>
-                            <option value="Inactivo">Inactivo</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
                         </select>
                     </div>
 
@@ -192,7 +216,7 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/js/administrador.js"></script>
+    <script src="../assets/js/administrador.js"></script>
 </body>
 
 </html>

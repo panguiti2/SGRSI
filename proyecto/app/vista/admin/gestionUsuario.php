@@ -2,6 +2,24 @@
 $rolRequerido = "administrador";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "credenciales" => "La cédula o la contraseña son incorrectas.",
+    "peticion" => "La petición de ingreso no es válida.",
+    "contraseña" => "Las contraseñas ingresadas no coinciden.",
+    "campos_vacios" => "No se pudo registrar el empleado: existen campos vacíos.",
+    "cedula_incorrecta" => "No se pudo registrar el empleado: cédula incorrecta.",
+    "contraseña_corta" => "La contraseña debe contener al menos 12 caracteres.",
+    "rol_incorrecto" => "Debe seleccionar un rol válido.",
+    "conexion" => "No se pudo establecer conexión con la base de datos.",
+    "error_usuario" => "No se pudo registrar el usuario.",
+    "exito" => "El usuario se registró exitosamente."
+];
+
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró exitosamente." : "";
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,15 +31,15 @@ verificarAcceso($rolRequerido);
 
   
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/global.css">
-    <link rel="stylesheet" href="./assets/css/formularios.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/formularios.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="administrador.php"><img src="./assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="inicio.php"><img src="../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -31,10 +49,10 @@ verificarAcceso($rolRequerido);
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="administrador.php">Inicio</a>
+                        <a class="nav-link" href="inicio.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="gestionUsuario.php">Usuarios</a>
+                        <a class="nav-link active" href="usuarios.php">Usuarios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="incidencias.php">Incidencias</a>
@@ -46,7 +64,7 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="inventario.php">Inventario</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="cerrarSesion.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -54,6 +72,14 @@ verificarAcceso($rolRequerido);
     </header>
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
+
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
 
         <section class="bg-white rounded mb-4 p-3 p-md-4 seccionTablaEmpleados">
             <h2 class="h4 mb-3">Datos de usuarios</h2>
@@ -145,25 +171,25 @@ verificarAcceso($rolRequerido);
                             </div>
 
                             <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                                <label for="contraseña" class="form-label">Contraseña</label>
-                                <input type="password" id="contraseña" name="contraseña" class="form-control"
+                                <label for="contrasena" class="form-label">Contraseña</label>
+                                <input type="password" id="contrasena" name="contrasena" class="form-control"
                                     placeholder="Ingrese la clave" autocomplete="new-password" required>
                             </div>
 
 
                              <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                                <label for="confirmarContraseña" class="form-label">Confirmar Contraseña</label>
-                                <input type="password" id="confirmarContraseña" name="confirmarContraseña" class="form-control"
+                                <label for="confirmarContrasena" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" id="confirmarContrasena" name="confirmarContrasena" class="form-control"
                                     placeholder="Confirme la clave" autocomplete="new-password" required>
                             </div>
 
                             <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                                <label for="cargo" class="form-label">Cargo</label>
-                                <select name="cargo" id="cargo" class="form-select" required>
+                                <label for="rol" class="form-label">Rol</label>
+                                <select name="rol" id="rol" class="form-select" required>
                                     <option value="" disabled selected>Seleccione un cargo</option>
-                                    <option value="Funcionario/Docente">Solicitante</option>
-                                    <option value="Asistente/Tecnico">Tecnico</option>
-                                    <option value="Administrativo">Administrador</option>
+                                    <option value="solicitante">Solicitante</option>
+                                    <option value="tecnico">Técnico</option>
+                                    <option value="administrador">Administrador</option>
                                 </select>
                             </div>
                         </section>
@@ -186,7 +212,7 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/js/administrador.js"></script>
+    <script src="../assets/js/administrador.js"></script>
 </body>
 
 </html>

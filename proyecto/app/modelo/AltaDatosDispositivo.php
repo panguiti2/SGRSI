@@ -18,17 +18,17 @@ class AltaDatosDispositivo
          }
 
 /**
-     * Registra un nuevo dispositivo con su rol.
+     * Registra un nuevo dispositivo.
      *
-     * @param string $idLab id del laboratorio.
+     * @param string $idLab Identificador del laboratorio.
      * @param string $numeroDispositivo Numero del dispositivo.
-     * @param string $Modificaciones modificaciones realizadas.
+     * @param string $modificaciones Última modificación registrada.
      * @param string $ultimoCambio ultimo cambio registrado.
      * @param bool $estado estado del dispositivo.
      *
      * @return bool TRUE si el registro se completa correctamente, FALSE en caso contrario.
      */
-    public function registrarDispositivo(string $idLab, string $numeroDispositivo, string $Modificaciones, string $ultimoCambio, bool $estado): bool
+    public function registrarDispositivo(string $idLab, string $numeroDispositivo, string $modificaciones, string $ultimoCambio, bool $estado): bool
     {
 
         try {
@@ -40,7 +40,7 @@ class AltaDatosDispositivo
 
             $consultaDispositivo = $this->conexion->prepare($sqlDispositivo);
 
-            $consultaDispositivo->execute(["idLab" => $idLab, "numeroDispositivo" => $numeroDispositivo, "Modificaciones" => $Modificaciones, "ultimoCambio" => $ultimoCambio, "estado" => $estado]);
+            $consultaDispositivo->execute(["idLab" => $idLab, "numeroDispositivo" => $numeroDispositivo, "Modificaciones" => $modificaciones, "ultimoCambio" => $ultimoCambio, "estado" => $estado]);
 
             //Confirma todas las operaciones realizadas.
             $this->conexion->commit();

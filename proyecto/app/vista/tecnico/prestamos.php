@@ -2,6 +2,17 @@
 $rolRequerido = "tecnico";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "peticion" => "La petición no es válida.",
+    "campos_vacios" => "Debe completar todos los campos del préstamo.",
+    "datos_incorrectos" => "Los datos del préstamo no son válidos.",
+    "error_prestamo" => "No se pudo registrar el préstamo."
+];
+
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registró exitosamente." : "";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,15 +23,15 @@ verificarAcceso($rolRequerido);
     <title>Prestamos</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/global.css">
-    <link rel="stylesheet" href="./assets/css/formularios.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/formularios.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100 sgrsi-app" id="inicio">
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="tecnico.php"><img src="./assets/img/logoITI.png" alt="Logo ITI"
+            <a class="navbar-brand fw-bold" href="inicio.php"><img src="../assets/img/logoITI.png" alt="Logo ITI"
                     class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
@@ -31,7 +42,7 @@ verificarAcceso($rolRequerido);
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="tecnico.php">Inicio</a>
+                        <a class="nav-link" href="inicio.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="solicitudes.php">Solicitudes</a>
@@ -52,7 +63,7 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="registrosUso.php">Registros de uso</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../cerrarSesion.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -60,6 +71,14 @@ verificarAcceso($rolRequerido);
     </header>
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
+
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
 
         <section class="bg-white rounded mb-4 p-3 p-md-4">
             <section class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
@@ -75,13 +94,23 @@ verificarAcceso($rolRequerido);
                             <th >CI</th>
                             <th >Turno</th>
                             <th >Nombre</th>
-                            <th >Máquina</th>
+                            <th >Laptop</th>
                             <th >Retiro</th>
                             <th >Devolución</th>
-                            <th >Operaciones</th>
                         </tr>
                     </thead>
-                    <tbody id="cuerpoTablaPrestamos"></tbody>
+                    <tbody id="cuerpoTablaPrestamos">
+                        <?php foreach ($prestamos as $prestamo): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($prestamo["cedulaSolicitante"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["turno"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["nombreSolicitante"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["numeroLaptop"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["fechaRetiro"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["fechaDevolucion"]) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
             </section>
         </section>
@@ -90,7 +119,7 @@ verificarAcceso($rolRequerido);
             <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarRegistarPrestamo" type="button"
                 aria-label="Cerrar"></button>
 
-            <form class="formPrestamo p-4" id="formularioPrestamos">
+            <form action="procesarAltaPrestamo.php" method="post" class="formPrestamo p-4" id="formularioPrestamos">
                 <fieldset>
                     <legend class="h4 mb-4">Solicitud de Préstamo de Equipo</legend>
 
@@ -118,8 +147,8 @@ verificarAcceso($rolRequerido);
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="maquina" class="form-label">N° de máquina</label>
-                            <input type="number" id="maquina" name="maquina" class="form-control" required>
+                            <label for="numeroLaptop" class="form-label">N° de laptop</label>
+                            <input type="text" id="numeroLaptop" name="numeroLaptop" class="form-control" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -151,7 +180,7 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/tecnico.js"></script>
+    <script src="../assets/js/tecnico.js"></script>
 </body>
 
 </html>

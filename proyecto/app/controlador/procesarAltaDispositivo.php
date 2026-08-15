@@ -26,7 +26,7 @@ if ($idLab === "" || $numeroDispositivo === "" || $modificaciones === "" || $est
     exit;
 }
 
-$laboratoriosPermitidos = ["TALL01", "TALL02", "TALL03", "LAB01", "LAB02", "LAB03", "LAB04", "LAB05", "LAB06"];
+$laboratoriosPermitidos = ["LAB01", "LAB02", "LAB03", "LAB04", "LAB05", "LAB06"];
 
 if (!in_array($idLab, $laboratoriosPermitidos, true) || !in_array($modificaciones, ["N/A", "Reparado", "Actualizado"], true) || !in_array($estado, ["1", "0"], true)) {
     header("Location: inventario.php?error=datos_incorrectos");

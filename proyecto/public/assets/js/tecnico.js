@@ -566,8 +566,6 @@ function agregarFilaIncidenciaTecnico(incidencia) {
     const campoLaboratorioIncidencia = document.createElement("td");
     campoLaboratorioIncidencia.textContent = incidencia.laboratorio;
 
-    const campoTallerIncidencia = document.createElement("td");
-    campoTallerIncidencia.textContent = incidencia.taller;
 
     const campoTurnoIncidencia = document.createElement("td");
     campoTurnoIncidencia.textContent = incidencia.turno;
@@ -621,7 +619,6 @@ function agregarFilaIncidenciaTecnico(incidencia) {
 
     fila.appendChild(campoIdIncidencia);
     fila.appendChild(campoLaboratorioIncidencia);
-    fila.appendChild(campoTallerIncidencia);
     fila.appendChild(campoTurnoIncidencia);
     fila.appendChild(campoFechaHoraIncidencia);
     fila.appendChild(campoDocenteIncidencia);
@@ -952,8 +949,6 @@ function agregarFilaRegistroUsoTecnico(registro) {
     const campoLaboratorioRegistro = document.createElement("td");
     campoLaboratorioRegistro.textContent = registro.laboratorio;
 
-    const campoTallerRegistro = document.createElement("td");
-    campoTallerRegistro.textContent = registro.taller;
 
     const campoTurnoRegistro = document.createElement("td");
     campoTurnoRegistro.textContent = registro.turno;
@@ -978,7 +973,6 @@ function agregarFilaRegistroUsoTecnico(registro) {
 
     fila.appendChild(campoIdRegistro);
     fila.appendChild(campoLaboratorioRegistro);
-    fila.appendChild(campoTallerRegistro);
     fila.appendChild(campoTurnoRegistro);
     fila.appendChild(campoFechaHoraRegistro);
     fila.appendChild(campoDocenteRegistro);

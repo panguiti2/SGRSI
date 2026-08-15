@@ -11,6 +11,8 @@ Antes de empezar a programar, es obligatorio leer las normas de desarrollo en lo
 *   [Especificación de Requerimientos de Software](./docs/ERS.pdf)
 *   [Convenciones de Mensajes de Commit](./docs/convencionesCommit.md)
 *   [Estándares de Codificación de Código](./docs/estandaresCodificacion.md)
+*   [DER, modelo relacional y tercera forma normal](./docs/modeloDatos.md)
+*   [Generación de documentación Doxygen](./docs/doxygen.md)
 
 
 ## Desarrollado por PANGU

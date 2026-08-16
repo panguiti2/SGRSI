@@ -528,6 +528,8 @@ function agregarFilaIncidenciaAdmin(incidencia) {
     const campoLaboratorioIncidencia = document.createElement("td");
     campoLaboratorioIncidencia.textContent = incidencia.laboratorio;
 
+    const campoTallerIncidencia = document.createElement("td");
+    campoTallerIncidencia.textContent = incidencia.taller;
 
     const campoTurnoIncidencia = document.createElement("td");
     campoTurnoIncidencia.textContent = incidencia.turno;
@@ -579,6 +581,7 @@ function agregarFilaIncidenciaAdmin(incidencia) {
 
     fila.appendChild(campoIdIncidencia);
     fila.appendChild(campoLaboratorioIncidencia);
+    fila.appendChild(campoTallerIncidencia);
     fila.appendChild(campoTurnoIncidencia);
     fila.appendChild(campoFechaHoraIncidencia);
     fila.appendChild(campoDocenteIncidencia);

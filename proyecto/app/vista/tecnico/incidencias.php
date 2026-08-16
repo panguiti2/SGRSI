@@ -83,6 +83,7 @@ verificarAcceso($rolRequerido);
                       <tr>
                             <th >ID</th>
                             <th >Laboratorio</th>
+                            <th >Taller</th>
                             <th >Turno</th>
                             <th >Fecha y hora</th>
                             <th >Docente</th>
@@ -102,31 +103,47 @@ verificarAcceso($rolRequerido);
                         </tr>
                     </thead>
 
-                    <tbody id="cuerpoTablaIncidencias">
-                    <?php foreach ($incidencias as $incidencia): ?><tr>
-                        <td><?= htmlspecialchars($incidencia["idIncidencia"]) ?></td><td><?= htmlspecialchars($incidencia["laboratorio"]) ?></td>
-                        <td><?= htmlspecialchars($incidencia["turno"]) ?></td><td><?= htmlspecialchars($incidencia["fechaHora"]) ?></td>
-                        <td><?= htmlspecialchars($incidencia["docente"]) ?></td><td><?= htmlspecialchars($incidencia["grupo"]) ?></td>
-                        <td><?= htmlspecialchars($incidencia["asignatura"]) ?></td><td><?= $incidencia["reportoAlumno"] ? "Sí" : "No" ?></td>
-                        <td><?= htmlspecialchars($incidencia["nombreAlumno"] ?? "") ?></td><td><?= htmlspecialchars((string) ($incidencia["maquina"] ?? "")) ?></td>
-                        <td><?= htmlspecialchars($incidencia["recurso"]) ?></td><td><?= htmlspecialchars($incidencia["tipoIncidencia"]) ?></td>
-                        <td><?= htmlspecialchars($incidencia["descripcion"]) ?></td><td><?= htmlspecialchars($incidencia["vencimiento"] ?? "") ?></td>
-                        <td><?= htmlspecialchars($incidencia["estado"]) ?></td><td><?= htmlspecialchars($incidencia["urgencia"] ?? "") ?></td>
-                        <td><?= htmlspecialchars($incidencia["tecnicoAsignado"] ?? "") ?></td>
-                        <td><form action="procesarAsignacionIncidencia.php" method="post" class="d-grid gap-1">
-                            <input type="hidden" name="idIncidencia" value="<?= htmlspecialchars($incidencia["idIncidencia"]) ?>">
-                            <input type="datetime-local" name="vencimiento" class="form-control form-control-sm" required>
-                            <select name="estado" class="form-select form-select-sm" required><option>PENDIENTE</option><option>EN PROCESO</option><option>RESUELTO</option></select>
-                            <select name="urgencia" class="form-select form-select-sm" required><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select>
-                            <input type="text" name="tecnicoAsignado" class="form-control form-control-sm" value="<?= htmlspecialchars($incidencia["tecnicoAsignado"] ?? "") ?>" required>
-                            <button class="btn btn-primary btn-sm">Guardar</button>
-                        </form></td>
-                    </tr><?php endforeach; ?>
-                    </tbody>
+                    <tbody id="cuerpoTablaIncidencias"></tbody>
                 </table>
             </section>
 
     </main>
+
+    <dialog class="dialogAsignarIncidencia seccionFormulario w-100 p-0 rounded-3 border-0"
+        style="max-width: 500px;">
+        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAsignarIncidencia"
+            type="button" aria-label="Cerrar"></button>
+
+        <form id="formularioAsignarIncidencia" class="p-4">
+            <fieldset>
+                <legend class="h4 mb-4">Asignar incidencia</legend>
+
+                <section class="row g-3 mb-4">
+                    <div class="col-12">
+                        <label for="vencimientoIncidencia" class="form-label">Vencimiento</label>
+                        <input type="datetime-local" id="vencimientoIncidencia" class="form-control" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="urgenciaIncidencia" class="form-label">Urgencia</label>
+                        <select id="urgenciaIncidencia" class="form-select" required>
+                            <option value="" disabled selected>Seleccione urgencia</option>
+                            <option value="ALTA">Alta</option>
+                            <option value="MEDIA">Media</option>
+                            <option value="BAJA">Baja</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="tecnicoIncidencia" class="form-label">Técnico asignado</label>
+                        <input type="text" id="tecnicoIncidencia" class="form-control" required>
+                    </div>
+                </section>
+
+                <button type="submit" class="btn btn-primary w-100">Guardar asignación</button>
+            </fieldset>
+        </form>
+    </dialog>
 
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">
         <address class="d-flex flex-column flex-md-row justify-content-center gap-2 gap-md-3 text-center mb-2">

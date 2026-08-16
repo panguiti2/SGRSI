@@ -55,14 +55,14 @@ verificarAcceso($rolRequerido);
         <section class="seccionFormulario bg-white rounded p-3 p-md-4 mb-4">
             <button class="btn btn-outline-primary w-100 w-md-auto mb-3">Mis solicitudes</button>
 
-            <form action="procesarAltaSolicitud.php" method="post" id="formularioSolicitud">
+            <form id="formularioSolicitud">
                 <fieldset>
                     <legend class="h4 mb-4">Solicitar servicio</legend>
 
                     <section class="row g-3 mb-4 ">
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="laboratorio" class="form-label">Laboratorio</label>
-                            <select id="laboratorio" name="laboratorio" class="form-select" required>
+                            <select id="laboratorio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione laboratorio</option>
                                 <option value="N/A">N/A</option>
                                 <option value="LAB1">Laboratorio 1</option>
@@ -71,6 +71,17 @@ verificarAcceso($rolRequerido);
                                 <option value="LAB4">Laboratorio 4</option>
                                 <option value="LAB5">Laboratorio 5</option>
                                 <option value="LAB6">Laboratorio 6</option>
+                            </select>
+                        </div>
+
+                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                            <label for="taller" class="form-label">Taller</label>
+                            <select id="taller" class="form-select" required>
+                                <option value="" disabled selected>Seleccione taller</option>
+                                <option value="N/A">N/A</option>
+                                <option value="TALLER1">Taller 1</option>
+                                <option value="TALLER2">Taller 2</option>
+                                <option value="TALLER3">Taller 3</option>
                             </select>
                         </div>
 
@@ -160,27 +171,6 @@ verificarAcceso($rolRequerido);
                     </section>
                 </fieldset>
             </form>
-        </section>
-
-        <section class="bg-white rounded p-3 p-md-4 panelTabla">
-            <h2 class="h4 mb-3">Mis solicitudes</h2>
-            <section class="table-responsive">
-                <table class="table table-bordered table-hover table-sm mb-0 small">
-                    <thead class="table-light"><tr><th>ID</th><th>Laboratorio</th><th>Fecha</th><th>Tipo</th><th>Prioridad</th><th>Estado</th></tr></thead>
-                    <tbody>
-                        <?php foreach ($solicitudes as $solicitud): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["laboratorio"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["fechaHora"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["prioridad"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </section>
         </section>
 
     </main>

@@ -50,14 +50,14 @@ verificarAcceso($rolRequerido);
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
         <section class="seccionRegistroUso seccionFormulario bg-white rounded p-3 p-md-4">
-            <form action="procesarAltaRegistroUso.php" method="post" id="formularioRegistroUso">
+            <form id="formularioRegistroUso">
                 <fieldset>
                     <legend class="h4 mb-4">Registro de uso de laboratorio</legend>
 
                     <section class="row g-3">
                         <div class="col-12 col-md-6">
                             <label for="laboratorio" class="form-label">Laboratorio</label>
-                            <select id="laboratorio" name="laboratorio" class="form-select" required>
+                            <select id="laboratorio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione laboratorio</option>
                                 <option value="N/A">N/A</option>
                                 <option value="LAB1">Laboratorio 1</option>
@@ -68,6 +68,18 @@ verificarAcceso($rolRequerido);
                                 <option value="LAB6">Laboratorio 6</option>
                             </select>
                         </div>
+
+                         <div class="col-12 col-md-6">
+                            <label for="taller" class="form-label">Taller</label>
+                            <select id="taller" class="form-select" required>
+                                <option value="" disabled selected>Seleccione taller</option>
+                                <option value="N/A">N/A</option>
+                                <option value="TALLER1">Taller 1</option>
+                                <option value="TALLER2">Taller 2</option>
+                                <option value="TALLER3">Taller 3</option>
+                            </select>
+                        </div>
+                               
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="turno" class="form-label">Turno</label>
@@ -81,13 +93,13 @@ verificarAcceso($rolRequerido);
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="fechaHora" class="form-label">Fecha y hora</label>
-                            <input type="datetime-local" id="fechaHora" name="fechaHora" class="form-control" required>
+                            <input type="datetime-local" id="fechaHora" class="form-control" required>
                         </div>
 
                         
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="docente" class="form-label">Docente</label>
-                            <input type="text" id="docente" name="docente" class="form-control"
+                            <input type="text" id="docente" class="form-control"
                                 placeholder="Ingrese el nombre del docente" required>
                         </div>
 
@@ -143,9 +155,6 @@ verificarAcceso($rolRequerido);
                 </fieldset>
             </form>
         </section>
-        <section class="bg-white rounded p-3 p-md-4 mt-4 panelTabla"><h2 class="h4">Mis registros</h2><section class="table-responsive"><table class="table table-bordered table-sm"><thead><tr><th>ID</th><th>Laboratorio</th><th>Fecha</th><th>Asignatura</th><th>Máquinas</th><th>Incidencias</th></tr></thead><tbody>
-        <?php foreach ($registrosUso as $registro): ?><tr><td><?= htmlspecialchars($registro["idRegistro"]) ?></td><td><?= htmlspecialchars($registro["laboratorio"]) ?></td><td><?= htmlspecialchars($registro["fechaHora"]) ?></td><td><?= htmlspecialchars($registro["asignatura"]) ?></td><td><?= $registro["usoMaquinas"] ? "Sí" : "No" ?></td><td><?= $registro["huboIncidencias"] ? "Sí" : "No" ?></td></tr><?php endforeach; ?>
-        </tbody></table></section></section>
     </main>
 
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">

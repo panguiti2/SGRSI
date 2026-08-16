@@ -25,17 +25,39 @@ class AltaDatosSolicitud
     {
         try {
             $this->conexion->beginTransaction();
-            $sql = "INSERT INTO SOLICITUD (
-                        idSolicitud, cedulaSolicitante, laboratorio, turno, docente,
-                        asignatura, email, fechaHora, tipoServicio, software,
+            $sqlTicket = "INSERT INTO TICKET (
+                        id, cedulaSolicitante, laboratorio, fechaHora, NombreDocente, estado
+                    ) VALUES (
+                        :id, :cedulaSolicitante, :laboratorio, :fechaHora, :NombreDocente, 'PENDIENTE'
+                    )";
+            $consultaTicket = $this->conexion->prepare($sqlTicket);
+            $consultaTicket->execute([
+                "id" => $solicitud["idSolicitud"],
+                "cedulaSolicitante" => $solicitud["cedulaSolicitante"],
+                "laboratorio" => $solicitud["laboratorio"],
+                "fechaHora" => $solicitud["fechaHora"],
+                "NombreDocente" => $solicitud["docente"]
+            ]);
+
+            $sqlServicio = "INSERT INTO SERVICIO (
+                        id, TipoServicio, turno, asignatura, email, software,
                         todasMaquinas, prioridad, descripcion
                     ) VALUES (
-                        :idSolicitud, :cedulaSolicitante, :laboratorio, :turno, :docente,
-                        :asignatura, :email, :fechaHora, :tipoServicio, :software,
+                        :id, :TipoServicio, :turno, :asignatura, :email, :software,
                         :todasMaquinas, :prioridad, :descripcion
                     )";
-            $consulta = $this->conexion->prepare($sql);
-            $consulta->execute($solicitud);
+            $consultaServicio = $this->conexion->prepare($sqlServicio);
+            $consultaServicio->execute([
+                "id" => $solicitud["idSolicitud"],
+                "TipoServicio" => $solicitud["tipoServicio"],
+                "turno" => $solicitud["turno"],
+                "asignatura" => $solicitud["asignatura"],
+                "email" => $solicitud["email"],
+                "software" => $solicitud["software"],
+                "todasMaquinas" => $solicitud["todasMaquinas"],
+                "prioridad" => $solicitud["prioridad"],
+                "descripcion" => $solicitud["descripcion"]
+            ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {
             if ($this->conexion->inTransaction()) {
@@ -54,11 +76,15 @@ class AltaDatosSolicitud
     public function actualizarEstado(string $idSolicitud, string $estado): bool
     {
         $consulta = $this->conexion->prepare(
-            "UPDATE SOLICITUD SET estado = :estado WHERE idSolicitud = :idSolicitud"
+            "UPDATE TICKET
+             SET estado = :estado,
+                 FechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
+             WHERE id = :idSolicitud"
         );
         return $consulta->execute([
             "idSolicitud" => $idSolicitud,
-            "estado" => $estado
+            "estado" => $estado,
+            "estadoCierre" => $estado
         ]);
     }
 }

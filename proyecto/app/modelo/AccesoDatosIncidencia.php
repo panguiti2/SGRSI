@@ -23,14 +23,17 @@ class AccesoDatosIncidencia
      */
     public function listarIncidencias(?string $cedulaSolicitante = null): array
     {
-        $sql = "SELECT idIncidencia, cedulaSolicitante, laboratorio, turno, fechaHora,
-                       docente, grupo, asignatura, reportoAlumno, nombreAlumno, maquina,
-                       recurso, tipoIncidencia, descripcion, vencimiento, estado,
-                       urgencia, tecnicoAsignado FROM INCIDENCIA";
+        $sql = "SELECT t.id AS idIncidencia, t.cedulaSolicitante, t.laboratorio,
+                       i.turno, t.fechaHora, t.NombreDocente AS docente, i.grupo,
+                       i.asignatura, i.reportoAlumno, i.NombreAlumno AS nombreAlumno,
+                       i.maquina, i.recurso, i.tipoIncidencia, i.descripcion,
+                       i.vencimiento, t.estado, i.urgencia, i.tecnicoAsignado
+                FROM TICKET AS t
+                INNER JOIN INCIDENCIA AS i ON i.id = t.id";
         if ($cedulaSolicitante !== null) {
-            $sql .= " WHERE cedulaSolicitante = :cedulaSolicitante";
+            $sql .= " WHERE t.cedulaSolicitante = :cedulaSolicitante";
         }
-        $sql .= " ORDER BY fechaHora DESC";
+        $sql .= " ORDER BY t.fechaHora DESC";
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute($cedulaSolicitante === null ? [] : ["cedulaSolicitante" => $cedulaSolicitante]);
         return $consulta->fetchAll(PDO::FETCH_ASSOC);

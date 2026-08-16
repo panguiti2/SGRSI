@@ -25,17 +25,40 @@ class AltaDatosIncidencia
     {
         try {
             $this->conexion->beginTransaction();
-            $sql = "INSERT INTO INCIDENCIA (
-                        idIncidencia, cedulaSolicitante, laboratorio, turno, fechaHora,
-                        docente, grupo, asignatura, reportoAlumno, nombreAlumno, maquina,
-                        recurso, tipoIncidencia, descripcion
+            $sqlTicket = "INSERT INTO TICKET (
+                        id, cedulaSolicitante, laboratorio, fechaHora, NombreDocente, estado
                     ) VALUES (
-                        :idIncidencia, :cedulaSolicitante, :laboratorio, :turno, :fechaHora,
-                        :docente, :grupo, :asignatura, :reportoAlumno, :nombreAlumno, :maquina,
-                        :recurso, :tipoIncidencia, :descripcion
+                        :id, :cedulaSolicitante, :laboratorio, :fechaHora, :NombreDocente, 'PENDIENTE'
                     )";
-            $consulta = $this->conexion->prepare($sql);
-            $consulta->execute($incidencia);
+            $consultaTicket = $this->conexion->prepare($sqlTicket);
+            $consultaTicket->execute([
+                "id" => $incidencia["idIncidencia"],
+                "cedulaSolicitante" => $incidencia["cedulaSolicitante"],
+                "laboratorio" => $incidencia["laboratorio"],
+                "fechaHora" => $incidencia["fechaHora"],
+                "NombreDocente" => $incidencia["docente"]
+            ]);
+
+            $sqlIncidencia = "INSERT INTO INCIDENCIA (
+                        id, descripcion, turno, asignatura, reportoAlumno,
+                        NombreAlumno, grupo, maquina, recurso, tipoIncidencia
+                    ) VALUES (
+                        :id, :descripcion, :turno, :asignatura, :reportoAlumno,
+                        :NombreAlumno, :grupo, :maquina, :recurso, :tipoIncidencia
+                    )";
+            $consultaIncidencia = $this->conexion->prepare($sqlIncidencia);
+            $consultaIncidencia->execute([
+                "id" => $incidencia["idIncidencia"],
+                "descripcion" => $incidencia["descripcion"],
+                "turno" => $incidencia["turno"],
+                "asignatura" => $incidencia["asignatura"],
+                "reportoAlumno" => $incidencia["reportoAlumno"],
+                "NombreAlumno" => $incidencia["nombreAlumno"],
+                "grupo" => $incidencia["grupo"],
+                "maquina" => $incidencia["maquina"],
+                "recurso" => $incidencia["recurso"],
+                "tipoIncidencia" => $incidencia["tipoIncidencia"]
+            ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {
             if ($this->conexion->inTransaction()) $this->conexion->rollBack();
@@ -50,10 +73,38 @@ class AltaDatosIncidencia
      */
     public function asignarIncidencia(array $asignacion): bool
     {
-        $sql = "UPDATE INCIDENCIA
-                SET vencimiento = :vencimiento, estado = :estado,
-                    urgencia = :urgencia, tecnicoAsignado = :tecnicoAsignado
-                WHERE idIncidencia = :idIncidencia";
-        return $this->conexion->prepare($sql)->execute($asignacion);
+        try {
+            $this->conexion->beginTransaction();
+            $consultaTicket = $this->conexion->prepare(
+                "UPDATE TICKET
+                 SET estado = :estado,
+                     FechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
+                 WHERE id = :idIncidencia"
+            );
+            $consultaTicket->execute([
+                "estado" => $asignacion["estado"],
+                "estadoCierre" => $asignacion["estado"],
+                "idIncidencia" => $asignacion["idIncidencia"]
+            ]);
+
+            $consultaIncidencia = $this->conexion->prepare(
+                "UPDATE INCIDENCIA
+                 SET vencimiento = :vencimiento, urgencia = :urgencia,
+                     tecnicoAsignado = :tecnicoAsignado
+                 WHERE id = :idIncidencia"
+            );
+            $consultaIncidencia->execute([
+                "vencimiento" => $asignacion["vencimiento"],
+                "urgencia" => $asignacion["urgencia"],
+                "tecnicoAsignado" => $asignacion["tecnicoAsignado"],
+                "idIncidencia" => $asignacion["idIncidencia"]
+            ]);
+            return $this->conexion->commit();
+        } catch (PDOException $error) {
+            if ($this->conexion->inTransaction()) {
+                $this->conexion->rollBack();
+            }
+            return false;
+        }
     }
 }

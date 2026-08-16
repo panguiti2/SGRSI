@@ -1,10 +1,9 @@
-INSERT INTO SOLICITUD (
-    idSolicitud, cedulaSolicitante, laboratorio, turno, docente,
-    asignatura, email, fechaHora, tipoServicio, software,
-    todasMaquinas, prioridad, descripcion, estado
-) VALUES (
-    'SOL00001', '33333333', 'LAB1', 'MATUTINO', 'Ana Pérez',
-    'Programación', 'ana@example.com', '2026-08-17 08:00:00',
-    'INSTALACION', 'Visual Studio Code', TRUE, 'NORMAL',
-    'Instalación para la clase.', 'PENDIENTE'
-);
+START TRANSACTION;
+
+INSERT INTO TICKET (id, cedulaSolicitante, fechaApertura, grupo, nombreDocente, descripcion, turno, estado, asignatura)
+VALUES ('SOL00001', '33333333', '2026-08-17 08:00:00', '3A', 'Ana Pérez', 'Instalación para la clase.', 'MATUTINO', 'PENDIENTE', 'Programación');
+
+INSERT INTO SERVICIO (idServicio, tipoServicio)
+VALUES ('SOL00001', 'INSTALACION');
+
+COMMIT;

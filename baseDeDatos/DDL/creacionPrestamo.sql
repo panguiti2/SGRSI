@@ -7,5 +7,7 @@ CREATE TABLE PRESTAMO (
     fechaRetiro DATETIME NOT NULL,
     fechaDevolucion DATETIME NOT NULL,
 
-    CONSTRAINT pk_prestamo PRIMARY KEY (idPrestamo)
+    CONSTRAINT pk_prestamo PRIMARY KEY (idPrestamo),
+    CONSTRAINT fk_prestamo_solicitante FOREIGN KEY (cedulaSolicitante) REFERENCES SOLICITANTE (cedula),
+    CONSTRAINT chk_prestamo_fechas CHECK (fechaDevolucion >= fechaRetiro)
 );

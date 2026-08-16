@@ -39,9 +39,6 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registroUso.php">Registro de Uso</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>

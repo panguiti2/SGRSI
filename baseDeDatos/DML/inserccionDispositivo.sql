@@ -1,4 +1,4 @@
-INSERT INTO LABORATORIO (idLab, nombre) VALUES
+INSERT INTO LABORATORIO (idLaboratorio, nombre) VALUES
 ('LAB01', 'Laboratorio 1'),
 ('LAB02', 'Laboratorio 2'),
 ('LAB03', 'Laboratorio 3'),
@@ -6,7 +6,7 @@ INSERT INTO LABORATORIO (idLab, nombre) VALUES
 ('LAB05', 'Laboratorio 5'),
 ('LAB06', 'Laboratorio 6');
 
-INSERT INTO DISPOSITIVO (idLab, numeroDispositivo, Modificaciones, estado)VALUES
+INSERT INTO DISPOSITIVO (idLaboratorio, numeroDispositivo, modificaciones, estado) VALUES
 ('LAB01', 'PC010', 'Actualizado', TRUE),
 ('LAB01', 'PC011', 'Reparado', TRUE),
 ('LAB01', 'PC012', 'Actualizado', FALSE),

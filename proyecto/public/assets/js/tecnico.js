@@ -118,14 +118,13 @@ function cerrarAltaPrestamo() {
     dialogPrestamos.close();
 }
 
+// Los préstamos se cargan y registran con PHP y PDO, no con localStorage.
+if (false) {
 /**
  * Carga un préstamo en el formulario para modificarlo.
  * @param {string} cedulaSolicitante Cédula asociada al préstamo.
  * @returns {void}
  */
-
-// Los préstamos se cargan y registran con PHP y PDO, no con localStorage.
-if (false) {
 function abrirModificarPrestamo(cedulaSolicitante) {
     prestamoEnEdicion = true;
     const prestamos = cargarPrestamosGuardadosLocal();
@@ -915,92 +914,6 @@ if (btnCerrarAsignarSolicitud) {
 if (dialogAsignarSolicitud) {
     dialogAsignarSolicitud.addEventListener("cancel", cerrarAsignarSolicitud);
 }
-
-/**
- * Cuerpo de la tabla de registros de uso.
- * @type {HTMLTableSectionElement|null}
- */
-
-const cuerpoTablaRegistrosUso = document.getElementById("cuerpoTablaRegistrosUso");
-
-/**
- * Obtiene los registros de uso almacenados localmente.
- * @returns {RegistroUso[]} Lista de registros de uso.
- */
-
-function cargarRegistrosUsoTecnicoLocal() {
-    const registrosGuardados = localStorage.getItem("registrosUso");
-    if (registrosGuardados === null) return [];
-    return JSON.parse(registrosGuardados);
-}
-
-/**
- * Agrega un registro de uso a la tabla técnica.
- * @param {RegistroUso} registro Registro que se mostrará.
- * @returns {void}
- */
-
-function agregarFilaRegistroUsoTecnico(registro) {
-    const fila = document.createElement("tr");
-
-    const campoIdRegistro = document.createElement("td");
-    campoIdRegistro.textContent = registro.id;
-
-    const campoLaboratorioRegistro = document.createElement("td");
-    campoLaboratorioRegistro.textContent = registro.laboratorio;
-
-
-    const campoTurnoRegistro = document.createElement("td");
-    campoTurnoRegistro.textContent = registro.turno;
-
-    const campoFechaHoraRegistro = document.createElement("td");
-    campoFechaHoraRegistro.textContent = registro.fechaHora;
-
-    const campoDocenteRegistro = document.createElement("td");
-    campoDocenteRegistro.textContent = registro.docente;
-
-    const campoGrupoRegistro = document.createElement("td");
-    campoGrupoRegistro.textContent = registro.grupo;
-
-    const campoAsignaturaRegistro = document.createElement("td");
-    campoAsignaturaRegistro.textContent = registro.asignatura;
-
-    const campoUsoMaquinasRegistro = document.createElement("td");
-    campoUsoMaquinasRegistro.textContent = registro.usoMaquinas;
-
-    const campoIncidenciasRegistro = document.createElement("td");
-    campoIncidenciasRegistro.textContent = registro.incidencias;
-
-    fila.appendChild(campoIdRegistro);
-    fila.appendChild(campoLaboratorioRegistro);
-    fila.appendChild(campoTurnoRegistro);
-    fila.appendChild(campoFechaHoraRegistro);
-    fila.appendChild(campoDocenteRegistro);
-    fila.appendChild(campoGrupoRegistro);
-    fila.appendChild(campoAsignaturaRegistro);
-    fila.appendChild(campoUsoMaquinasRegistro);
-    fila.appendChild(campoIncidenciasRegistro);
-
-    cuerpoTablaRegistrosUso.appendChild(fila);
-}
-
-/**
- * Actualiza la tabla técnica de registros de uso.
- * @returns {void}
- */
-
-function actualizarTablaRegistrosUsoTecnico() {
-    cuerpoTablaRegistrosUso.replaceChildren();
-    const registros = cargarRegistrosUsoTecnicoLocal();
-
-    for (const registro of registros) {
-        agregarFilaRegistroUsoTecnico(registro);
-    }
-}
-
-//if (cuerpoTablaRegistrosUso) {
- //   actualizarTablaRegistrosUsoTecnico();
-//}
 
 /**
  * Cuerpo de la tabla técnica de inventario.

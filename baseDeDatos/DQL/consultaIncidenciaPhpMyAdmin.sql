@@ -1,6 +1,8 @@
-SELECT idIncidencia, cedulaSolicitante, laboratorio, turno, fechaHora,
-       docente, grupo, asignatura, reportoAlumno, nombreAlumno, maquina,
-       recurso, tipoIncidencia, descripcion, vencimiento, estado,
-       urgencia, tecnicoAsignado
-FROM INCIDENCIA
-ORDER BY fechaHora DESC;
+SELECT t.id AS idIncidencia, t.cedulaSolicitante, t.fechaApertura, t.fechaCierre,
+       t.grupo, t.nombreDocente, t.descripcion, t.turno, t.estado,
+       t.asignatura, i.reportoAlumno, i.nombreAlumno,
+       g.cedulaTecnico, g.fecha AS fechaGestion
+FROM TICKET AS t
+INNER JOIN INCIDENCIA AS i ON i.id = t.id
+LEFT JOIN GESTIONA AS g ON g.idTicket = t.id
+ORDER BY t.fechaApertura DESC;

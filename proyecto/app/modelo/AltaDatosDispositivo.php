@@ -36,7 +36,7 @@ class AltaDatosDispositivo
             //Si una instrucción falla, retorna excepción con la posibilidad de deshacer cambios con rollBack()
             $this->conexion->beginTransaction();
 
-            $sqlDispositivo = "INSERT INTO DISPOSITIVO (idLab, numeroDispositivo, Modificaciones, ultimoCambio, estado) VALUES (:idLab, :numeroDispositivo, :Modificaciones, :ultimoCambio, :estado)";
+            $sqlDispositivo = "INSERT INTO DISPOSITIVO (idLaboratorio, numeroDispositivo, modificaciones, ultimoCambio, estado) VALUES (:idLab, :numeroDispositivo, :Modificaciones, :ultimoCambio, :estado)";
 
             $consultaDispositivo = $this->conexion->prepare($sqlDispositivo);
 

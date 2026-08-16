@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Verifica que la sesión pertenezca al rol requerido y redirige si no corresponde.
+ * @param string $rolRequerido Rol necesario para acceder al recurso.
+ * @return void
+ */
 function verificarAcceso(string $rolRequerido): void
 {
     if (session_status() === PHP_SESSION_NONE) {

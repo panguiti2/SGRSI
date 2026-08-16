@@ -1,7 +1,8 @@
 SELECT
-    idSolicitud, cedulaSolicitante, laboratorio, turno, docente,
-    asignatura, email, fechaHora, tipoServicio, software,
-    todasMaquinas, prioridad, descripcion, estado
-FROM SOLICITUD
-WHERE cedulaSolicitante = :cedulaSolicitante
-ORDER BY fechaHora DESC;
+    t.id AS idSolicitud, t.cedulaSolicitante, t.fechaApertura, t.fechaCierre,
+    t.grupo, t.nombreDocente, t.descripcion, t.turno, t.estado,
+    t.asignatura, s.tipoServicio
+FROM TICKET AS t
+INNER JOIN SERVICIO AS s ON s.idServicio = t.id
+WHERE t.cedulaSolicitante = :cedulaSolicitante
+ORDER BY t.fechaApertura DESC;

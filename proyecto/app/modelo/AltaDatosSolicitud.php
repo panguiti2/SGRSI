@@ -1,29 +1,56 @@
 <?php
 
+/**
+ * Clase encargada de registrar solicitudes y actualizar su estado.
+ */
 class AltaDatosSolicitud
 {
     private PDO $conexion;
 
+    /**
+     * Inicializa las operaciones de solicitudes con una conexión activa.
+     * @param PDO $conexion Conexión a la base de datos.
+     */
     public function __construct(PDO $conexion)
     {
         $this->conexion = $conexion;
     }
 
+    /**
+     * Registra una solicitud mediante una transacción.
+     * @param array $solicitud Datos validados de la nueva solicitud.
+     * @return bool TRUE si se confirma el registro, FALSE en caso contrario.
+     */
     public function registrarSolicitud(array $solicitud): bool
     {
         try {
             $this->conexion->beginTransaction();
-            $sql = "INSERT INTO SOLICITUD (
-                        idSolicitud, cedulaSolicitante, laboratorio, turno, docente,
-                        asignatura, email, fechaHora, tipoServicio, software,
-                        todasMaquinas, prioridad, descripcion
+            $sqlTicket = "INSERT INTO TICKET (
+                        id, cedulaSolicitante, fechaApertura, grupo, nombreDocente,
+                        descripcion, turno, estado, asignatura
                     ) VALUES (
-                        :idSolicitud, :cedulaSolicitante, :laboratorio, :turno, :docente,
-                        :asignatura, :email, :fechaHora, :tipoServicio, :software,
-                        :todasMaquinas, :prioridad, :descripcion
+                        :id, :cedulaSolicitante, :fechaApertura, :grupo, :nombreDocente,
+                        :descripcion, :turno, 'PENDIENTE', :asignatura
                     )";
-            $consulta = $this->conexion->prepare($sql);
-            $consulta->execute($solicitud);
+            $consultaTicket = $this->conexion->prepare($sqlTicket);
+            $consultaTicket->execute([
+                "id" => $solicitud["idSolicitud"],
+                "cedulaSolicitante" => $solicitud["cedulaSolicitante"],
+                "fechaApertura" => $solicitud["fechaApertura"],
+                "grupo" => $solicitud["grupo"],
+                "nombreDocente" => $solicitud["nombreDocente"],
+                "descripcion" => $solicitud["descripcion"],
+                "turno" => $solicitud["turno"],
+                "asignatura" => $solicitud["asignatura"]
+            ]);
+
+            $sqlServicio = "INSERT INTO SERVICIO (idServicio, tipoServicio)
+                            VALUES (:idServicio, :tipoServicio)";
+            $consultaServicio = $this->conexion->prepare($sqlServicio);
+            $consultaServicio->execute([
+                "idServicio" => $solicitud["idSolicitud"],
+                "tipoServicio" => $solicitud["tipoServicio"]
+            ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {
             if ($this->conexion->inTransaction()) {
@@ -33,14 +60,24 @@ class AltaDatosSolicitud
         }
     }
 
+    /**
+     * Actualiza el estado de una solicitud existente.
+     * @param string $idSolicitud Identificador de la solicitud.
+     * @param string $estado Nuevo estado de seguimiento.
+     * @return bool TRUE si la consulta se ejecuta correctamente.
+     */
     public function actualizarEstado(string $idSolicitud, string $estado): bool
     {
         $consulta = $this->conexion->prepare(
-            "UPDATE SOLICITUD SET estado = :estado WHERE idSolicitud = :idSolicitud"
+            "UPDATE TICKET
+             SET estado = :estado,
+                 FechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
+             WHERE id = :idSolicitud"
         );
         return $consulta->execute([
             "idSolicitud" => $idSolicitud,
-            "estado" => $estado
+            "estado" => $estado,
+            "estadoCierre" => $estado
         ]);
     }
 }

@@ -1,14 +1,32 @@
 <?php
 
+/**
+ * Registra préstamos de equipos en la base de datos.
+ */
 class AltaDatosPrestamo
 {
     private PDO $conexion;
 
+    /**
+     * Inicializa el alta de préstamos con una conexión activa.
+     * @param PDO $conexion Conexión activa con la base de datos.
+     */
     public function __construct(PDO $conexion)
     {
         $this->conexion = $conexion;
     }
 
+    /**
+     * Registra un préstamo con los datos recibidos.
+     * @param string $idPrestamo Identificador del préstamo.
+     * @param string $cedulaSolicitante Cédula del solicitante.
+     * @param string $turno Turno correspondiente al préstamo.
+     * @param string $nombreSolicitante Nombre del solicitante.
+     * @param string $numeroLaptop Número de la laptop prestada.
+     * @param string $fechaRetiro Fecha de retiro del equipo.
+     * @param string $fechaDevolucion Fecha prevista o efectiva de devolución.
+     * @return bool Verdadero si el préstamo fue registrado.
+     */
     public function registrarPrestamo(
         string $idPrestamo,
         string $cedulaSolicitante,

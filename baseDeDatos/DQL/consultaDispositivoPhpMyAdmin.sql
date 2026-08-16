@@ -1,5 +1,5 @@
 SELECT
-    d.idLab,
+    d.idLaboratorio,
     l.nombre AS laboratorio,
     d.numeroDispositivo,
     d.Modificaciones AS modificaciones,
@@ -10,5 +10,5 @@ SELECT
     d.ultimoCambio
 FROM DISPOSITIVO AS d
 INNER JOIN LABORATORIO AS l
-    ON l.idLab = d.idLab
-ORDER BY d.idLab, d.numeroDispositivo;
+    ON l.idLaboratorio = d.idLaboratorio
+ORDER BY d.idLaboratorio, d.numeroDispositivo;

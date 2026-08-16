@@ -26,37 +26,30 @@ class AltaDatosSolicitud
         try {
             $this->conexion->beginTransaction();
             $sqlTicket = "INSERT INTO TICKET (
-                        id, cedulaSolicitante, laboratorio, fechaHora, NombreDocente, estado
+                        id, cedulaSolicitante, fechaApertura, grupo, nombreDocente,
+                        descripcion, turno, estado, asignatura
                     ) VALUES (
-                        :id, :cedulaSolicitante, :laboratorio, :fechaHora, :NombreDocente, 'PENDIENTE'
+                        :id, :cedulaSolicitante, :fechaApertura, :grupo, :nombreDocente,
+                        :descripcion, :turno, 'PENDIENTE', :asignatura
                     )";
             $consultaTicket = $this->conexion->prepare($sqlTicket);
             $consultaTicket->execute([
                 "id" => $solicitud["idSolicitud"],
                 "cedulaSolicitante" => $solicitud["cedulaSolicitante"],
-                "laboratorio" => $solicitud["laboratorio"],
-                "fechaHora" => $solicitud["fechaHora"],
-                "NombreDocente" => $solicitud["docente"]
+                "fechaApertura" => $solicitud["fechaApertura"],
+                "grupo" => $solicitud["grupo"],
+                "nombreDocente" => $solicitud["nombreDocente"],
+                "descripcion" => $solicitud["descripcion"],
+                "turno" => $solicitud["turno"],
+                "asignatura" => $solicitud["asignatura"]
             ]);
 
-            $sqlServicio = "INSERT INTO SERVICIO (
-                        id, TipoServicio, turno, asignatura, email, software,
-                        todasMaquinas, prioridad, descripcion
-                    ) VALUES (
-                        :id, :TipoServicio, :turno, :asignatura, :email, :software,
-                        :todasMaquinas, :prioridad, :descripcion
-                    )";
+            $sqlServicio = "INSERT INTO SERVICIO (idServicio, tipoServicio)
+                            VALUES (:idServicio, :tipoServicio)";
             $consultaServicio = $this->conexion->prepare($sqlServicio);
             $consultaServicio->execute([
-                "id" => $solicitud["idSolicitud"],
-                "TipoServicio" => $solicitud["tipoServicio"],
-                "turno" => $solicitud["turno"],
-                "asignatura" => $solicitud["asignatura"],
-                "email" => $solicitud["email"],
-                "software" => $solicitud["software"],
-                "todasMaquinas" => $solicitud["todasMaquinas"],
-                "prioridad" => $solicitud["prioridad"],
-                "descripcion" => $solicitud["descripcion"]
+                "idServicio" => $solicitud["idSolicitud"],
+                "tipoServicio" => $solicitud["tipoServicio"]
             ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {

@@ -60,9 +60,6 @@ $mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registr
                         <a class="nav-link active" href="prestamos.php">Préstamos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registrosUso.php">Registros de uso</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>

@@ -40,9 +40,6 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registroUso.php">Registro de Uso</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
@@ -61,20 +58,6 @@ verificarAcceso($rolRequerido);
 
                     <section class="row g-3 mb-4 ">
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="laboratorio" class="form-label">Laboratorio</label>
-                            <select id="laboratorio" name="laboratorio" class="form-select" required>
-                                <option value="" disabled selected>Seleccione laboratorio</option>
-                                <option value="N/A">N/A</option>
-                                <option value="LAB1">Laboratorio 1</option>
-                                <option value="LAB2">Laboratorio 2</option>
-                                <option value="LAB3">Laboratorio 3</option>
-                                <option value="LAB4">Laboratorio 4</option>
-                                <option value="LAB5">Laboratorio 5</option>
-                                <option value="LAB6">Laboratorio 6</option>
-                            </select>
-                        </div>
-
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="turno" class="form-label">Turno</label>
                             <select id="turno" name="turno" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
@@ -85,8 +68,8 @@ verificarAcceso($rolRequerido);
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="docente" class="form-label">Docente</label>
-                            <input type="text" id="docente" name="docente" class="form-control" required
+                            <label for="nombreDocente" class="form-label">Docente</label>
+                            <input type="text" id="nombreDocente" name="nombreDocente" class="form-control" required
                                 placeholder="Ingrese su nombre">
                         </div>
 
@@ -97,14 +80,13 @@ verificarAcceso($rolRequerido);
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="email" class="form-label">Correo electrónico</label>
-                            <input type="email" id="email" name="email" class="form-control"
-                                placeholder="ejemplo@correo.com" required>
+                            <label for="grupo" class="form-label">Grupo</label>
+                            <input type="text" id="grupo" name="grupo" class="form-control" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="fechaHora" class="form-label">Fecha y hora solicitada</label>
-                            <input type="datetime-local" id="fechaHora" name="fechaHora" class="form-control" required>
+                            <label for="fechaApertura" class="form-label">Fecha y hora solicitada</label>
+                            <input type="datetime-local" id="fechaApertura" name="fechaApertura" class="form-control" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -118,39 +100,9 @@ verificarAcceso($rolRequerido);
                             </select>
                         </div>
 
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="software" class="form-label">Programa/App</label>
-                            <input type="text" id="software" name="software" class="form-control"
-                                placeholder="Ej: Scratch, GeoGebra, VS Code">
-                        </div>
-
-                        <div class="col-12 cajaRadio">
-                            <label class="form-label d-block">¿En todas las máquinas?</label>
-                            <section class="d-flex gap-3">
-                                <div class="form-check">
-                                    <input type="radio" name="todasMaquinas" value="SI" class="form-check-input"
-                                        id="todasSi" required>
-                                    <label class="form-check-label" for="todasSi">Sí</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="todasMaquinas" value="NO" class="form-check-input"
-                                        id="todasNo">
-                                    <label class="form-check-label" for="todasNo">No</label>
-                                </div>
-                            </section>
-                        </div>
-
-                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="prioridad" class="form-label">Prioridad</label>
-                            <select id="prioridad" name="prioridad" class="form-select">
-                                <option value="NORMAL">Normal</option>
-                                <option value="URGENTE">Urgente</option>
-                            </select>
-                        </div>
-
                         <div class="col-12 cajaTextarea">
                             <label for="descripcion" class="form-label">Descripción / uso en clase</label>
-                            <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
+                            <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required
                                 placeholder="Describa su solicitud.."></textarea>
                         </div>
 
@@ -166,15 +118,14 @@ verificarAcceso($rolRequerido);
             <h2 class="h4 mb-3">Mis solicitudes</h2>
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
-                    <thead class="table-light"><tr><th>ID</th><th>Laboratorio</th><th>Fecha</th><th>Tipo</th><th>Prioridad</th><th>Estado</th></tr></thead>
+                    <thead class="table-light"><tr><th>ID</th><th>Fecha</th><th>Grupo</th><th>Tipo</th><th>Estado</th></tr></thead>
                     <tbody>
                         <?php foreach ($solicitudes as $solicitud): ?>
                             <tr>
                                 <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["laboratorio"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["fechaHora"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["prioridad"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -195,7 +146,6 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/usuario.js"></script>
 </body>
 
 </html>

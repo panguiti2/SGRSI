@@ -114,14 +114,13 @@ function cerrarAltaUsuario() {
     dialogAltaUsuario.close();
 }
 
+// La tabla de usuarios se carga desde PHP y MySQL, no desde localStorage.
+if (false) {
 /**
  * Carga un usuario en el formulario para modificarlo.
  * @param {string} cedula Cédula del usuario.
  * @returns {void}
  */
-
-// La tabla de usuarios se carga desde PHP y MySQL, no desde localStorage.
-if (false) {
 function abrirModificarUsuario(cedula) {
     usuarioEnEdicion = true;
     const usuarios = cargarUsuariosGuardadosLocal();
@@ -598,9 +597,10 @@ function agregarFilaIncidenciaAdmin(incidencia) {
     cuerpoTablaIncidenciasAdmin.appendChild(fila);
 }
 
-/** Actualiza la tabla administrativa de incidencias.
- *  @returns {void} */
-
+/**
+ * Actualiza la tabla administrativa de incidencias.
+ * @returns {void}
+ */
 function actualizarTablaIncidenciasAdmin() {
     cuerpoTablaIncidenciasAdmin.replaceChildren();
     const incidencias = cargarIncidenciasAdminLocal();

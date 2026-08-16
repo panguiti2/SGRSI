@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Administra la conexión PDO con la base de datos del sistema.
+ */
 class ConectorPDO
 {
     private string $servidor;
@@ -13,10 +16,10 @@ class ConectorPDO
     /**
      * Constructor parametrizado que recibe los datos necesarios para conectarse a la base de datos y los almacena en los 
      * atributos del objeto. 
-     * @param PDO $servidor Nombre o dirección del servidor de base de datos. PRECONDICION: No debe ser una cadena vacía.
-     * @param PDO $usuario Usuario con permisos para acceder a la base de datos. PRECONDICION: No debe ser una cadena vacía.
-     * @param PDO $clave Contraseña del usuario de la base de datos. PRECONDICION: No debe ser una cadena vacía.
-     * @param PDO $baseDatos Nombre de la base de datos a la que se desea conectar. PRECONDICION: No debe ser una cadena vacía.
+     * @param string $servidor Nombre o dirección del servidor de base de datos. PRECONDICION: No debe ser una cadena vacía.
+     * @param string $usuario Usuario con permisos para acceder a la base de datos. PRECONDICION: No debe ser una cadena vacía.
+     * @param string $clave Contraseña del usuario de la base de datos. PRECONDICION: No debe ser una cadena vacía.
+     * @param string $baseDatos Nombre de la base de datos a la que se desea conectar. PRECONDICION: No debe ser una cadena vacía.
      */
     public function __construct (string $servidor, string $usuario, string $clave, string $baseDatos) {
         $this->servidor = $servidor;
@@ -51,6 +54,7 @@ class ConectorPDO
 
     /**
      * Cierra la conexión con la base de datos.
+     * @return void
      * POSTCONDICION: El atributo $conexion queda con valor NULL.
      */
         public function desconectar(): void

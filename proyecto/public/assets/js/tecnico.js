@@ -118,14 +118,13 @@ function cerrarAltaPrestamo() {
     dialogPrestamos.close();
 }
 
+// Los préstamos se cargan y registran con PHP y PDO, no con localStorage.
+if (false) {
 /**
  * Carga un préstamo en el formulario para modificarlo.
  * @param {string} cedulaSolicitante Cédula asociada al préstamo.
  * @returns {void}
  */
-
-// Los préstamos se cargan y registran con PHP y PDO, no con localStorage.
-if (false) {
 function abrirModificarPrestamo(cedulaSolicitante) {
     prestamoEnEdicion = true;
     const prestamos = cargarPrestamosGuardadosLocal();

@@ -1,14 +1,26 @@
 <?php
 
+/**
+ * Clase de acceso a datos para consultar incidencias.
+ */
 class AccesoDatosIncidencia
 {
     private PDO $conexion;
 
+    /**
+     * Inicializa el acceso a incidencias con una conexión activa.
+     * @param PDO $conexion Conexión a la base de datos.
+     */
     public function __construct(PDO $conexion)
     {
         $this->conexion = $conexion;
     }
 
+    /**
+     * Lista todas las incidencias o las creadas por un solicitante.
+     * @param string|null $cedulaSolicitante Cédula utilizada para filtrar; NULL obtiene todas.
+     * @return array Incidencias recuperadas como arreglos asociativos.
+     */
     public function listarIncidencias(?string $cedulaSolicitante = null): array
     {
         $sql = "SELECT idIncidencia, cedulaSolicitante, laboratorio, turno, fechaHora,

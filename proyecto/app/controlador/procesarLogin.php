@@ -1,9 +1,9 @@
 <?php
 
-require_once RUTA_MODELO . "/modelo/ConectorPDO.php";
-require_once RUTA_MODELO . "/modelo/AccesoDatosUsuario.php";
-require_once RUTA_MODELO . "/modelo/Usuario.php";
-require_once RUTA_MODELO . "/modelo/Login.php";
+require_once RUTA_MODELO . "/ConectorPDO.php";
+require_once RUTA_MODELO . "/AccesoDatosUsuario.php";
+require_once RUTA_MODELO . "/Usuario.php";
+require_once RUTA_MODELO . "/Login.php";
 
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {

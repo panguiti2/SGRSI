@@ -161,9 +161,6 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
                         <label for="laboratorio" class="form-label">Laboratorio</label>
                         <select id="idLab" name="idLab" class="form-select" required>
                             <option value="" disabled selected>Seleccione laboratorio</option>
-                            <option value="TALL01">Taller 1</option>
-                            <option value="TALL02">Taller 2</option>
-                            <option value="TALL03">Taller 3</option>
                             <option value="LAB01">Laboratorio 1</option>
                             <option value="LAB02">Laboratorio 2</option>
                             <option value="LAB03">Laboratorio 3</option>

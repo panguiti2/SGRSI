@@ -7,7 +7,6 @@
  * @typedef {Object} Incidencia
  * @property {number} id Identificador del reporte.
  * @property {string} laboratorio Laboratorio relacionado.
- * @property {string} taller Taller relacionado.
  * @property {string} turno Turno del reporte.
  * @property {string} fechaHora Fecha y hora informadas.
  * @property {string} docente Nombre del docente.
@@ -29,7 +28,6 @@
  * @typedef {Object} Solicitud
  * @property {number} id Identificador de la solicitud.
  * @property {string} laboratorio Laboratorio solicitado.
- * @property {string} taller Taller solicitado.
  * @property {string} turno Turno solicitado.
  * @property {string} docente Nombre del docente.
  * @property {string} asignatura Asignatura relacionada.
@@ -47,7 +45,6 @@
  * @typedef {Object} RegistroUso
  * @property {number} id Identificador del registro.
  * @property {string} laboratorio Laboratorio utilizado.
- * @property {string} taller Taller utilizado.
  * @property {string} turno Turno del uso.
  * @property {string} fechaHora Fecha y hora del uso.
  * @property {string} docente Nombre del docente.
@@ -88,12 +85,6 @@ const formularioIncidencia = document.getElementById("formularioIncidencia");
  */
 
 const campoLaboratorioIncidencia = document.getElementById("laboratorio");
-/**
- * Campo taller de la incidencia.
- * @type {HTMLSelectElement|null}
- */
-
-const campoTallerIncidencia = document.getElementById("taller");
 /**
  * Campo turno de la incidencia.
  * @type {HTMLSelectElement|null}
@@ -186,7 +177,6 @@ function obtenerDatosFormularioIncidencia() {
 
     return {
         laboratorio: campoLaboratorioIncidencia.value,
-        taller: campoTallerIncidencia.value,
         turno: campoTurnoIncidencia.value,
         fechaHora: campoFechaHoraIncidencia.value,
         docente: campoDocenteIncidencia.value.trim(),
@@ -233,9 +223,7 @@ function gestionarIncidencia(eventoFormulario) {
     alert("Incidencia registrada correctamente");
 }
 
-if (formularioIncidencia) {
-    formularioIncidencia.addEventListener("submit", gestionarIncidencia);
-}
+// La alta de incidencias se procesa con PHP y PDO; se desactiva el envío a localStorage.
 
 /**
  * Formulario de solicitudes de servicio.
@@ -251,12 +239,6 @@ const formularioSolicitud = document.getElementById("formularioSolicitud");
 
 const campoLaboratorioSolicitud = document.getElementById("laboratorio");
 
-/**
- * Campo taller de la solicitud.
- * @type {HTMLSelectElement|null}
- */
-
-const campoTallerSolicitud = document.getElementById("taller");
 
 /**
  * Campo turno de la solicitud.
@@ -352,7 +334,6 @@ function obtenerDatosFormularioSolicitud() {
 
     return {
         laboratorio: campoLaboratorioSolicitud.value,
-        taller: campoTallerSolicitud.value,
         turno: campoTurnoSolicitud.value,
         docente: campoDocenteSolicitud.value.trim(),
         asignatura: campoAsignaturaSolicitud.value.trim(),
@@ -395,9 +376,7 @@ function gestionarSolicitud(eventoFormulario) {
     alert("Solicitud registrada correctamente");
 }
 
-if (formularioSolicitud) {
-    formularioSolicitud.addEventListener("submit", gestionarSolicitud);
-}
+// La alta de solicitudes se procesa con PHP y PDO; se desactiva el envío a localStorage.
 
 /**
  * Formulario de registros de uso.
@@ -412,12 +391,6 @@ const formularioRegistroUso = document.getElementById("formularioRegistroUso");
  */
 
 const campoLaboratorioRegistro = document.getElementById("laboratorio");
-/**
- * Campo taller del registro.
- * @type {HTMLSelectElement|null}
- */
-
-const campoTallerRegistro = document.getElementById("taller");
 /**
  * Campo turno del registro.
  * @type {HTMLSelectElement|null}
@@ -481,7 +454,6 @@ function obtenerDatosFormularioRegistroUso() {
 
     return {
         laboratorio: campoLaboratorioRegistro.value,
-        taller: campoTallerRegistro.value,
         turno: campoTurnoRegistro.value,
         fechaHora: campoFechaHoraRegistro.value,
         docente: campoDocenteRegistro.value.trim(),
@@ -520,6 +492,4 @@ function gestionarRegistroUso(eventoFormulario) {
     alert("Registro de uso guardado correctamente");
 }
 
-if (formularioRegistroUso) {
-    formularioRegistroUso.addEventListener("submit", gestionarRegistroUso);
-}
+// El alta de registros de uso se procesa con PHP y PDO.

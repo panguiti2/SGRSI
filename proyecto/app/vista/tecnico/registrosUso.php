@@ -56,7 +56,6 @@ verificarAcceso($rolRequerido);
                         <tr>
                             <th>ID</th>
                             <th>Laboratorio</th>
-                            <th>Taller</th>
                             <th>Turno</th>
                             <th>Fecha y hora</th>
                             <th>Docente</th>
@@ -66,7 +65,9 @@ verificarAcceso($rolRequerido);
                             <th>Incidencias</th>
                         </tr>
                     </thead>
-                    <tbody id="cuerpoTablaRegistrosUso"></tbody>
+                    <tbody id="cuerpoTablaRegistrosUso">
+                    <?php foreach ($registrosUso as $registro): ?><tr><td><?= htmlspecialchars($registro["idRegistro"]) ?></td><td><?= htmlspecialchars($registro["laboratorio"]) ?></td><td><?= htmlspecialchars($registro["turno"]) ?></td><td><?= htmlspecialchars($registro["fechaHora"]) ?></td><td><?= htmlspecialchars($registro["docente"]) ?></td><td><?= htmlspecialchars($registro["grupo"]) ?></td><td><?= htmlspecialchars($registro["asignatura"]) ?></td><td><?= $registro["usoMaquinas"] ? "Sí" : "No" ?></td><td><?= $registro["huboIncidencias"] ? "Sí" : "No" ?></td></tr><?php endforeach; ?>
+                    </tbody>
                 </table>
             </div>
         </section>

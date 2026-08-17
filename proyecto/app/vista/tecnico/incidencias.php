@@ -2,6 +2,16 @@
 $rolRequerido = "tecnico";
 require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
 verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "datos_incorrectos" => "Los datos de gestión no son válidos.",
+    "asignacion" => "No se pudo gestionar la incidencia."
+];
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
+    ? "La incidencia se gestionó exitosamente."
+    : "";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -32,6 +42,12 @@ verificarAcceso($rolRequerido);
         </section>
     </header>
     <main class="container-xl flex-grow-1 p-3 p-md-4">
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
         <section class="bg-white rounded p-3 p-md-4 panelTabla">
             <h1 class="h3 mb-3">Incidencias registradas</h1>
             <section class="table-responsive">
@@ -53,7 +69,11 @@ verificarAcceso($rolRequerido);
                                 <td><?= htmlspecialchars($incidencia["estado"]) ?></td>
                                 <td><form action="procesarAsignacionIncidencia.php" method="post" class="d-flex gap-1">
                                     <input type="hidden" name="idIncidencia" value="<?= htmlspecialchars($incidencia["idIncidencia"]) ?>">
-                                    <select name="estado" class="form-select form-select-sm"><option>PENDIENTE</option><option>EN PROCESO</option><option>RESUELTO</option></select>
+                                    <select name="estado" class="form-select form-select-sm" aria-label="Estado de la incidencia">
+                                        <option value="PENDIENTE" <?= $incidencia["estado"] === "PENDIENTE" ? "selected" : "" ?>>Pendiente</option>
+                                        <option value="EN PROCESO" <?= $incidencia["estado"] === "EN PROCESO" ? "selected" : "" ?>>En proceso</option>
+                                        <option value="RESUELTO" <?= $incidencia["estado"] === "RESUELTO" ? "selected" : "" ?>>Resuelto</option>
+                                    </select>
                                     <button class="btn btn-sm btn-primary">Gestionar</button>
                                 </form></td>
                             </tr>

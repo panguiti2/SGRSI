@@ -361,8 +361,33 @@ if (dialogPrestamos) {
 }
 
 //if (cuerpoTablaPrestamos) {
- //   actualizarTablaPrestamos();
+//   actualizarTablaPrestamos();
 //}
+
+const dialogDevolucionPrestamo = document.querySelector(".dialogDevolucionPrestamo");
+const formularioDevolucionPrestamo = document.getElementById("formularioDevolucionPrestamo");
+const campoIdPrestamoDevolucion = document.getElementById("idPrestamoDevolucion");
+const btnCerrarDevolucionPrestamo = document.getElementById("btnCerrarDevolucionPrestamo");
+
+document.querySelectorAll(".btnRegistrarDevolucion").forEach((boton) => {
+    boton.addEventListener("click", () => {
+        campoIdPrestamoDevolucion.value = boton.dataset.id;
+        dialogDevolucionPrestamo.showModal();
+    });
+});
+
+if (btnCerrarDevolucionPrestamo) {
+    btnCerrarDevolucionPrestamo.addEventListener("click", () => {
+        formularioDevolucionPrestamo.reset();
+        dialogDevolucionPrestamo.close();
+    });
+}
+
+if (dialogDevolucionPrestamo) {
+    dialogDevolucionPrestamo.addEventListener("cancel", () => {
+        formularioDevolucionPrestamo.reset();
+    });
+}
 
 /**
  * Cuerpo de la tabla técnica de incidencias.

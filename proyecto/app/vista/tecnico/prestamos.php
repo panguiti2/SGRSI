@@ -8,11 +8,16 @@ $mensajesError = [
     "peticion" => "La petición no es válida.",
     "campos_vacios" => "Debe completar todos los campos del préstamo.",
     "datos_incorrectos" => "Los datos del préstamo no son válidos.",
-    "error_prestamo" => "No se pudo registrar el préstamo."
+    "error_prestamo" => "No se pudo registrar el préstamo.",
+    "error_devolucion" => "No se pudo registrar la devolución."
 ];
 
 $error = $mensajesError[$codigoError] ?? "";
 $mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registró exitosamente." : "";
+
+if (($_GET["exito"] ?? "") === "devolucion") {
+    $mensajeExito = "La devolución se registró y el préstamo fue cerrado.";
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -93,7 +98,10 @@ $mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registr
                             <th >Nombre</th>
                             <th >Laptop</th>
                             <th >Retiro</th>
-                            <th >Devolución</th>
+                            <th >Devolución esperada</th>
+                            <th >Devolución real</th>
+                            <th >Estado</th>
+                            <th >Operaciones</th>
                         </tr>
                     </thead>
                     <tbody id="cuerpoTablaPrestamos">
@@ -105,6 +113,14 @@ $mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registr
                                 <td><?= htmlspecialchars($prestamo["numeroLaptop"]) ?></td>
                                 <td><?= htmlspecialchars($prestamo["fechaRetiro"]) ?></td>
                                 <td><?= htmlspecialchars($prestamo["fechaDevolucion"]) ?></td>
+                                <td><?= htmlspecialchars($prestamo["fechaDevolucionReal"] ?? "Pendiente") ?></td>
+                                <td><?= htmlspecialchars($prestamo["estado"]) ?></td>
+                                <td>
+                                    <?php if ($prestamo["estado"] === "ACTIVO"): ?>
+                                        <button type="button" class="btnOperacion btnRegistrarDevolucion"
+                                            data-id="<?= htmlspecialchars($prestamo["idPrestamo"]) ?>">Registrar devolución</button>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -155,13 +171,30 @@ $mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registr
                         </div>
 
                         <div class="col-12 cajaEntradaDeDatos">
-                            <label for="devolucion" class="form-label">Fecha y hora de devolución</label>
-                            <input type="datetime-local" id="devolucion" name="devolucion" class="form-control"
-                                required>
+                            <label for="devolucion" class="form-label">Fecha y hora esperada de devolución</label>
+                            <input type="datetime-local" id="devolucion" name="devolucion" class="form-control" required>
                         </div>
+
                     </section>
 
                     <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                </fieldset>
+            </form>
+        </dialog>
+
+        <dialog class="dialogDevolucionPrestamo seccionFormulario w-100 p-0 rounded-3 border-0" style="max-width: 600px;">
+            <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarDevolucionPrestamo" type="button"
+                aria-label="Cerrar"></button>
+
+            <form action="procesarDevolucionPrestamo.php" method="post" id="formularioDevolucionPrestamo" class="p-4">
+                <fieldset>
+                    <legend class="h4 mb-4">Registrar devolución</legend>
+                    <input type="hidden" name="idPrestamo" id="idPrestamoDevolucion">
+                    <div class="mb-4 cajaEntradaDeDatos">
+                        <label for="fechaDevolucion" class="form-label">Fecha y hora de devolución</label>
+                        <input type="datetime-local" id="fechaDevolucion" name="fechaDevolucion" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Cerrar préstamo</button>
                 </fieldset>
             </form>
         </dialog>

@@ -24,7 +24,6 @@ class AltaDatosPrestamo
      * @param string $nombreSolicitante Nombre del solicitante.
      * @param string $numeroLaptop Número de la laptop prestada.
      * @param string $fechaRetiro Fecha de retiro del equipo.
-     * @param string $fechaDevolucion Fecha prevista o efectiva de devolución.
      * @return bool Verdadero si el préstamo fue registrado.
      */
     public function registrarPrestamo(

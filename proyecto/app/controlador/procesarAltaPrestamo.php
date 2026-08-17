@@ -36,7 +36,7 @@ if ($fechaRetiro === false || $fechaDevolucion === false || $fechaDevolucion <= 
 
 $idPrestamo = "PRE" . strtoupper(substr(uniqid(), -5));
 
-$conectorPDO = new ConectorPDO("localhost", "root", "", "test");
+$conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
 $altaDatosPrestamo = new AltaDatosPrestamo($conexion);
 

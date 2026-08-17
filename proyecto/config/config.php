@@ -11,3 +11,8 @@ define("RUTA_PUBLIC", RUTA_RAIZ . "/public");
 define("RUTA_PUBLIC_ADMIN", RUTA_PUBLIC . "/admin");
 define("RUTA_PUBLIC_TECNICO", RUTA_PUBLIC . "/tecnico");
 define("RUTA_PUBLIC_SOLICITANTE", RUTA_PUBLIC . "/solicitante");
+
+require_once RUTA_RAIZ . "/vendor/autoload.php";
+
+$dotenv = Dotenv\Dotenv::createImmutable(RUTA_RAIZ);
+$dotenv->load();

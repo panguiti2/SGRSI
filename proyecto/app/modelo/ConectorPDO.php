@@ -14,14 +14,9 @@ class ConectorPDO
 
 
     /**
-     * Constructor parametrizado que recibe los datos necesarios para conectarse a la base de datos y los almacena en los 
-     * atributos del objeto. 
-     * @param string $servidor Nombre o dirección del servidor de base de datos. PRECONDICION: No debe ser una cadena vacía.
-     * @param string $usuario Usuario con permisos para acceder a la base de datos. PRECONDICION: No debe ser una cadena vacía.
-     * @param string $clave Contraseña del usuario de la base de datos. PRECONDICION: No debe ser una cadena vacía.
-     * @param string $baseDatos Nombre de la base de datos a la que se desea conectar. PRECONDICION: No debe ser una cadena vacía.
+     * Recibe la configuración de conexión cargada desde el archivo .env.
      */
-    public function __construct (string $servidor, string $usuario, string $clave, string $baseDatos) {
+    public function __construct(string $servidor, string $usuario, string $clave, string $baseDatos) {
         $this->servidor = $servidor;
         $this->usuario = $usuario;
         $this->clave = $clave;

@@ -73,7 +73,10 @@ class AltaDatosSolicitud
         $consulta = $this->conexion->prepare(
             "UPDATE TICKET
              SET estado = :estado,
-                 fechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
+                 fechaCierre = CASE
+                     WHEN :estadoCierre = 'RESUELTO' THEN GREATEST(NOW(), fechaApertura)
+                     ELSE NULL
+                 END
              WHERE id = :idSolicitud"
         );
         return $consulta->execute([

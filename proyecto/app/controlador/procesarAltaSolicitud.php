@@ -2,6 +2,7 @@
 
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosSolicitud.php";
+require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: solicitudes.php?error=peticion");
@@ -50,6 +51,14 @@ $solicitud = [
 
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
+$accesoDatosDispositivo = new AccesoDatosDispositivo($conexion);
+
+if (!$accesoDatosDispositivo->existeDispositivo($idLaboratorio, $numeroDispositivo)) {
+    $conectorPDO->desconectar();
+    header("Location: solicitudes.php?error=datos_incorrectos");
+    exit;
+}
+
 $altaDatosSolicitud = new AltaDatosSolicitud($conexion);
 $resultado = $altaDatosSolicitud->registrarSolicitud($solicitud);
 $conectorPDO->desconectar();

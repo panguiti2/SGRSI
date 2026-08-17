@@ -161,12 +161,11 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
                         <label for="laboratorio" class="form-label">Laboratorio</label>
                         <select id="idLab" name="idLab" class="form-select" required>
                             <option value="" disabled selected>Seleccione laboratorio</option>
-                            <option value="LAB01">Laboratorio 1</option>
-                            <option value="LAB02">Laboratorio 2</option>
-                            <option value="LAB03">Laboratorio 3</option>
-                            <option value="LAB04">Laboratorio 4</option>
-                            <option value="LAB05">Laboratorio 5</option>
-                            <option value="LAB06">Laboratorio 6</option>
+                            <?php foreach ($laboratorios as $laboratorio): ?>
+                                <option value="<?= htmlspecialchars($laboratorio["idLaboratorio"]) ?>">
+                                    <?= htmlspecialchars($laboratorio["nombre"]) ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 

@@ -104,22 +104,19 @@ verificarAcceso($rolRequerido);
                             <label for="idLaboratorio" class="form-label">Laboratorio</label>
                             <select id="idLaboratorio" name="idLaboratorio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione el laboratorio</option>
-                                <option value="TALL01">Taller 1</option>
-                                <option value="TALL02">Taller 2</option>
-                                <option value="TALL03">Taller 3</option>
-                                <option value="LAB01">Laboratorio 1</option>
-                                <option value="LAB02">Laboratorio 2</option>
-                                <option value="LAB03">Laboratorio 3</option>
-                                <option value="LAB04">Laboratorio 4</option>
-                                <option value="LAB05">Laboratorio 5</option>
-                                <option value="LAB06">Laboratorio 6</option>
+                                <?php foreach ($laboratorios as $laboratorio): ?>
+                                    <option value="<?= htmlspecialchars($laboratorio["idLaboratorio"]) ?>">
+                                        <?= htmlspecialchars($laboratorio["nombre"]) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="numeroDispositivo" class="form-label">Número de dispositivo</label>
-                            <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
-                                placeholder="Ej.: PC-001" required>
+                            <select id="numeroDispositivo" name="numeroDispositivo" class="form-select" disabled required>
+                                <option value="" selected>Primero seleccione el laboratorio</option>
+                            </select>
                         </div>
 
                         <div class="col-12 cajaTextarea">
@@ -175,6 +172,10 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.dispositivosFormulario = <?= json_encode($dispositivosFormulario, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    </script>
+    <script src="../assets/js/usuario.js"></script>
 </body>
 
 </html>

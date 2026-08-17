@@ -8,6 +8,7 @@ $conexion = $conectorPDO->establecerConexion();
 
 $accesoDatosDispositivo = new AccesoDatosDispositivo($conexion);
 $dispositivos = $accesoDatosDispositivo->listarDispositivos();
+$laboratorios = $accesoDatosDispositivo->listarLaboratorios();
 
 $conectorPDO->desconectar();
 

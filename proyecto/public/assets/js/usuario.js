@@ -364,3 +364,38 @@ function gestionarSolicitud(eventoFormulario) {
 }
 
 // La alta de solicitudes se procesa con PHP y PDO; se desactiva el envío a localStorage.
+
+/**
+ * Actualiza el selector de dispositivos según el laboratorio elegido.
+ * Los datos son enviados por PHP desde la base de datos al cargar la vista.
+ */
+const selectorLaboratorio = document.getElementById("idLaboratorio");
+const selectorDispositivo = document.getElementById("numeroDispositivo");
+
+if (selectorLaboratorio && selectorDispositivo && Array.isArray(window.dispositivosFormulario)) {
+    selectorLaboratorio.addEventListener("change", () => {
+        const laboratorioSeleccionado = selectorLaboratorio.value;
+        const dispositivos = window.dispositivosFormulario.filter((dispositivo) => (
+            dispositivo.idLaboratorio === laboratorioSeleccionado
+        ));
+
+        selectorDispositivo.innerHTML = "";
+        selectorDispositivo.disabled = dispositivos.length === 0;
+
+        const opcionInicial = document.createElement("option");
+        opcionInicial.value = "";
+        opcionInicial.selected = true;
+        opcionInicial.disabled = true;
+        opcionInicial.textContent = dispositivos.length === 0
+            ? "No hay dispositivos registrados"
+            : "Seleccione el dispositivo";
+        selectorDispositivo.appendChild(opcionInicial);
+
+        for (const dispositivo of dispositivos) {
+            const opcion = document.createElement("option");
+            opcion.value = dispositivo.numeroDispositivo;
+            opcion.textContent = dispositivo.numeroDispositivo;
+            selectorDispositivo.appendChild(opcion);
+        }
+    });
+}

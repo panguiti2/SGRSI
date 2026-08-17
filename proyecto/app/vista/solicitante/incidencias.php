@@ -69,20 +69,18 @@ verificarAcceso($rolRequerido);
                     <label class="form-label" for="idLaboratorio">Laboratorio</label>
                     <select class="form-select" id="idLaboratorio" name="idLaboratorio" required>
                         <option value="" selected disabled>Seleccione el laboratorio</option>
-                        <option value="TALL01">Taller 1</option>
-                        <option value="TALL02">Taller 2</option>
-                        <option value="TALL03">Taller 3</option>
-                        <option value="LAB01">Laboratorio 1</option>
-                        <option value="LAB02">Laboratorio 2</option>
-                        <option value="LAB03">Laboratorio 3</option>
-                        <option value="LAB04">Laboratorio 4</option>
-                        <option value="LAB05">Laboratorio 5</option>
-                        <option value="LAB06">Laboratorio 6</option>
+                        <?php foreach ($laboratorios as $laboratorio): ?>
+                            <option value="<?= htmlspecialchars($laboratorio["idLaboratorio"]) ?>">
+                                <?= htmlspecialchars($laboratorio["nombre"]) ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </section>
                 <section class="col-12 col-md-6 cajaEntradaDeDatos">
                     <label class="form-label" for="numeroDispositivo">Número de dispositivo</label>
-                    <input class="form-control" id="numeroDispositivo" name="numeroDispositivo" placeholder="Ej.: PC-001" required>
+                    <select class="form-select" id="numeroDispositivo" name="numeroDispositivo" disabled required>
+                        <option value="" selected>Primero seleccione el laboratorio</option>
+                    </select>
                 </section>
                 <fieldset class="col-12 col-md-6 cajaRadio">
                     <legend class="form-label mb-1">¿Reportó un alumno?</legend>
@@ -147,6 +145,10 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.dispositivosFormulario = <?= json_encode($dispositivosFormulario, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    </script>
+    <script src="../assets/js/usuario.js"></script>
     <script>
         document.querySelectorAll('input[name="reportoAlumno"]').forEach((opcion) => {
             opcion.addEventListener('change', () => {

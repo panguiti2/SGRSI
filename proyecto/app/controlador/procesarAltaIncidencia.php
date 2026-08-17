@@ -2,6 +2,7 @@
 
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosIncidencia.php";
+require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
 
 $turno = trim($_POST["turno"] ?? "");
 $fechaEntrada = trim($_POST["fechaApertura"] ?? "");
@@ -35,6 +36,14 @@ $datos = [
 ];
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
+$accesoDatosDispositivo = new AccesoDatosDispositivo($conexion);
+
+if (!$accesoDatosDispositivo->existeDispositivo($idLaboratorio, $numeroDispositivo)) {
+    $conectorPDO->desconectar();
+    header("Location: incidencias.php?error=datos_incorrectos");
+    exit;
+}
+
 $resultado = (new AltaDatosIncidencia($conexion))->registrarIncidencia($datos);
 $conectorPDO->desconectar();
 header("Location: incidencias.php?" . ($resultado ? "exito=incidencia" : "error=incidencia"));

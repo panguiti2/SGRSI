@@ -46,6 +46,82 @@ class AccesoDatosDispositivo {
         return $dispositivos;
     }
 
+    /**
+     * Recupera los laboratorios y talleres disponibles para los formularios.
+     *
+     * @return array Arreglo de laboratorios ordenados por identificador.
+     */
+    public function listarLaboratorios(): array
+    {
+        $sql = "
+            SELECT idLaboratorio, nombre
+            FROM LABORATORIO
+            ORDER BY idLaboratorio
+        ";
+
+        $consulta = $this->conexion->query($sql);
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Recupera los dispositivos junto con el laboratorio al que pertenecen.
+     *
+     * @return array Arreglo usado por los formularios para filtrar dispositivos.
+     */
+    public function listarDispositivosParaFormulario(): array
+    {
+        $sql = "
+            SELECT idLaboratorio, numeroDispositivo
+            FROM DISPOSITIVO
+            ORDER BY idLaboratorio, numeroDispositivo
+        ";
+
+        $consulta = $this->conexion->query($sql);
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Comprueba que un dispositivo pertenezca al laboratorio recibido.
+     *
+     * @param string $idLaboratorio Identificador del laboratorio.
+     * @param string $numeroDispositivo Identificador del dispositivo.
+     * @return bool True si existe la combinación recibida.
+     */
+    public function existeDispositivo(string $idLaboratorio, string $numeroDispositivo): bool
+    {
+        $sql = "
+            SELECT 1
+            FROM DISPOSITIVO
+            WHERE idLaboratorio = :idLaboratorio
+                AND numeroDispositivo = :numeroDispositivo
+        ";
+
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute([
+            "idLaboratorio" => $idLaboratorio,
+            "numeroDispositivo" => $numeroDispositivo
+        ]);
+
+        return $consulta->fetchColumn() !== false;
+    }
+
+    /**
+     * Comprueba que exista un laboratorio o taller.
+     *
+     * @param string $idLaboratorio Identificador del laboratorio.
+     * @return bool True si existe el laboratorio.
+     */
+    public function existeLaboratorio(string $idLaboratorio): bool
+    {
+        $sql = "SELECT 1 FROM LABORATORIO WHERE idLaboratorio = :idLaboratorio";
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute(["idLaboratorio" => $idLaboratorio]);
+
+        return $consulta->fetchColumn() !== false;
+    }
+
 }
 
 ?>

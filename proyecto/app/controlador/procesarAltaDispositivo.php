@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../../config/config.php";
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosDispositivo.php";
+require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -26,9 +27,7 @@ if ($idLab === "" || $numeroDispositivo === "" || $modificaciones === "" || $est
     exit;
 }
 
-$laboratoriosPermitidos = ["LAB01", "LAB02", "LAB03", "LAB04", "LAB05", "LAB06"];
-
-if (!in_array($idLab, $laboratoriosPermitidos, true) || !in_array($modificaciones, ["N/A", "Reparado", "Actualizado"], true) || !in_array($estado, ["1", "0"], true)) {
+if (!in_array($modificaciones, ["N/A", "Reparado", "Actualizado"], true) || !in_array($estado, ["1", "0"], true)) {
     header("Location: inventario.php?error=datos_incorrectos");
     exit;
 }
@@ -47,6 +46,14 @@ $conexion = $conectorPDO->establecerConexion();
 
 if ($conexion === null) {
     header("Location: inventario.php?error=conexion");
+    exit;
+}
+
+$accesoDatosDispositivo = new AccesoDatosDispositivo($conexion);
+
+if (!$accesoDatosDispositivo->existeLaboratorio($idLab)) {
+    $conectorPDO->desconectar();
+    header("Location: inventario.php?error=datos_incorrectos");
     exit;
 }
 

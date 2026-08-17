@@ -14,4 +14,9 @@ if ($_SESSION["tecnico"] !== true) {
     exit;
 }
 
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: prestamos.php?error=peticion");
+    exit;
+}
+
 require_once RUTA_CONTROLADOR . "/procesarAltaPrestamo.php";

@@ -3,6 +3,7 @@
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosIncidencia.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
+require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";
 
 $turno = trim($_POST["turno"] ?? "");
 $fechaEntrada = trim($_POST["fechaApertura"] ?? "");
@@ -16,9 +17,8 @@ $nombreAlumno = trim($_POST["nombreAlumno"] ?? "");
 $descripcion = trim($_POST["descripcion"] ?? "");
 $fechaHora = DateTime::createFromFormat("Y-m-d\\TH:i", $fechaEntrada);
 
-$validos = $_SERVER["REQUEST_METHOD"] === "POST" && $fechaHora !== false
+$validos = $fechaHora !== false
     && !in_array("", [$turno, $nombreDocente, $grupo, $asignatura, $idLaboratorio, $numeroDispositivo, $reportoAlumno, $descripcion], true)
-    && in_array($turno, ["MATUTINO", "VESPERTINO", "NOCTURNO"], true)
     && in_array($reportoAlumno, ["SI", "NO"], true)
     && (($reportoAlumno === "SI" && $nombreAlumno !== "") || ($reportoAlumno === "NO" && $nombreAlumno === ""));
 if (!$validos) {
@@ -37,8 +37,10 @@ $datos = [
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
 $accesoDatosDispositivo = new AccesoDatosDispositivo($conexion);
+$accesoDatosCatalogo = new AccesoDatosCatalogo($conexion);
 
-if (!$accesoDatosDispositivo->existeDispositivo($idLaboratorio, $numeroDispositivo)) {
+if (!$accesoDatosCatalogo->existeTurno($turno)
+    || !$accesoDatosDispositivo->existeDispositivo($idLaboratorio, $numeroDispositivo)) {
     $conectorPDO->desconectar();
     header("Location: incidencias.php?error=datos_incorrectos");
     exit;

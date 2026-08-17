@@ -24,3 +24,23 @@ function cargarVistaProtegida(string $rol, string $vista): void
 
     require_once $vista;
 }
+
+/**
+ * Comprueba una sesión y un rol antes de cargar cualquier archivo de app.
+ */
+function verificarRolPublico(string $rol): void
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (!isset($_SESSION["cedula"])) {
+        header("Location: ../login.php?error=sin_sesion");
+        exit;
+    }
+
+    if (($_SESSION[$rol] ?? false) !== true) {
+        header("Location: ../login.php?error=no_autorizado");
+        exit;
+    }
+}

@@ -1,7 +1,4 @@
 <?php
-$rolRequerido = "tecnico";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
 
 $codigoError = $_GET["error"] ?? "";
 $mensajesError = [

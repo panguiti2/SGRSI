@@ -1,8 +1,4 @@
 <?php
-$rolRequerido = "tecnico";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
-
 $codigoError = $_GET["error"] ?? "";
 $mensajesError = [
     "peticion" => "La petición no es válida.",
@@ -147,9 +143,11 @@ if (($_GET["exito"] ?? "") === "devolucion") {
                             <label for="turno" class="form-label">Turno</label>
                             <select id="turno" name="turno" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
-                                <option value="Matutino">Matutino</option>
-                                <option value="Vespertino">Vespertino</option>
-                                <option value="Nocturno">Nocturno</option>
+                            <?php foreach ($turnos as $turno): ?>
+                                <option value="<?= htmlspecialchars($turno["codigo"]) ?>">
+                                    <?= htmlspecialchars($turno["nombre"]) ?>
+                                </option>
+                            <?php endforeach; ?>
                             </select>
                         </div>
 

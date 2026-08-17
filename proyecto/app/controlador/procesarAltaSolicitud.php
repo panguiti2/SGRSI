@@ -3,11 +3,7 @@
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosSolicitud.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
-
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: solicitudes.php?error=peticion");
-    exit;
-}
+require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";
 
 $turno = trim($_POST["turno"] ?? "");
 $nombreDocente = trim($_POST["nombreDocente"] ?? "");
@@ -26,9 +22,7 @@ if (in_array("", $camposObligatorios, true)) {
 }
 
 $fechaApertura = DateTime::createFromFormat("Y-m-d\\TH:i", $fechaAperturaEntrada);
-$datosValidos = in_array($turno, ["MATUTINO", "VESPERTINO", "NOCTURNO"], true)
-    && in_array($tipoServicio, ["INSTALACION", "ACTUALIZACION", "CONFIGURACION", "OTRO"], true)
-    && $fechaApertura !== false;
+$datosValidos = $fechaApertura !== false;
 
 if (!$datosValidos) {
     header("Location: solicitudes.php?error=datos_incorrectos");
@@ -52,8 +46,11 @@ $solicitud = [
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
 $accesoDatosDispositivo = new AccesoDatosDispositivo($conexion);
+$accesoDatosCatalogo = new AccesoDatosCatalogo($conexion);
 
-if (!$accesoDatosDispositivo->existeDispositivo($idLaboratorio, $numeroDispositivo)) {
+if (!$accesoDatosCatalogo->existeTurno($turno)
+    || !$accesoDatosCatalogo->existeTipoServicio($tipoServicio)
+    || !$accesoDatosDispositivo->existeDispositivo($idLaboratorio, $numeroDispositivo)) {
     $conectorPDO->desconectar();
     header("Location: solicitudes.php?error=datos_incorrectos");
     exit;

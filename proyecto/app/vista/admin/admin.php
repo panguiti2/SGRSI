@@ -1,7 +1,4 @@
 <?php
-$rolRequerido = "administrador";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
 
 ?>
 

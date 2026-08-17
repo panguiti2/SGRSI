@@ -1,8 +1,3 @@
-<?php
-$rolRequerido = "solicitante";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -48,9 +43,11 @@ verificarAcceso($rolRequerido);
                     <label class="form-label" for="turno">Turno</label>
                     <select class="form-select" id="turno" name="turno" required>
                         <option value="" selected disabled>Seleccione</option>
-                        <option value="MATUTINO">Matutino</option>
-                        <option value="VESPERTINO">Vespertino</option>
-                        <option value="NOCTURNO">Nocturno</option>
+                        <?php foreach ($turnos as $turno): ?>
+                            <option value="<?= htmlspecialchars($turno["codigo"]) ?>">
+                                <?= htmlspecialchars($turno["nombre"]) ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </section>
                 <section class="col-12 col-md-6 cajaEntradaDeDatos">

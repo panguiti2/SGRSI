@@ -1,13 +1,8 @@
 <?php
 
-require_once __DIR__ . "/../../config/config.php";
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosPrestamo.php";
-
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: prestamos.php?error=peticion");
-    exit;
-}
+require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";
 
 $cedulaSolicitante = trim($_POST["cedulaSolicitante"] ?? "");
 $turno = trim($_POST["turno"] ?? "");
@@ -21,7 +16,7 @@ if ($cedulaSolicitante === "" || $turno === "" || $nombreSolicitante === "" || $
     exit;
 }
 
-if (!preg_match("/^[1-9][0-9]{7}$/", $cedulaSolicitante) || !in_array($turno, ["Matutino", "Vespertino", "Nocturno"], true)) {
+if (!preg_match("/^[1-9][0-9]{7}$/", $cedulaSolicitante)) {
     header("Location: prestamos.php?error=datos_incorrectos");
     exit;
 }
@@ -38,6 +33,14 @@ $idPrestamo = "PRE" . strtoupper(substr(uniqid(), -5));
 
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
+$accesoDatosCatalogo = new AccesoDatosCatalogo($conexion);
+
+if (!$accesoDatosCatalogo->existeTurno($turno)) {
+    $conectorPDO->desconectar();
+    header("Location: prestamos.php?error=datos_incorrectos");
+    exit;
+}
+
 $altaDatosPrestamo = new AltaDatosPrestamo($conexion);
 
 $resultado = $altaDatosPrestamo->registrarPrestamo(

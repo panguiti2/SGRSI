@@ -1,8 +1,3 @@
-<?php
-$rolRequerido = "solicitante";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -61,9 +56,11 @@ verificarAcceso($rolRequerido);
                             <label for="turno" class="form-label">Turno</label>
                             <select id="turno" name="turno" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
-                                <option value="MATUTINO">Matutino</option>
-                                <option value="VESPERTINO">Vespertino</option>
-                                <option value="NOCTURNO">Nocturno</option>
+                                <?php foreach ($turnos as $turno): ?>
+                                    <option value="<?= htmlspecialchars($turno["codigo"]) ?>">
+                                        <?= htmlspecialchars($turno["nombre"]) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -93,10 +90,11 @@ verificarAcceso($rolRequerido);
                             <label for="tipoServicio" class="form-label">Tipo de servicio</label>
                             <select id="tipoServicio" name="tipoServicio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
-                                <option value="INSTALACION">Instalación de software</option>
-                                <option value="ACTUALIZACION">Actualización</option>
-                                <option value="CONFIGURACION">Configuración</option>
-                                <option value="OTRO">Otro</option>
+                                <?php foreach ($tiposServicio as $tipoServicio): ?>
+                                    <option value="<?= htmlspecialchars($tipoServicio["codigo"]) ?>">
+                                        <?= htmlspecialchars($tipoServicio["nombre"]) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 

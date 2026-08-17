@@ -6,7 +6,6 @@ require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
 require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";
 
 $turno = trim($_POST["turno"] ?? "");
-$fechaEntrada = trim($_POST["fechaApertura"] ?? "");
 $nombreDocente = trim($_POST["nombreDocente"] ?? "");
 $grupo = trim($_POST["grupo"] ?? "");
 $asignatura = trim($_POST["asignatura"] ?? "");
@@ -15,10 +14,9 @@ $numeroDispositivo = trim($_POST["numeroDispositivo"] ?? "");
 $reportoAlumno = trim($_POST["reportoAlumno"] ?? "");
 $nombreAlumno = trim($_POST["nombreAlumno"] ?? "");
 $descripcion = trim($_POST["descripcion"] ?? "");
-$fechaHora = DateTime::createFromFormat("Y-m-d\\TH:i", $fechaEntrada);
+$fechaHora = new DateTime();
 
-$validos = $fechaHora !== false
-    && !in_array("", [$turno, $nombreDocente, $grupo, $asignatura, $idLaboratorio, $numeroDispositivo, $reportoAlumno, $descripcion], true)
+$validos = !in_array("", [$turno, $nombreDocente, $grupo, $asignatura, $idLaboratorio, $numeroDispositivo, $reportoAlumno, $descripcion], true)
     && in_array($reportoAlumno, ["SI", "NO"], true)
     && (($reportoAlumno === "SI" && $nombreAlumno !== "") || ($reportoAlumno === "NO" && $nombreAlumno === ""));
 if (!$validos) {

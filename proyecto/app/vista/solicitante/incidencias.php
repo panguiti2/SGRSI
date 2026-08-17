@@ -36,10 +36,6 @@
             <h1 class="h3 mb-4">Reportar incidencia</h1>
             <form action="procesarAltaIncidencia.php" method="post" class="row g-3" id="formularioIncidencia">
                 <section class="col-12 col-md-6 cajaEntradaDeDatos">
-                    <label class="form-label" for="fechaApertura">Fecha de apertura</label>
-                    <input class="form-control" type="datetime-local" id="fechaApertura" name="fechaApertura" required>
-                </section>
-                <section class="col-12 col-md-6 cajaEntradaDeDatos">
                     <label class="form-label" for="turno">Turno</label>
                     <select class="form-select" id="turno" name="turno" required>
                         <option value="" selected disabled>Seleccione</option>

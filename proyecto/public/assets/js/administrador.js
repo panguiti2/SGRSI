@@ -345,9 +345,7 @@ function gestionarUsuario(eventoFormulario) {
     actualizarTablaUsuarios();
 }
 
-if (formularioAltaUsuario) {
-    formularioAltaUsuario.addEventListener("submit", gestionarUsuario);
-}
+// El formulario se procesa mediante PHP y PDO; no se intercepta con localStorage.
 }
 
 if (btnAltaUsuario) {

@@ -124,7 +124,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registr
                         <div class="col-12 col-md-6">
                             <label for="cedulaSolicitante" class="form-label">Cédula</label>
                             <input type="text" id="cedulaSolicitante" name="cedulaSolicitante" class="form-control"
-                                pattern="[1-9][0-9]{7}" maxlength="8" required placeholder="Ingrese CI">
+                                pattern="[1-9][0-9]{7}" maxlength="8" required placeholder="Ej.: 12345678">
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -140,12 +140,13 @@ $mensajeExito = ($_GET["exito"] ?? "") === "prestamo" ? "El préstamo se registr
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="nombreSolicitante" class="form-label">Nombre</label>
                             <input type="text" id="nombreSolicitante" name="nombreSolicitante" class="form-control"
-                                required placeholder="Ingrese Nombre">
+                                required placeholder="Nombre completo de quien solicita">
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="numeroLaptop" class="form-label">N° de laptop</label>
-                            <input type="text" id="numeroLaptop" name="numeroLaptop" class="form-control" required>
+                            <input type="text" id="numeroLaptop" name="numeroLaptop" class="form-control"
+                                placeholder="Ej.: LT-001" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">

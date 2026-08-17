@@ -12,6 +12,7 @@ CREATE TABLE DISPOSITIVO (
     Modificaciones VARCHAR(255) NOT NULL,
     ultimoCambio TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     estado BOOLEAN NOT NULL DEFAULT TRUE,
+    cedulaAdministrador CHAR(8) NULL,
 
     CONSTRAINT pk_dispositivo
         PRIMARY KEY (idLaboratorio, numeroDispositivo)

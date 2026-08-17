@@ -11,4 +11,4 @@ $conexion = $conectorPDO->establecerConexion();
 
 $conectorPDO->desconectar();
 
-require_once RUTA_VISTA . "/gestionUsuario.php";
+require_once RUTA_VISTA . "/admin/gestionUsuario.php";

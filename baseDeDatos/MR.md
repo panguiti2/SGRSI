@@ -32,19 +32,10 @@ DISPOSITIVO(
     estado,
     ultimoCambio,
     modificaciones,
+    cedulaAdministrador,
 
-    FK idLaboratorio → LABORATORIO.idLaboratorio
-)
-
-CONTROLA(
-    cedulaAdministrador PK,
-    idLaboratorio PK,
-    numeroDispositivo PK,
-
-    FK cedulaAdministrador → ADMINISTRADOR.cedula,
-
-    FK (idLaboratorio, numeroDispositivo)
-        → DISPOSITIVO(idLaboratorio, numeroDispositivo)
+    FK idLaboratorio → LABORATORIO.idLaboratorio,
+    FK cedulaAdministrador → ADMINISTRADOR.cedula
 )
 
 PRESTAMO(
@@ -54,13 +45,11 @@ PRESTAMO(
     fechaDevolucion,
     fechaSolicitud,
     turno,
-    cedulaSolicitante,
-
-    FK cedulaSolicitante → SOLICITANTE.cedula
+    cedulaSolicitante
 )
 
 TICKET(
-    idTicket PK,
+    id PK,
     cedulaSolicitante,
     cedulaTecnico,
     idLaboratorio,
@@ -83,30 +72,17 @@ TICKET(
 )
 
 INCIDENCIA(
-    idTicket PK,
+    id PK,
+    reportoAlumno,
     nombreAlumno,
 
-    FK idTicket → TICKET.idTicket
-)
-
-REPORTE_ALUMNO(
-    idTicket PK,
-    reporteAlumno PK,
-
-    FK idTicket → INCIDENCIA.idTicket
+    FK id → TICKET.id
 )
 
 SERVICIO(
-    idTicket PK,
-    idServicio UNIQUE,
+    idServicio PK,
+    tipoServicio,
 
-    FK idTicket → TICKET.idTicket
-)
-
-TIPO_SERVICIO(
-    idTicket PK,
-    tipoServicio PK,
-
-    FK idTicket → SERVICIO.idTicket
+    FK idServicio → TICKET.id
 )
 

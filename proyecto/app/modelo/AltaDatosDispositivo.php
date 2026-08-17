@@ -22,14 +22,15 @@ class AltaDatosDispositivo
      *
      * @param string $idLab Identificador del laboratorio.
      * @param string $numeroDispositivo Numero del dispositivo.
-     * @param string $modificaciones Última modificación registrada.
      * @param string $ultimoCambio ultimo cambio registrado.
      * @param bool $estado estado del dispositivo.
      *
      * @return bool TRUE si el registro se completa correctamente, FALSE en caso contrario.
      */
-    public function registrarDispositivo(string $idLab, string $numeroDispositivo, string $modificaciones, string $ultimoCambio, bool $estado): bool
+    public function registrarDispositivo(string $idLab, string $numeroDispositivo, string $ultimoCambio, bool $estado): bool
     {
+
+        $modificaciones = "N/A";
 
         try {
             //Método que ejecuta de forma agrupada todas las instrucciones dirigidas a la base de datos

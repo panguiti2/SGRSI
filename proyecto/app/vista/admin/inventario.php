@@ -1,7 +1,4 @@
 <?php
-$rolRequerido = "administrador";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
 
 $codigoError = $_GET["error"] ?? "";
 $mensajesError = [
@@ -10,11 +7,20 @@ $mensajesError = [
     "datos_incorrectos" => "Los datos del dispositivo no son válidos.",
     "conexion" => "No se pudo establecer conexión con la base de datos.",
     "error_dispositivo" => "No se pudo registrar el dispositivo.",
+    "dispositivo_en_uso" => "No se puede eliminar el dispositivo porque está asociado a un ticket.",
     "exito" => "El dispositivo se registró exitosamente."
 ];
 
 $error = $mensajesError[$codigoError] ?? "";
 $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se registró exitosamente." : "";
+
+if (($_GET["exito"] ?? "") === "dispositivo_modificado") {
+    $mensajeExito = "El dispositivo se modificó exitosamente.";
+}
+
+if (($_GET["exito"] ?? "") === "dispositivo_eliminado") {
+    $mensajeExito = "El dispositivo se eliminó exitosamente.";
+}
 
 
 ?>
@@ -83,15 +89,20 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
 
             <section class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
                 <h2 class="h4 m-0">Datos de dispositivo</h2>
-                <form class="d-flex flex-column flex-sm-row gap-2">
-                    <label class="visually-hidden" for="ordenInventarioAdmin">Ordenar por</label>
-                    <select class="form-select form-select-sm" id="ordenInventarioAdmin">
-                        <option value="" disabled selected>Seleccione</option>
-                        <option>Laboratorio</option>
-                    </select>
-                    <button class="btn btn-primary btn-sm" type="submit">Ordenar</button>
-                    <button class="btn btn-secondary btn-sm" type="button">Historial</button>
-                </form>
+                <section class="d-flex flex-column flex-sm-row align-items-sm-center gap-2">
+                    <button class="btn btn-success px-3" id="btnAltaDispositivo" type="button">
+                        Alta dispositivo
+                    </button>
+                    <form class="d-flex flex-column flex-sm-row gap-2">
+                        <label class="visually-hidden" for="ordenInventarioAdmin">Ordenar por</label>
+                        <select class="form-select form-select-sm" id="ordenInventarioAdmin">
+                            <option value="" disabled selected>Seleccione</option>
+                            <option>Laboratorio</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm" type="submit">Ordenar</button>
+                        <button class="btn btn-secondary btn-sm" type="button">Historial</button>
+                    </form>
+                </section>
             </section>
 
 
@@ -118,8 +129,17 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
                                 <td><?= htmlspecialchars($dispositivo["ultimoCambio"]) ?></td>
                                 <td>
                                     <div class="cajaOperaciones">
-                                        <button type="button" class="btnOperacion btnModificar">Modificar</button>
-                                        <button type="button" class="btnOperacion btnEliminar">Eliminar</button>
+                                        <button type="button" class="btnOperacion btnModificarDispositivo"
+                                            data-laboratorio="<?= htmlspecialchars($dispositivo["idLab"]) ?>"
+                                            data-numero="<?= htmlspecialchars($dispositivo["numeroDispositivo"]) ?>"
+                                            data-modificaciones="<?= htmlspecialchars($dispositivo["modificaciones"]) ?>"
+                                            data-estado="<?= $dispositivo["estado"] === "Activo" ? "1" : "0" ?>"
+                                            data-ultimo-cambio="<?= htmlspecialchars($dispositivo["ultimoCambio"]) ?>">Modificar</button>
+                                        <form action="procesarBajaDispositivo.php" method="post" class="formEliminarDispositivo">
+                                            <input type="hidden" name="idLab" value="<?= htmlspecialchars($dispositivo["idLab"]) ?>">
+                                            <input type="hidden" name="numeroDispositivo" value="<?= htmlspecialchars($dispositivo["numeroDispositivo"]) ?>">
+                                            <button type="submit" class="btnOperacion btnDesactivar">Eliminar</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -129,12 +149,6 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
                     </tbody>
                 </table>
             </section>
-        </section>
-
-
-        <section class="bg-white rounded mb-4 p-3 p-md-4 seccionOperaciones">
-            <h2 class="h4 mb-3">Operaciones disponibles</h2>
-            <button class="btn btn-success w-100 botonOperacion" id="btnAltaDispositivo">Alta dispositivo</button>
         </section>
 
     </main>
@@ -147,7 +161,9 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
 
         <form action="procesarAltaDispositivo.php" method="post" id="formularioAltaDispositivo" class="p-4">
             <fieldset>
-                <legend class="h4 mb-4">Gestión de dispositivos</legend>
+                <legend class="h4 mb-4" id="tituloFormularioDispositivo">Gestión de dispositivos</legend>
+
+                <input type="hidden" id="idLabFijo" name="idLabFijo">
 
                 <section class="row g-3 mb-4">
 
@@ -169,13 +185,14 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
                         </select>
                     </div>
 
-                    <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                    <div class="col-12 col-md-6 cajaEntradaDeDatos" id="grupoModificaciones">
                         <label for="modificaciones" class="form-label">Modificaciones</label>
                         <select id="modificaciones" name="modificaciones" class="form-select" required>
-                            <option value="" disabled selected>Seleccione una opción</option>
-                            <option value="N/A">N/A</option>
-                            <option value="Reparado">Reparado</option>
-                            <option value="Actualizado">Actualizado</option>
+                            <?php foreach ($modificacionesDispositivo as $modificacion): ?>
+                                <option value="<?= htmlspecialchars($modificacion["codigo"]) ?>">
+                                    <?= htmlspecialchars($modificacion["nombre"]) ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -196,7 +213,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
                     </div>
                 </section>
 
-                <button type="submit" class="btn btn-primary w-100">Guardar dispositivo</button>
+                <button type="submit" class="btn btn-primary w-100" id="botonGuardarDispositivo">Guardar dispositivo</button>
             </fieldset>
         </form>
     </dialog>

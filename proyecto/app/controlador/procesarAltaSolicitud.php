@@ -9,18 +9,25 @@ $turno = trim($_POST["turno"] ?? "");
 $nombreDocente = trim($_POST["nombreDocente"] ?? "");
 $grupo = trim($_POST["grupo"] ?? "");
 $asignatura = trim($_POST["asignatura"] ?? "");
+$fechaEsperadaEntrada = trim($_POST["fechaEsperada"] ?? "");
 $tipoServicio = trim($_POST["tipoServicio"] ?? "");
 $idLaboratorio = trim($_POST["idLaboratorio"] ?? "");
 $numeroDispositivo = trim($_POST["numeroDispositivo"] ?? "");
 $descripcion = trim($_POST["descripcion"] ?? "");
 
-$camposObligatorios = [$turno, $nombreDocente, $grupo, $asignatura, $tipoServicio, $idLaboratorio, $numeroDispositivo, $descripcion];
+$camposObligatorios = [$turno, $nombreDocente, $grupo, $asignatura, $fechaEsperadaEntrada, $tipoServicio, $idLaboratorio, $numeroDispositivo, $descripcion];
 if (in_array("", $camposObligatorios, true)) {
     header("Location: solicitudes.php?error=campos_vacios");
     exit;
 }
 
 $fechaApertura = new DateTime();
+$fechaEsperada = DateTime::createFromFormat("Y-m-d\\TH:i", $fechaEsperadaEntrada);
+
+if ($fechaEsperada === false || $fechaEsperada <= $fechaApertura) {
+    header("Location: solicitudes.php?error=datos_incorrectos");
+    exit;
+}
 
 $solicitud = [
     "idSolicitud" => "SOL" . strtoupper(substr(uniqid(), -5)),
@@ -30,6 +37,7 @@ $solicitud = [
     "grupo" => $grupo,
     "asignatura" => $asignatura,
     "fechaApertura" => $fechaApertura->format("Y-m-d H:i:s"),
+    "fechaEsperada" => $fechaEsperada->format("Y-m-d H:i:s"),
     "tipoServicio" => $tipoServicio,
     "idLaboratorio" => $idLaboratorio,
     "numeroDispositivo" => $numeroDispositivo,

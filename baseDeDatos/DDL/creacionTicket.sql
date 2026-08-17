@@ -35,6 +35,7 @@ CREATE TABLE INCIDENCIA (
 CREATE TABLE SERVICIO (
     idServicio CHAR(8) NOT NULL,
     tipoServicio VARCHAR(50) NOT NULL,
+    fechaEsperada DATETIME NULL,
     CONSTRAINT pk_servicio PRIMARY KEY (idServicio),
     CONSTRAINT fk_servicio_ticket FOREIGN KEY (idServicio) REFERENCES TICKET (id)
 );

@@ -26,10 +26,10 @@ class AltaDatosSolicitud
         try {
             $this->conexion->beginTransaction();
             $sqlTicket = "INSERT INTO TICKET (
-                        id, cedulaSolicitante, idLaboratorio, numeroDispositivo, fechaApertura, grupo, nombreDocente,
+                        id, cedulaSolicitante, idLaboratorio, numeroDispositivo, fechaApertura, fechaEsperada, grupo, nombreDocente,
                         descripcion, turno, estado, asignatura
                     ) VALUES (
-                        :id, :cedulaSolicitante, :idLaboratorio, :numeroDispositivo, :fechaApertura, :grupo, :nombreDocente,
+                        :id, :cedulaSolicitante, :idLaboratorio, :numeroDispositivo, :fechaApertura, :fechaEsperada, :grupo, :nombreDocente,
                         :descripcion, :turno, 'PENDIENTE', :asignatura
                     )";
             $consultaTicket = $this->conexion->prepare($sqlTicket);
@@ -39,6 +39,7 @@ class AltaDatosSolicitud
                 "idLaboratorio" => $solicitud["idLaboratorio"],
                 "numeroDispositivo" => $solicitud["numeroDispositivo"],
                 "fechaApertura" => $solicitud["fechaApertura"],
+                "fechaEsperada" => $solicitud["fechaEsperada"],
                 "grupo" => $solicitud["grupo"],
                 "nombreDocente" => $solicitud["nombreDocente"],
                 "descripcion" => $solicitud["descripcion"],

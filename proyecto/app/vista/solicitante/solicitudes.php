@@ -82,6 +82,11 @@
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                            <label for="fechaEsperada" class="form-label">Fecha y hora esperada</label>
+                            <input type="datetime-local" id="fechaEsperada" name="fechaEsperada" class="form-control" required>
+                        </div>
+
+                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="tipoServicio" class="form-label">Tipo de servicio</label>
                             <select id="tipoServicio" name="tipoServicio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>

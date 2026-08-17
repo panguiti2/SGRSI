@@ -82,7 +82,12 @@ $mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró 
         <?php endif; ?>
 
         <section class="bg-white rounded mb-4 p-3 p-md-4 seccionTablaEmpleados">
-            <h2 class="h4 mb-3">Datos de usuarios</h2>
+            <section class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
+                <h2 class="h4 m-0">Datos de usuarios</h2>
+                <button type="button" class="btn btn-success" id="btnAltaUsuario">
+                    Alta usuario
+                </button>
+            </section>
 
             <section class="table-responsive panelTabla">
                 <table class="table table-bordered table-hover table-sm mb-0 small">

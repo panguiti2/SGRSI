@@ -1,14 +1,19 @@
 <?php
 
+/** Elimina dispositivos que no están asociados a tickets. */
 class BajaDatosDispositivo
 {
     private PDO $conexion;
 
+    /** @param PDO $conexion Conexión PDO activa. */
     public function __construct(PDO $conexion)
     {
         $this->conexion = $conexion;
     }
 
+    /** @param string $idLaboratorio Laboratorio del dispositivo. 
+     * @param string $numeroDispositivo Identificador del dispositivo. 
+     * @return bool True si se eliminó. */
     public function eliminarDispositivo(string $idLaboratorio, string $numeroDispositivo): bool
     {
         try {

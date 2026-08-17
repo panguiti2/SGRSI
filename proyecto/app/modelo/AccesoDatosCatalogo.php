@@ -7,36 +7,43 @@ class AccesoDatosCatalogo
 {
     private PDO $conexion;
 
+    /** @param PDO $conexion Conexión PDO activa. */
     public function __construct(PDO $conexion)
     {
         $this->conexion = $conexion;
     }
 
+    /** @return array Turnos disponibles. */
     public function listarTurnos(): array
     {
         return $this->listar("TURNO", "codigoTurno");
     }
 
+    /** @return array Tipos de servicio disponibles. */
     public function listarTiposServicio(): array
     {
         return $this->listar("TIPO_SERVICIO", "codigoTipoServicio");
     }
 
+    /** @return array Modificaciones disponibles para un dispositivo. */
     public function listarModificacionesDispositivo(): array
     {
         return $this->listar("MODIFICACION_DISPOSITIVO", "codigoModificacion");
     }
 
+    /** @param string $codigoTurno Código a comprobar. @return bool True si existe. */
     public function existeTurno(string $codigoTurno): bool
     {
         return $this->existe("TURNO", "codigoTurno", $codigoTurno);
     }
 
+    /** @param string $codigoTipoServicio Código a comprobar. @return bool True si existe. */
     public function existeTipoServicio(string $codigoTipoServicio): bool
     {
         return $this->existe("TIPO_SERVICIO", "codigoTipoServicio", $codigoTipoServicio);
     }
 
+    /** @param string $codigoModificacion Código a comprobar. @return bool True si existe. */
     public function existeModificacionDispositivo(string $codigoModificacion): bool
     {
         return $this->existe("MODIFICACION_DISPOSITIVO", "codigoModificacion", $codigoModificacion);

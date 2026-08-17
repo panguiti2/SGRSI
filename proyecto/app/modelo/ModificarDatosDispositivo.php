@@ -1,14 +1,25 @@
 <?php
 
+/** Actualiza los datos editables de un dispositivo. */
 class ModificarDatosDispositivo
 {
     private PDO $conexion;
 
+    /** @param PDO $conexion Conexión PDO activa. */
     public function __construct(PDO $conexion)
     {
         $this->conexion = $conexion;
     }
 
+    /**
+     * Actualiza modificación, fecha de cambio y estado de un dispositivo.
+     * @param string $idLaboratorio Laboratorio al que pertenece.
+     * @param string $numeroDispositivo Identificador del dispositivo.
+     * @param string $modificaciones Modificación registrada.
+     * @param string $ultimoCambio Fecha y hora del cambio.
+     * @param bool $estado Estado activo o inactivo.
+     * @return bool True si se actualizó una fila.
+     */
     public function modificarDispositivo(
         string $idLaboratorio,
         string $numeroDispositivo,

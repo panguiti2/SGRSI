@@ -15,6 +15,10 @@ class ConectorPDO
 
     /**
      * Recibe la configuración de conexión cargada desde el archivo .env.
+     * @param string $servidor Servidor de base de datos.
+     * @param string $usuario Usuario de conexión.
+     * @param string $clave Contraseña de conexión.
+     * @param string $baseDatos Nombre de la base de datos.
      */
     public function __construct(string $servidor, string $usuario, string $clave, string $baseDatos) {
         $this->servidor = $servidor;

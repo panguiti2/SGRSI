@@ -14,5 +14,6 @@ $laboratorios = $accesoDatosDispositivo->listarLaboratorios();
 $dispositivosFormulario = $accesoDatosDispositivo->listarDispositivosParaFormulario();
 $accesoDatosCatalogo = new AccesoDatosCatalogo($conexion);
 $turnos = $accesoDatosCatalogo->listarTurnos();
+$estadosTicket = $accesoDatosCatalogo->listarEstadosTicket();
 $conectorPDO->desconectar();
 require_once $vistaIncidencias;

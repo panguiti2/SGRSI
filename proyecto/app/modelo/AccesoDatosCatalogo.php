@@ -31,6 +31,12 @@ class AccesoDatosCatalogo
         return $this->listar("MODIFICACION_DISPOSITIVO", "codigoModificacion");
     }
 
+    /** @return array Estados disponibles para los tickets. */
+    public function listarEstadosTicket(): array
+    {
+        return $this->listar("ESTADO_TICKET", "codigoEstado");
+    }
+
     /** @param string $codigoTurno Código a comprobar. @return bool True si existe. */
     public function existeTurno(string $codigoTurno): bool
     {
@@ -47,6 +53,12 @@ class AccesoDatosCatalogo
     public function existeModificacionDispositivo(string $codigoModificacion): bool
     {
         return $this->existe("MODIFICACION_DISPOSITIVO", "codigoModificacion", $codigoModificacion);
+    }
+
+    /** @param string $codigoEstado Estado a comprobar. @return bool True si existe. */
+    public function existeEstadoTicket(string $codigoEstado): bool
+    {
+        return $this->existe("ESTADO_TICKET", "codigoEstado", $codigoEstado);
     }
 
     private function listar(string $tabla, string $columna): array

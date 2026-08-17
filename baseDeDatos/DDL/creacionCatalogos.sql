@@ -15,3 +15,9 @@ CREATE TABLE IF NOT EXISTS MODIFICACION_DISPOSITIVO (
     nombre VARCHAR(50) NOT NULL,
     CONSTRAINT pk_modificacion_dispositivo PRIMARY KEY (codigoModificacion)
 );
+
+CREATE TABLE IF NOT EXISTS ESTADO_TICKET (
+    codigoEstado VARCHAR(15) NOT NULL,
+    nombre VARCHAR(30) NOT NULL,
+    CONSTRAINT pk_estado_ticket PRIMARY KEY (codigoEstado)
+);

@@ -66,9 +66,11 @@ $mensajeExito = ($_GET["exito"] ?? "") === "estado"
                                 <td><form action="procesarEstadoSolicitud.php" method="post" class="d-flex gap-1">
                                     <input type="hidden" name="idSolicitud" value="<?= htmlspecialchars($solicitud["idSolicitud"]) ?>">
                                     <select name="estado" class="form-select form-select-sm" aria-label="Estado de la solicitud">
-                                        <option value="PENDIENTE" <?= $solicitud["estado"] === "PENDIENTE" ? "selected" : "" ?>>Pendiente</option>
-                                        <option value="EN PROCESO" <?= $solicitud["estado"] === "EN PROCESO" ? "selected" : "" ?>>En proceso</option>
-                                        <option value="RESUELTO" <?= $solicitud["estado"] === "RESUELTO" ? "selected" : "" ?>>Resuelto</option>
+                                        <?php foreach ($estadosTicket as $estadoTicket): ?>
+                                            <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>" <?= $solicitud["estado"] === $estadoTicket["codigo"] ? "selected" : "" ?>>
+                                                <?= htmlspecialchars($estadoTicket["nombre"]) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                     <button class="btn btn-sm btn-primary">Guardar</button>
                                 </form></td>

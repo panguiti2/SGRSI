@@ -13,3 +13,8 @@ INSERT IGNORE INTO MODIFICACION_DISPOSITIVO (codigoModificacion, nombre) VALUES
     ('N/A', 'Sin modificaciones'),
     ('Reparado', 'Reparado'),
     ('Actualizado', 'Actualizado');
+
+INSERT IGNORE INTO ESTADO_TICKET (codigoEstado, nombre) VALUES
+    ('PENDIENTE', 'Pendiente'),
+    ('EN PROCESO', 'En proceso'),
+    ('RESUELTO', 'Resuelto');

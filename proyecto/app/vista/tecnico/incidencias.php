@@ -67,9 +67,11 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
                                 <td><form action="procesarAsignacionIncidencia.php" method="post" class="d-flex gap-1">
                                     <input type="hidden" name="idIncidencia" value="<?= htmlspecialchars($incidencia["idIncidencia"]) ?>">
                                     <select name="estado" class="form-select form-select-sm" aria-label="Estado de la incidencia">
-                                        <option value="PENDIENTE" <?= $incidencia["estado"] === "PENDIENTE" ? "selected" : "" ?>>Pendiente</option>
-                                        <option value="EN PROCESO" <?= $incidencia["estado"] === "EN PROCESO" ? "selected" : "" ?>>En proceso</option>
-                                        <option value="RESUELTO" <?= $incidencia["estado"] === "RESUELTO" ? "selected" : "" ?>>Resuelto</option>
+                                        <?php foreach ($estadosTicket as $estadoTicket): ?>
+                                            <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>" <?= $incidencia["estado"] === $estadoTicket["codigo"] ? "selected" : "" ?>>
+                                                <?= htmlspecialchars($estadoTicket["nombre"]) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                     <button class="btn btn-sm btn-primary">Gestionar</button>
                                 </form></td>

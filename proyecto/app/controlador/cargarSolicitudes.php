@@ -15,6 +15,7 @@ $dispositivosFormulario = $accesoDatosDispositivo->listarDispositivosParaFormula
 $accesoDatosCatalogo = new AccesoDatosCatalogo($conexion);
 $turnos = $accesoDatosCatalogo->listarTurnos();
 $tiposServicio = $accesoDatosCatalogo->listarTiposServicio();
+$estadosTicket = $accesoDatosCatalogo->listarEstadosTicket();
 $conectorPDO->desconectar();
 
 require_once $vistaSolicitudes;

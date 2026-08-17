@@ -25,11 +25,17 @@ if (!$validos) {
 }
 
 $datos = [
-    "idIncidencia" => "INC" . strtoupper(substr(uniqid(), -5)), "cedulaSolicitante" => $_SESSION["cedula"],
-    "turno" => $turno, "fechaApertura" => $fechaHora->format("Y-m-d H:i:s"),
-    "nombreDocente" => $nombreDocente, "grupo" => $grupo, "asignatura" => $asignatura,
-    "idLaboratorio" => $idLaboratorio, "numeroDispositivo" => $numeroDispositivo,
-    "reportoAlumno" => $reportoAlumno === "SI" ? 1 : 0, "nombreAlumno" => $nombreAlumno === "" ? null : $nombreAlumno,
+    "idIncidencia" => "INC" . strtoupper(substr(uniqid(), -5)), 
+    "cedulaSolicitante" => $_SESSION["cedula"],
+    "turno" => $turno, 
+    "fechaApertura" => $fechaHora->format("Y-m-d H:i:s"),
+    "nombreDocente" => $nombreDocente, 
+    "grupo" => $grupo, 
+    "asignatura" => $asignatura,
+    "idLaboratorio" => $idLaboratorio, 
+    "numeroDispositivo" => $numeroDispositivo,
+    "reportoAlumno" => $reportoAlumno === "SI" ? 1 : 0, 
+    "nombreAlumno" => $nombreAlumno === "" ? null : $nombreAlumno,
     "descripcion" => $descripcion
 ];
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);

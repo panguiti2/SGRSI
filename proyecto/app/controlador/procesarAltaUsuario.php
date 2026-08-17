@@ -1,19 +1,8 @@
 
 <?php
 
-require_once __DIR__ . "/../../config/config.php";
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosUsuario.php";
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: usuarios.php?error=peticion" );
-    exit;
-}
 
 $cedula = trim($_POST["cedula"] ?? "");
 $nombre = trim($_POST["nombre"] ?? "");

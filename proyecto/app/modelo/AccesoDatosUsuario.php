@@ -86,6 +86,7 @@ public function listarUsuarios (): array {
     u.cedula,
     u.nombre,
     u.apellido,
+    u.estado,
 
     CASE
         WHEN a.cedula IS NOT NULL THEN 1

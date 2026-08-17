@@ -19,4 +19,4 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-require_once RUTA_CONTROLADOR . "/procesarAltaUsuario.php";
+require_once RUTA_CONTROLADOR . "/procesarEstadoUsuario.php";

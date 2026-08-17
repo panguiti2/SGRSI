@@ -1,7 +1,4 @@
 <?php
-$rolRequerido = "administrador";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
 
 $codigoError = $_GET["error"] ?? "";
 $mensajesError = [
@@ -10,6 +7,7 @@ $mensajesError = [
     "contraseña" => "Las contraseñas ingresadas no coinciden.",
     "campos_vacios" => "No se pudo registrar el empleado: existen campos vacíos.",
     "cedula_incorrecta" => "No se pudo registrar el empleado: cédula incorrecta.",
+    "datos_incorrectos" => "Los datos del usuario no son válidos.",
     "contraseña_corta" => "La contraseña debe contener al menos 12 caracteres.",
     "rol_incorrecto" => "Debe seleccionar un rol válido.",
     "conexion" => "No se pudo establecer conexión con la base de datos.",
@@ -19,6 +17,14 @@ $mensajesError = [
 
 $error = $mensajesError[$codigoError] ?? "";
 $mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró exitosamente." : "";
+
+if (($_GET["exito"] ?? "") === "usuario_modificado") {
+    $mensajeExito = "El usuario se modificó exitosamente.";
+}
+
+if (($_GET["exito"] ?? "") === "estado_usuario") {
+    $mensajeExito = "El estado del usuario se actualizó exitosamente.";
+}
 
 ?>
 <!DOCTYPE html>
@@ -98,6 +104,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró 
                             <th>Nombre</th>
                             <th >Apellido</th>
                             <th >Cargo</th>
+                            <th >Estado</th>
                             <th >Operaciones</th>
                         </tr>
                     </thead>
@@ -106,12 +113,16 @@ $mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró 
                             <?php
                                 if ($usuario["administrador"] == 1) {
                                     $rol = "Administrador";
+                                    $rolValor = "administrador";
                                 } elseif ($usuario["tecnico"] == 1) {
                                     $rol = "Técnico";
+                                    $rolValor = "tecnico";
                                 } elseif ($usuario["solicitante"] == 1) {
                                     $rol = "Solicitante";
+                                    $rolValor = "solicitante";
                                 } else {
                                     $rol = "Sin rol";
+                                    $rolValor = "";
                                 }
                             ?>
                             <tr>
@@ -119,10 +130,21 @@ $mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró 
                                 <td><?= htmlspecialchars($usuario["nombre"]) ?></td>
                                 <td><?= htmlspecialchars($usuario["apellido"]) ?></td>
                                 <td><?= htmlspecialchars($rol) ?></td>
+                                <td><?= $usuario["estado"] ? "Activo" : "Inactivo" ?></td>
                                 <td>
                                     <div class="cajaOperaciones">
-                                        <button type="button" class="btnOperacion btnModificar">Modificar</button>
-                                        <button type="button" class="btnOperacion btnEliminar">Eliminar</button>
+                                        <button type="button" class="btnOperacion btnModificarUsuario"
+                                            data-cedula="<?= htmlspecialchars($usuario["cedula"]) ?>"
+                                            data-nombre="<?= htmlspecialchars($usuario["nombre"]) ?>"
+                                            data-apellido="<?= htmlspecialchars($usuario["apellido"]) ?>"
+                                            data-rol="<?= htmlspecialchars($rolValor) ?>">Modificar</button>
+                                        <form action="procesarEstadoUsuario.php" method="post" class="formCambiarEstadoUsuario">
+                                            <input type="hidden" name="cedula" value="<?= htmlspecialchars($usuario["cedula"]) ?>">
+                                            <input type="hidden" name="estado" value="<?= $usuario["estado"] ? "0" : "1" ?>">
+                                            <button type="submit" class="btnOperacion <?= $usuario["estado"] ? "btnDesactivar" : "btnActivar" ?>">
+                                                <?= $usuario["estado"] ? "Desactivar" : "Activar" ?>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -132,25 +154,13 @@ $mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró 
             </section>
         </section>
 
-        <section class="bg-white rounded mb-4 p-3 p-md-4 seccionOperaciones">
-            <h2 class="h4 mb-3">Operaciones disponibles</h2>
-
-            <section class="row justify-content-center">
-                <div class="col-12 col-sm-8 col-md-4">
-                    <button type="button" class="botonOperacion w-100" id="btnAltaUsuario">
-                        Alta Usuario
-                    </button>
-                </div>
-            </section>
-        </section>
-
         <dialog class="dialogAltaUsuario seccionFormulario w-100 p-0 rounded-3 border-0" style="max-width: 600px;">
             <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarAltaUsuario" type="button"
                 aria-label="Cerrar"></button>
 
             <form action="procesarAltaUsuario.php" method="post" id="formularioAltaUsuario" class="p-4">
                 <fieldset>
-                    <legend class="h4 mb-4">Gestión de usuarios</legend>
+                    <legend class="h4 mb-4" id="tituloFormularioUsuario">Gestión de usuarios</legend>
 
                     <fieldset class="mb-3">
                         <legend class="h6 mb-3">Datos del usuario</legend>
@@ -200,7 +210,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "usuario" ? "El usuario se registró 
                         </section>
                     </fieldset>
 
-                    <button type="submit" class="btn btn-primary w-100">Guardar usuario</button>
+                    <button type="submit" class="btn btn-primary w-100" id="botonGuardarUsuario">Guardar usuario</button>
                 </fieldset>
             </form>
         </dialog>

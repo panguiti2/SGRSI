@@ -1,0 +1,61 @@
+<?php
+
+class ModificarDatosUsuario
+{
+    private PDO $conexion;
+
+    public function __construct(PDO $conexion)
+    {
+        $this->conexion = $conexion;
+    }
+
+    public function modificarUsuario(
+        string $cedula,
+        string $nombre,
+        string $apellido,
+        string $claveHash,
+        string $rol
+    ): bool {
+        $tablasRol = [
+            "administrador" => "ADMINISTRADOR",
+            "tecnico" => "TECNICO",
+            "solicitante" => "SOLICITANTE"
+        ];
+
+        if (!isset($tablasRol[$rol])) {
+            return false;
+        }
+
+        try {
+            $this->conexion->beginTransaction();
+
+            $sqlUsuario = "UPDATE USUARIO
+                SET nombre = :nombre, apellido = :apellido, claveHash = :claveHash
+                WHERE cedula = :cedula";
+            $parametros = [
+                "cedula" => $cedula,
+                "nombre" => $nombre,
+                "apellido" => $apellido,
+                "claveHash" => $claveHash
+            ];
+            $this->conexion->prepare($sqlUsuario)->execute($parametros);
+
+            foreach ($tablasRol as $tablaRol) {
+                $this->conexion->prepare("DELETE FROM " . $tablaRol . " WHERE cedula = :cedula")
+                    ->execute(["cedula" => $cedula]);
+            }
+
+            $this->conexion->prepare("INSERT INTO " . $tablasRol[$rol] . " (cedula) VALUES (:cedula)")
+                ->execute(["cedula" => $cedula]);
+
+            $this->conexion->commit();
+            return true;
+        } catch (PDOException $error) {
+            if ($this->conexion->inTransaction()) {
+                $this->conexion->rollBack();
+            }
+
+            return false;
+        }
+    }
+}

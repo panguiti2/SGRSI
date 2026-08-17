@@ -180,6 +180,36 @@ h6 {
   outline-offset: 2px;
 }
 
+.cajaOperaciones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btnOperacion {
+  border: none;
+  border-radius: 5px;
+  background-color: var(--azul);
+  color: var(--blancoCristal);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.45rem 0.65rem;
+}
+
+.btnOperacion:hover,
+.btnOperacion:focus {
+  background-color: var(--celeste);
+  color: var(--azul);
+}
+
+.btnDesactivar {
+  background-color: #b02a37;
+}
+
+.btnActivar {
+  background-color: #198754;
+}
+
 
 footer.sgrsi-footer {
   background-color: var(--azul);

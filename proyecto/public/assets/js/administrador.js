@@ -609,5 +609,102 @@ function actualizarTablaIncidenciasAdmin() {
 }
 
 //if (cuerpoTablaIncidenciasAdmin) {
- //   actualizarTablaIncidenciasAdmin();
+//   actualizarTablaIncidenciasAdmin();
 // }
+
+const campoRolUsuario = document.getElementById("rol");
+const tituloFormularioUsuario = document.getElementById("tituloFormularioUsuario");
+const botonGuardarUsuario = document.getElementById("botonGuardarUsuario");
+const campoContrasenaUsuario = document.getElementById("contrasena");
+const campoConfirmarContrasenaUsuario = document.getElementById("confirmarContrasena");
+
+function prepararAltaUsuario() {
+    if (!formularioAltaUsuario) return;
+
+    formularioAltaUsuario.action = "procesarAltaUsuario.php";
+    campoCedula.readOnly = false;
+    campoContrasenaUsuario.required = true;
+    campoConfirmarContrasenaUsuario.required = true;
+    tituloFormularioUsuario.textContent = "Gestión de usuarios";
+    botonGuardarUsuario.textContent = "Guardar usuario";
+}
+
+if (btnAltaUsuario) {
+    btnAltaUsuario.addEventListener("click", prepararAltaUsuario);
+}
+
+document.querySelectorAll(".btnModificarUsuario").forEach((boton) => {
+    boton.addEventListener("click", () => {
+        formularioAltaUsuario.reset();
+        formularioAltaUsuario.action = "procesarModificarUsuario.php";
+        campoCedula.value = boton.dataset.cedula;
+        campoNombre.value = boton.dataset.nombre;
+        campoApellido.value = boton.dataset.apellido;
+        campoRolUsuario.value = boton.dataset.rol;
+        campoCedula.readOnly = true;
+        campoContrasenaUsuario.required = true;
+        campoConfirmarContrasenaUsuario.required = true;
+        tituloFormularioUsuario.textContent = "Modificar usuario";
+        botonGuardarUsuario.textContent = "Guardar modificación";
+        dialogAltaUsuario.showModal();
+    });
+});
+
+document.querySelectorAll(".formCambiarEstadoUsuario").forEach((formulario) => {
+    formulario.addEventListener("submit", (evento) => {
+        const boton = formulario.querySelector("button");
+        const accion = boton.textContent.trim().toLowerCase();
+
+        if (!confirm(`¿Desea ${accion} este usuario?`)) {
+            evento.preventDefault();
+        }
+    });
+});
+
+const tituloFormularioDispositivo = document.getElementById("tituloFormularioDispositivo");
+const botonGuardarDispositivo = document.getElementById("botonGuardarDispositivo");
+const campoLaboratorioFijo = document.getElementById("idLabFijo");
+const grupoModificaciones = document.getElementById("grupoModificaciones");
+
+function prepararAltaDispositivo() {
+    if (!formularioAltaDispositivo) return;
+
+    formularioAltaDispositivo.action = "procesarAltaDispositivo.php";
+    campoNumero.readOnly = false;
+    campoLaboratorio.disabled = false;
+    campoLaboratorioFijo.value = "";
+    grupoModificaciones.hidden = true;
+    tituloFormularioDispositivo.textContent = "Gestión de dispositivos";
+    botonGuardarDispositivo.textContent = "Guardar dispositivo";
+}
+
+if (btnAltaDispositivo) {
+    btnAltaDispositivo.addEventListener("click", prepararAltaDispositivo);
+}
+
+document.querySelectorAll(".btnModificarDispositivo").forEach((boton) => {
+    boton.addEventListener("click", () => {
+        formularioAltaDispositivo.reset();
+        formularioAltaDispositivo.action = "procesarModificarDispositivo.php";
+        campoLaboratorio.value = boton.dataset.laboratorio;
+        campoLaboratorio.disabled = true;
+        campoLaboratorioFijo.value = boton.dataset.laboratorio;
+        grupoModificaciones.hidden = false;
+        campoNumero.value = boton.dataset.numero;
+        campoNumero.readOnly = true;
+        campoModificaciones.value = boton.dataset.modificaciones;
+        campoEstado.value = boton.dataset.estado;
+        campoUltimoCambio.value = boton.dataset.ultimoCambio.replace(" ", "T").slice(0, 16);
+        tituloFormularioDispositivo.textContent = "Modificar dispositivo";
+        botonGuardarDispositivo.textContent = "Guardar modificación";
+        dialogAltaDispositivo.showModal();
+    });
+});
+
+document.querySelectorAll(".formEliminarDispositivo").forEach((formulario) => {
+    formulario.addEventListener("submit", (evento) => {
+        if (!confirm("¿Desea eliminar este dispositivo?")) {
+            evento.preventDefault();
+        }
+    });
+});

@@ -47,14 +47,14 @@ verificarAcceso($rolRequerido);
         </section>
     </header>
 
-    <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
+    <main class="container-xl flex-grow-1 p-3 p-md-4">
 
         <section class="seccionFormulario bg-white rounded p-3 p-md-4 mb-4">
-            <button class="btn btn-outline-primary w-100 w-md-auto mb-3">Mis solicitudes</button>
+            <h1 class="h3 mb-4">Solicitar servicio</h1>
 
             <form action="procesarAltaSolicitud.php" method="post" id="formularioSolicitud">
                 <fieldset>
-                    <legend class="h4 mb-4">Solicitar servicio</legend>
+                    <legend class="visually-hidden">Datos de la solicitud</legend>
 
                     <section class="row g-3 mb-4 ">
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -81,7 +81,7 @@ verificarAcceso($rolRequerido);
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="grupo" class="form-label">Grupo</label>
-                            <input type="text" id="grupo" name="grupo" class="form-control" required>
+                            <input type="text" id="grupo" name="grupo" class="form-control" placeholder="Ej.: 3° BD" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -98,6 +98,28 @@ verificarAcceso($rolRequerido);
                                 <option value="CONFIGURACION">Configuración</option>
                                 <option value="OTRO">Otro</option>
                             </select>
+                        </div>
+
+                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                            <label for="idLaboratorio" class="form-label">Laboratorio</label>
+                            <select id="idLaboratorio" name="idLaboratorio" class="form-select" required>
+                                <option value="" disabled selected>Seleccione el laboratorio</option>
+                                <option value="TALL01">Taller 1</option>
+                                <option value="TALL02">Taller 2</option>
+                                <option value="TALL03">Taller 3</option>
+                                <option value="LAB01">Laboratorio 1</option>
+                                <option value="LAB02">Laboratorio 2</option>
+                                <option value="LAB03">Laboratorio 3</option>
+                                <option value="LAB04">Laboratorio 4</option>
+                                <option value="LAB05">Laboratorio 5</option>
+                                <option value="LAB06">Laboratorio 6</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6 cajaEntradaDeDatos">
+                            <label for="numeroDispositivo" class="form-label">Número de dispositivo</label>
+                            <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
+                                placeholder="Ej.: PC-001" required>
                         </div>
 
                         <div class="col-12 cajaTextarea">
@@ -118,17 +140,24 @@ verificarAcceso($rolRequerido);
             <h2 class="h4 mb-3">Mis solicitudes</h2>
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
-                    <thead class="table-light"><tr><th>ID</th><th>Fecha</th><th>Grupo</th><th>Tipo</th><th>Estado</th></tr></thead>
+                    <thead class="table-light"><tr><th>ID</th><th>Fecha</th><th>Grupo</th><th>Dispositivo</th><th>Tipo</th><th>Estado</th></tr></thead>
                     <tbody>
-                        <?php foreach ($solicitudes as $solicitud): ?>
+                        <?php if (empty($solicitudes)): ?>
                             <tr>
-                                <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
-                                <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
+                                <td colspan="6" class="text-center text-muted py-3">Aún no registraste solicitudes.</td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php else: ?>
+                            <?php foreach ($solicitudes as $solicitud): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["idLaboratorio"] . " / " . $solicitud["numeroDispositivo"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </section>

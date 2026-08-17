@@ -26,16 +26,18 @@ class AltaDatosIncidencia
         try {
             $this->conexion->beginTransaction();
             $sqlTicket = "INSERT INTO TICKET (
-                        id, cedulaSolicitante, fechaApertura, grupo, nombreDocente,
+                        id, cedulaSolicitante, idLaboratorio, numeroDispositivo, fechaApertura, grupo, nombreDocente,
                         descripcion, turno, estado, asignatura
                     ) VALUES (
-                        :id, :cedulaSolicitante, :fechaApertura, :grupo, :nombreDocente,
+                        :id, :cedulaSolicitante, :idLaboratorio, :numeroDispositivo, :fechaApertura, :grupo, :nombreDocente,
                         :descripcion, :turno, 'PENDIENTE', :asignatura
                     )";
             $consultaTicket = $this->conexion->prepare($sqlTicket);
             $consultaTicket->execute([
                 "id" => $incidencia["idIncidencia"],
                 "cedulaSolicitante" => $incidencia["cedulaSolicitante"],
+                "idLaboratorio" => $incidencia["idLaboratorio"],
+                "numeroDispositivo" => $incidencia["numeroDispositivo"],
                 "fechaApertura" => $incidencia["fechaApertura"],
                 "grupo" => $incidencia["grupo"],
                 "nombreDocente" => $incidencia["nombreDocente"],
@@ -71,23 +73,16 @@ class AltaDatosIncidencia
             $consultaTicket = $this->conexion->prepare(
                 "UPDATE TICKET
                  SET estado = :estado,
-                     FechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
+                     cedulaTecnico = :cedulaTecnico,
+                     fechaGestion = NOW(),
+                     fechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
                  WHERE id = :idIncidencia"
             );
             $consultaTicket->execute([
                 "estado" => $asignacion["estado"],
                 "estadoCierre" => $asignacion["estado"],
+                "cedulaTecnico" => $asignacion["cedulaTecnico"],
                 "idIncidencia" => $asignacion["idIncidencia"]
-            ]);
-
-            $consultaGestion = $this->conexion->prepare(
-                "INSERT INTO GESTIONA (idTicket, cedulaTecnico, fecha)
-                 VALUES (:idTicket, :cedulaTecnico, NOW())
-                 ON DUPLICATE KEY UPDATE cedulaTecnico = VALUES(cedulaTecnico), fecha = NOW()"
-            );
-            $consultaGestion->execute([
-                "idTicket" => $asignacion["idIncidencia"],
-                "cedulaTecnico" => $asignacion["cedulaTecnico"]
             ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {

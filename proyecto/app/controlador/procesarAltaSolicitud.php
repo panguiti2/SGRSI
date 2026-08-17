@@ -14,9 +14,11 @@ $grupo = trim($_POST["grupo"] ?? "");
 $asignatura = trim($_POST["asignatura"] ?? "");
 $fechaAperturaEntrada = trim($_POST["fechaApertura"] ?? "");
 $tipoServicio = trim($_POST["tipoServicio"] ?? "");
+$idLaboratorio = trim($_POST["idLaboratorio"] ?? "");
+$numeroDispositivo = trim($_POST["numeroDispositivo"] ?? "");
 $descripcion = trim($_POST["descripcion"] ?? "");
 
-$camposObligatorios = [$turno, $nombreDocente, $grupo, $asignatura, $fechaAperturaEntrada, $tipoServicio, $descripcion];
+$camposObligatorios = [$turno, $nombreDocente, $grupo, $asignatura, $fechaAperturaEntrada, $tipoServicio, $idLaboratorio, $numeroDispositivo, $descripcion];
 if (in_array("", $camposObligatorios, true)) {
     header("Location: solicitudes.php?error=campos_vacios");
     exit;
@@ -41,6 +43,8 @@ $solicitud = [
     "asignatura" => $asignatura,
     "fechaApertura" => $fechaApertura->format("Y-m-d H:i:s"),
     "tipoServicio" => $tipoServicio,
+    "idLaboratorio" => $idLaboratorio,
+    "numeroDispositivo" => $numeroDispositivo,
     "descripcion" => $descripcion
 ];
 

@@ -25,11 +25,10 @@ class AccesoDatosIncidencia
     {
         $sql = "SELECT t.id AS idIncidencia, t.cedulaSolicitante, t.fechaApertura,
                        t.fechaCierre, t.grupo, t.nombreDocente, t.descripcion,
-                       t.turno, t.estado, t.asignatura, i.reportoAlumno,
-                       i.nombreAlumno, g.cedulaTecnico, g.fecha AS fechaGestion
+                       t.turno, t.estado, t.asignatura, t.idLaboratorio, t.numeroDispositivo, i.reportoAlumno,
+                       i.nombreAlumno, t.cedulaTecnico, t.fechaGestion
                 FROM TICKET AS t
-                INNER JOIN INCIDENCIA AS i ON i.id = t.id
-                LEFT JOIN GESTIONA AS g ON g.idTicket = t.id";
+                INNER JOIN INCIDENCIA AS i ON i.id = t.id";
         if ($cedulaSolicitante !== null) {
             $sql .= " WHERE t.cedulaSolicitante = :cedulaSolicitante";
         }

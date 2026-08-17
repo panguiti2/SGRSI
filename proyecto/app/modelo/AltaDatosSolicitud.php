@@ -26,16 +26,18 @@ class AltaDatosSolicitud
         try {
             $this->conexion->beginTransaction();
             $sqlTicket = "INSERT INTO TICKET (
-                        id, cedulaSolicitante, fechaApertura, grupo, nombreDocente,
+                        id, cedulaSolicitante, idLaboratorio, numeroDispositivo, fechaApertura, grupo, nombreDocente,
                         descripcion, turno, estado, asignatura
                     ) VALUES (
-                        :id, :cedulaSolicitante, :fechaApertura, :grupo, :nombreDocente,
+                        :id, :cedulaSolicitante, :idLaboratorio, :numeroDispositivo, :fechaApertura, :grupo, :nombreDocente,
                         :descripcion, :turno, 'PENDIENTE', :asignatura
                     )";
             $consultaTicket = $this->conexion->prepare($sqlTicket);
             $consultaTicket->execute([
                 "id" => $solicitud["idSolicitud"],
                 "cedulaSolicitante" => $solicitud["cedulaSolicitante"],
+                "idLaboratorio" => $solicitud["idLaboratorio"],
+                "numeroDispositivo" => $solicitud["numeroDispositivo"],
                 "fechaApertura" => $solicitud["fechaApertura"],
                 "grupo" => $solicitud["grupo"],
                 "nombreDocente" => $solicitud["nombreDocente"],
@@ -71,7 +73,7 @@ class AltaDatosSolicitud
         $consulta = $this->conexion->prepare(
             "UPDATE TICKET
              SET estado = :estado,
-                 FechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
+                 fechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
              WHERE id = :idSolicitud"
         );
         return $consulta->execute([

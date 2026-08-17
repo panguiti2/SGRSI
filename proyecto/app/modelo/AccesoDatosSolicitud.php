@@ -25,7 +25,7 @@ class AccesoDatosSolicitud
     {
         $sql = "SELECT t.id AS idSolicitud, t.cedulaSolicitante, t.fechaApertura,
                        t.fechaCierre, t.grupo, t.nombreDocente, t.descripcion,
-                       t.turno, t.estado, t.asignatura, s.tipoServicio
+                       t.turno, t.estado, t.asignatura, t.idLaboratorio, t.numeroDispositivo, s.tipoServicio
                 FROM TICKET AS t
                 INNER JOIN SERVICIO AS s ON s.idServicio = t.id";
 

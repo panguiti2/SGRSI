@@ -154,7 +154,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "dispositivo" ? "El dispositivo se re
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="numeroDispositivo" class="form-label">N° Dispositivo</label>
                         <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
-                            placeholder="Ej: PC01" required>
+                            placeholder="Ej.: PC-001" required>
                     </div>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">

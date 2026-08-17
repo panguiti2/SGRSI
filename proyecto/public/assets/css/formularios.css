@@ -61,15 +61,12 @@
 }
 
 .cajaTextarea textarea {
-    min-height: 25rem;
+    min-height: 8rem;
 }
 
 .cajaEntradaDeDatos {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: block;
     margin-bottom: 0.5rem;
-    white-space: nowrap;
 }
 
 .cajaTextarea {

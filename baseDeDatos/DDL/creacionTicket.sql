@@ -1,8 +1,12 @@
 CREATE TABLE TICKET (
     id CHAR(8) NOT NULL,
     cedulaSolicitante CHAR(8) NOT NULL,
+    cedulaTecnico CHAR(8) NULL,
+    idLaboratorio CHAR(8) NULL,
+    numeroDispositivo CHAR(8) NULL,
     fechaApertura DATETIME NOT NULL,
     fechaCierre DATETIME NULL,
+    fechaGestion DATETIME NULL,
     grupo VARCHAR(50) NOT NULL,
     nombreDocente VARCHAR(100) NOT NULL,
     descripcion VARCHAR(500) NOT NULL,
@@ -11,6 +15,8 @@ CREATE TABLE TICKET (
     asignatura VARCHAR(100) NOT NULL,
     CONSTRAINT pk_ticket PRIMARY KEY (id),
     CONSTRAINT fk_ticket_solicitante FOREIGN KEY (cedulaSolicitante) REFERENCES SOLICITANTE (cedula),
+    CONSTRAINT fk_ticket_tecnico FOREIGN KEY (cedulaTecnico) REFERENCES TECNICO (cedula),
+    CONSTRAINT fk_ticket_dispositivo FOREIGN KEY (idLaboratorio, numeroDispositivo) REFERENCES DISPOSITIVO (idLaboratorio, numeroDispositivo),
     CONSTRAINT chk_ticket_fechas CHECK (fechaCierre IS NULL OR fechaCierre >= fechaApertura)
 );
 
@@ -33,29 +39,7 @@ CREATE TABLE SERVICIO (
     CONSTRAINT fk_servicio_ticket FOREIGN KEY (idServicio) REFERENCES TICKET (id)
 );
 
-CREATE TABLE GESTIONA (
-    idTicket CHAR(8) NOT NULL,
-    cedulaTecnico CHAR(8) NOT NULL,
-    fecha DATETIME NOT NULL,
-    CONSTRAINT pk_gestiona PRIMARY KEY (idTicket),
-    CONSTRAINT fk_gestiona_ticket FOREIGN KEY (idTicket) REFERENCES TICKET (id),
-    CONSTRAINT fk_gestiona_tecnico FOREIGN KEY (cedulaTecnico) REFERENCES TECNICO (cedula)
-);
-
-CREATE TABLE INCLUYE (
-    idTicket CHAR(8) NOT NULL,
-    idLaboratorio CHAR(8) NOT NULL,
-    numeroDispositivo CHAR(8) NOT NULL,
-    CONSTRAINT pk_incluye PRIMARY KEY (idTicket, idLaboratorio, numeroDispositivo),
-    CONSTRAINT fk_incluye_ticket FOREIGN KEY (idTicket) REFERENCES TICKET (id),
-    CONSTRAINT fk_incluye_dispositivo FOREIGN KEY (idLaboratorio, numeroDispositivo) REFERENCES DISPOSITIVO (idLaboratorio, numeroDispositivo)
-);
-
-CREATE TABLE CONTROLA (
-    cedulaAdministrador CHAR(8) NOT NULL,
-    idLaboratorio CHAR(8) NOT NULL,
-    numeroDispositivo CHAR(8) NOT NULL,
-    CONSTRAINT pk_controla PRIMARY KEY (cedulaAdministrador, idLaboratorio, numeroDispositivo),
-    CONSTRAINT fk_controla_administrador FOREIGN KEY (cedulaAdministrador) REFERENCES ADMINISTRADOR (cedula),
-    CONSTRAINT fk_controla_dispositivo FOREIGN KEY (idLaboratorio, numeroDispositivo) REFERENCES DISPOSITIVO (idLaboratorio, numeroDispositivo)
-);
+ALTER TABLE DISPOSITIVO
+    ADD CONSTRAINT fk_dispositivo_administrador
+    FOREIGN KEY (cedulaAdministrador)
+    REFERENCES ADMINISTRADOR (cedula);

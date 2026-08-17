@@ -63,12 +63,13 @@ $error = $mensajesError[$codigoError] ?? "";
                                 <input type="text" id="cedula" name="cedula" class="form-control"
                                     autocomplete="username" pattern="[1-9][0-9]{7}"
                                     title="Ingrese exactamente 8 dígitos sin puntos ni guiones" inputmode="numeric"
-                                    maxlength="8" required>
+                                    maxlength="8" placeholder="Ej.: 12345678" required>
                             </div>
 
                             <div class="mb-3 cajaEntradaDeDatos">
                                 <label for="clave" class="form-label">Contraseña</label>
-                                <input type="password" id="clave" name="clave" class="form-control" autocomplete="current-password" required >
+                                <input type="password" id="clave" name="clave" class="form-control" autocomplete="current-password"
+                                    placeholder="Ingrese su contraseña" required >
                             </div>
 
                         </fieldset>

@@ -11,4 +11,4 @@ $dispositivos = $accesoDatosDispositivo->listarDispositivos();
 
 $conectorPDO->desconectar();
 
-require_once RUTA_VISTA . "/inventario.php";
+require_once RUTA_VISTA . "/admin/inventario.php";

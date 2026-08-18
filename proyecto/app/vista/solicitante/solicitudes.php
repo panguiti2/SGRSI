@@ -139,17 +139,19 @@
             <h2 class="h4 mb-3">Mis solicitudes</h2>
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
-                    <thead class="table-light"><tr><th>ID</th><th>Fecha</th><th>Grupo</th><th>Dispositivo</th><th>Tipo</th><th>Estado</th></tr></thead>
+                    <thead class="table-light"><tr><th>ID</th><th>Apertura</th><th>Fecha esperada</th><th>Cierre</th><th>Grupo</th><th>Dispositivo</th><th>Tipo</th><th>Estado</th></tr></thead>
                     <tbody>
                         <?php if (empty($solicitudes)): ?>
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-3">Aún no registraste solicitudes.</td>
+                                <td colspan="8" class="text-center text-muted py-3">Aún no registraste solicitudes.</td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($solicitudes as $solicitud): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["fechaEsperada"] ?? "Sin fecha") ?></td>
+                                    <td><?= htmlspecialchars($solicitud["fechaCierre"] ?? "Pendiente") ?></td>
                                     <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["idLaboratorio"] . " / " . $solicitud["numeroDispositivo"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>

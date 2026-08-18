@@ -26,10 +26,10 @@ class AltaDatosSolicitud
         try {
             $this->conexion->beginTransaction();
             $sqlTicket = "INSERT INTO TICKET (
-                        id, cedulaSolicitante, idLaboratorio, numeroDispositivo, fechaApertura, fechaEsperada, grupo, nombreDocente,
+                        id, cedulaSolicitante, idLaboratorio, numeroDispositivo, fechaApertura, grupo, nombreDocente,
                         descripcion, turno, estado, asignatura
                     ) VALUES (
-                        :id, :cedulaSolicitante, :idLaboratorio, :numeroDispositivo, :fechaApertura, :fechaEsperada, :grupo, :nombreDocente,
+                        :id, :cedulaSolicitante, :idLaboratorio, :numeroDispositivo, :fechaApertura, :grupo, :nombreDocente,
                         :descripcion, :turno, 'PENDIENTE', :asignatura
                     )";
             $consultaTicket = $this->conexion->prepare($sqlTicket);
@@ -39,7 +39,6 @@ class AltaDatosSolicitud
                 "idLaboratorio" => $solicitud["idLaboratorio"],
                 "numeroDispositivo" => $solicitud["numeroDispositivo"],
                 "fechaApertura" => $solicitud["fechaApertura"],
-                "fechaEsperada" => $solicitud["fechaEsperada"],
                 "grupo" => $solicitud["grupo"],
                 "nombreDocente" => $solicitud["nombreDocente"],
                 "descripcion" => $solicitud["descripcion"],
@@ -47,12 +46,13 @@ class AltaDatosSolicitud
                 "asignatura" => $solicitud["asignatura"]
             ]);
 
-            $sqlServicio = "INSERT INTO SERVICIO (idServicio, tipoServicio)
-                            VALUES (:idServicio, :tipoServicio)";
+            $sqlServicio = "INSERT INTO SERVICIO (idServicio, tipoServicio, fechaEsperada)
+                            VALUES (:idServicio, :tipoServicio, :fechaEsperada)";
             $consultaServicio = $this->conexion->prepare($sqlServicio);
             $consultaServicio->execute([
                 "idServicio" => $solicitud["idSolicitud"],
-                "tipoServicio" => $solicitud["tipoServicio"]
+                "tipoServicio" => $solicitud["tipoServicio"],
+                "fechaEsperada" => $solicitud["fechaEsperada"]
             ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {

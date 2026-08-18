@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que recupera el inventario para la vista de administración. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";
 require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";

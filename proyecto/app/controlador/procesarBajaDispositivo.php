@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que elimina un dispositivo seleccionado. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/BajaDatosDispositivo.php";
 

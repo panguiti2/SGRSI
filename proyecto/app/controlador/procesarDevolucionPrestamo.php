@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que cierra un préstamo al registrar su devolución. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/RegistrarDevolucionPrestamo.php";
 

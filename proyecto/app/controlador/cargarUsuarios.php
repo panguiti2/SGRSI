@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que recupera usuarios y carga la gestión administrativa. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AccesoDatosUsuario.php";
 

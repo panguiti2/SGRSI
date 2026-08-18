@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que recupera los registros de uso y carga su vista. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AccesoDatosRegistroUso.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";

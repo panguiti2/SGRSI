@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que valida y registra una solicitud de servicio. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosSolicitud.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";

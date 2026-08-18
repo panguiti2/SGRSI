@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que recupera el inventario de consulta para el técnico. */
+
 require_once __DIR__ . "/../modelo/ConectorPDO.php";
 require_once __DIR__ . "/../modelo/AccesoDatosDispositivo.php";
 

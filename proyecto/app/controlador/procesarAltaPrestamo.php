@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que valida y registra un préstamo. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosPrestamo.php";
 require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";

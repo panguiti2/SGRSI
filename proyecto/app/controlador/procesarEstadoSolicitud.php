@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que actualiza el estado de una solicitud. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosSolicitud.php";
 require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";

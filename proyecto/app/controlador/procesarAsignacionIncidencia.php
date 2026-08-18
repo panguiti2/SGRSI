@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que registra diagnóstico, solución y estado de una incidencia. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosIncidencia.php";
 require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";

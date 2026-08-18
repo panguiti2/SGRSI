@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que valida y actualiza un dispositivo. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/ModificarDatosDispositivo.php";
 require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";

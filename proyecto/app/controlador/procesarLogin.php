@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que autentica al usuario e inicia la sesión correspondiente. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AccesoDatosUsuario.php";
 require_once RUTA_MODELO . "/Usuario.php";

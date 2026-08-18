@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que recupera los préstamos y carga su vista. */
+
 require_once __DIR__ . "/../modelo/ConectorPDO.php";
 require_once __DIR__ . "/../modelo/AccesoDatosPrestamo.php";
 require_once __DIR__ . "/../modelo/AccesoDatosCatalogo.php";

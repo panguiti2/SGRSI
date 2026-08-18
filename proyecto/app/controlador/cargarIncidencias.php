@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que recupera incidencias y carga la vista solicitada. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AccesoDatosIncidencia.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";

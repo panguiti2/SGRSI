@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que valida y registra el uso de un laboratorio. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosRegistroUso.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";

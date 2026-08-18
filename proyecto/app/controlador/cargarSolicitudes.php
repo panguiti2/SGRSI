@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que recupera solicitudes y catálogos para la vista. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AccesoDatosSolicitud.php";
 require_once RUTA_MODELO . "/AccesoDatosDispositivo.php";

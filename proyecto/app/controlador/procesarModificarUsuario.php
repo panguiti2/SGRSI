@@ -1,5 +1,7 @@
 <?php
 
+/** Controlador que valida y actualiza un usuario. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/ModificarDatosUsuario.php";
 

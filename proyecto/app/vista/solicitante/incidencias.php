@@ -25,6 +25,7 @@
                     <li class="nav-item"><a class="nav-link" href="inicio.php">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="solicitudes.php">Solicitudes</a></li>
                     <li class="nav-item"><a class="nav-link active" href="incidencias.php">Incidencias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="registroUso.php">Registro de uso</a></li>
                     <li class="nav-item"><a class="nav-link" href="../cerrarSesion.php">Cerrar sesión</a></li>
                 </ul>
             </nav>

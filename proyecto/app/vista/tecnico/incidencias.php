@@ -33,6 +33,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
                     <li class="nav-item"><a class="nav-link active" href="incidencias.php">Incidencias</a></li>
                     <li class="nav-item"><a class="nav-link" href="inventario.php">Inventario</a></li>
                     <li class="nav-item"><a class="nav-link" href="prestamos.php">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="registrosUso.php">Registros de uso</a></li>
                     <li class="nav-item"><a class="nav-link" href="../cerrarSesion.php">Cerrar sesión</a></li>
                 </ul>
             </nav>

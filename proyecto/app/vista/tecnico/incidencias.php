@@ -65,6 +65,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
                                 <td><?= htmlspecialchars($incidencia["descripcion"]) ?></td>
                                 <td><?= htmlspecialchars($incidencia["estado"]) ?></td>
                                 <td><form action="procesarAsignacionIncidencia.php" method="post" class="d-flex gap-1">
+                                    <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                                     <input type="hidden" name="idIncidencia" value="<?= htmlspecialchars($incidencia["idIncidencia"]) ?>">
                                     <select name="estado" class="form-select form-select-sm" aria-label="Estado de la incidencia">
                                         <?php foreach ($estadosTicket as $estadoTicket): ?>

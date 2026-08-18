@@ -136,6 +136,7 @@ if (($_GET["exito"] ?? "") === "dispositivo_eliminado") {
                                             data-estado="<?= $dispositivo["estado"] === "Activo" ? "1" : "0" ?>"
                                             data-ultimo-cambio="<?= htmlspecialchars($dispositivo["ultimoCambio"]) ?>">Modificar</button>
                                         <form action="procesarBajaDispositivo.php" method="post" class="formEliminarDispositivo">
+                                            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                                             <input type="hidden" name="idLab" value="<?= htmlspecialchars($dispositivo["idLab"]) ?>">
                                             <input type="hidden" name="numeroDispositivo" value="<?= htmlspecialchars($dispositivo["numeroDispositivo"]) ?>">
                                             <button type="submit" class="btnOperacion btnDesactivar">Eliminar</button>
@@ -160,6 +161,7 @@ if (($_GET["exito"] ?? "") === "dispositivo_eliminado") {
             aria-label="Cerrar"></button>
 
         <form action="procesarAltaDispositivo.php" method="post" id="formularioAltaDispositivo" class="p-4">
+            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
             <fieldset>
                 <legend class="h4 mb-4" id="tituloFormularioDispositivo">Gestión de dispositivos</legend>
 

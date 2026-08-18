@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../../config/config.php";
+require_once __DIR__ . "/../protegerAcceso.php";
 
 session_start();
 
@@ -18,5 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: prestamos.php?error=peticion");
     exit;
 }
+validarTokenCsrf();
 
 require_once RUTA_CONTROLADOR . "/procesarAltaPrestamo.php";

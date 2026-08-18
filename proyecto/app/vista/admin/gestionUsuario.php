@@ -139,6 +139,7 @@ if (($_GET["exito"] ?? "") === "estado_usuario") {
                                             data-apellido="<?= htmlspecialchars($usuario["apellido"]) ?>"
                                             data-rol="<?= htmlspecialchars($rolValor) ?>">Modificar</button>
                                         <form action="procesarEstadoUsuario.php" method="post" class="formCambiarEstadoUsuario">
+                                            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                                             <input type="hidden" name="cedula" value="<?= htmlspecialchars($usuario["cedula"]) ?>">
                                             <input type="hidden" name="estado" value="<?= $usuario["estado"] ? "0" : "1" ?>">
                                             <button type="submit" class="btnOperacion <?= $usuario["estado"] ? "btnDesactivar" : "btnActivar" ?>">
@@ -159,6 +160,7 @@ if (($_GET["exito"] ?? "") === "estado_usuario") {
                 aria-label="Cerrar"></button>
 
             <form action="procesarAltaUsuario.php" method="post" id="formularioAltaUsuario" class="p-4">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                 <fieldset>
                     <legend class="h4 mb-4" id="tituloFormularioUsuario">Gestión de usuarios</legend>
 

@@ -42,6 +42,10 @@ $_SESSION["administrador"] = $usuario->esAdministrador();
 $_SESSION["tecnico"] = $usuario->esTecnico();
 $_SESSION["solicitante"] = $usuario->esSolicitante();
 
+if (!isset($_SESSION["csrfToken"])) {
+    $_SESSION["csrfToken"] = bin2hex(random_bytes(32));
+}
+
 if ($_SESSION["administrador"]) {
     header("Location: admin/inicio.php");
 } elseif ($_SESSION["tecnico"]) {

@@ -34,6 +34,8 @@ function verificarRolPublico(string $rol): void
         session_start();
     }
 
+    generarTokenCsrf();
+
     if (!isset($_SESSION["cedula"])) {
         header("Location: ../login.php?error=sin_sesion");
         exit;
@@ -42,5 +44,29 @@ function verificarRolPublico(string $rol): void
     if (($_SESSION[$rol] ?? false) !== true) {
         header("Location: ../login.php?error=no_autorizado");
         exit;
+    }
+
+    generarTokenCsrf();
+}
+
+/** Genera el token CSRF de la sesión si todavía no existe. */
+function generarTokenCsrf(): void
+{
+    if (!isset($_SESSION["csrfToken"])) {
+        $_SESSION["csrfToken"] = bin2hex(random_bytes(32));
+    }
+}
+
+/**
+ * Rechaza una petición POST cuyo token no coincide con el token de sesión.
+ * @param string $rutaError Ruta de retorno ante una solicitud rechazada.
+ */
+function validarTokenCsrf(): void
+{
+    $tokenRecibido = $_POST["csrfToken"] ?? "";
+
+    if (!isset($_SESSION["csrfToken"]) || !hash_equals($_SESSION["csrfToken"], $tokenRecibido)) {
+        http_response_code(403);
+        exit("Solicitud Rechazada...");
     }
 }

@@ -48,6 +48,7 @@
             <h1 class="h3 mb-4">Solicitar servicio</h1>
 
             <form action="procesarAltaSolicitud.php" method="post" id="formularioSolicitud">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                 <fieldset>
                     <legend class="visually-hidden">Datos de la solicitud</legend>
 

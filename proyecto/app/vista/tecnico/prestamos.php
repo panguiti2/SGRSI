@@ -129,6 +129,7 @@ if (($_GET["exito"] ?? "") === "devolucion") {
                 aria-label="Cerrar"></button>
 
             <form action="procesarAltaPrestamo.php" method="post" class="formPrestamo p-4" id="formularioPrestamos">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                 <fieldset>
                     <legend class="h4 mb-4">Solicitud de Préstamo de Equipo</legend>
 
@@ -185,6 +186,7 @@ if (($_GET["exito"] ?? "") === "devolucion") {
                 aria-label="Cerrar"></button>
 
             <form action="procesarDevolucionPrestamo.php" method="post" id="formularioDevolucionPrestamo" class="p-4">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                 <fieldset>
                     <legend class="h4 mb-4">Registrar devolución</legend>
                     <input type="hidden" name="idPrestamo" id="idPrestamoDevolucion">

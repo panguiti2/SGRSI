@@ -64,6 +64,7 @@ $mensajeExito = ($_GET["exito"] ?? "") === "estado"
                                 <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
                                 <td><form action="procesarEstadoSolicitud.php" method="post" class="d-flex gap-1">
+                                    <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                                     <input type="hidden" name="idSolicitud" value="<?= htmlspecialchars($solicitud["idSolicitud"]) ?>">
                                     <select name="estado" class="form-select form-select-sm" aria-label="Estado de la solicitud">
                                         <?php foreach ($estadosTicket as $estadoTicket): ?>

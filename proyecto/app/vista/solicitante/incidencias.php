@@ -35,6 +35,7 @@
         <section class="seccionFormulario bg-white rounded p-3 p-md-4 mb-4">
             <h1 class="h3 mb-4">Reportar incidencia</h1>
             <form action="procesarAltaIncidencia.php" method="post" class="row g-3" id="formularioIncidencia">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                 <section class="col-12 col-md-6 cajaEntradaDeDatos">
                     <label class="form-label" for="turno">Turno</label>
                     <select class="form-select" id="turno" name="turno" required>

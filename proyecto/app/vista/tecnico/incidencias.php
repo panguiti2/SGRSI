@@ -51,11 +51,11 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
                     <thead class="table-light">
-                        <tr><th>ID</th><th>Apertura</th><th>Docente</th><th>Grupo</th><th>Alumno</th><th>Descripción</th><th>Diagnóstico</th><th>Solución</th><th>Estado</th><th>Gestión</th></tr>
+                        <tr><th>ID</th><th>Apertura</th><th>Docente</th><th>Grupo</th><th>Alumno</th><th>Descripción</th><th>Estado</th><th>Gestión</th></tr>
                     </thead>
                     <tbody>
                         <?php if (empty($incidencias)): ?>
-                            <tr><td colspan="10" class="text-center text-muted py-3">No hay incidencias registradas.</td></tr>
+                            <tr><td colspan="8" class="text-center text-muted py-3">No hay incidencias registradas.</td></tr>
                         <?php else: foreach ($incidencias as $incidencia): ?>
                             <tr>
                                 <td><?= htmlspecialchars($incidencia["idIncidencia"]) ?></td>
@@ -64,33 +64,85 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
                                 <td><?= htmlspecialchars($incidencia["grupo"]) ?></td>
                                 <td><?= htmlspecialchars($incidencia["nombreAlumno"] ?? "") ?></td>
                                 <td><?= htmlspecialchars($incidencia["descripcion"]) ?></td>
-                                <td><?= htmlspecialchars($incidencia["diagnostico"] ?? "Pendiente") ?></td>
-                                <td><?= htmlspecialchars($incidencia["solucion"] ?? "Pendiente") ?></td>
                                 <td><?= htmlspecialchars($incidencia["estado"]) ?></td>
-                                <td><form action="procesarAsignacionIncidencia.php" method="post" class="d-flex gap-1">
-                                    <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
-                                    <input type="hidden" name="idIncidencia" value="<?= htmlspecialchars($incidencia["idIncidencia"]) ?>">
-                                    <textarea name="diagnostico" class="form-control form-control-sm" rows="2"
-                                        placeholder="Diagnóstico"></textarea>
-                                    <textarea name="solucion" class="form-control form-control-sm" rows="2"
-                                        placeholder="Solución aplicada"></textarea>
-                                    <select name="estado" class="form-select form-select-sm" aria-label="Estado de la incidencia">
-                                        <?php foreach ($estadosTicket as $estadoTicket): ?>
-                                            <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>" <?= $incidencia["estado"] === $estadoTicket["codigo"] ? "selected" : "" ?>>
-                                                <?= htmlspecialchars($estadoTicket["nombre"]) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <button class="btn btn-sm btn-primary">Gestionar</button>
-                                </form></td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary btnGestionarIncidencia"
+                                        data-id="<?= htmlspecialchars($incidencia["idIncidencia"]) ?>"
+                                        data-estado="<?= htmlspecialchars($incidencia["estado"]) ?>"
+                                        data-diagnostico="<?= htmlspecialchars($incidencia["diagnostico"] ?? "") ?>"
+                                        data-solucion="<?= htmlspecialchars($incidencia["solucion"] ?? "") ?>">
+                                        Gestionar
+                                    </button>
+                                </td>
                             </tr>
                         <?php endforeach; endif; ?>
                     </tbody>
                 </table>
             </section>
         </section>
+
+        <dialog id="dialogGestionarIncidencia" class="seccionFormulario w-100 p-0 rounded-3 border-0" style="max-width: 600px;">
+            <form action="procesarAsignacionIncidencia.php" method="post" class="p-4" id="formularioGestionarIncidencia">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
+                <input type="hidden" name="idIncidencia" id="idIncidenciaGestionar">
+                <fieldset>
+                    <section class="d-flex justify-content-between align-items-start gap-3 mb-4">
+                        <legend class="h4 mb-0">Gestionar incidencia</legend>
+                        <button class="btn-close" type="button" id="btnCerrarGestionIncidencia" aria-label="Cerrar"></button>
+                    </section>
+                    <section class="mb-3">
+                        <label for="diagnosticoIncidencia" class="form-label">Diagnóstico</label>
+                        <textarea id="diagnosticoIncidencia" name="diagnostico" class="form-control" rows="3"
+                            placeholder="Describa el diagnóstico realizado"></textarea>
+                    </section>
+                    <section class="mb-3">
+                        <label for="solucionIncidencia" class="form-label">Solución</label>
+                        <textarea id="solucionIncidencia" name="solucion" class="form-control" rows="3"
+                            placeholder="Describa la solución aplicada"></textarea>
+                    </section>
+                    <section class="mb-4">
+                        <label for="estadoIncidencia" class="form-label">Estado</label>
+                        <select id="estadoIncidencia" name="estado" class="form-select" required>
+                            <?php foreach ($estadosTicket as $estadoTicket): ?>
+                                <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>">
+                                    <?= htmlspecialchars($estadoTicket["nombre"]) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </section>
+                    <button type="submit" class="btn btn-primary w-100">Guardar gestión</button>
+                </fieldset>
+            </form>
+        </dialog>
     </main>
     <footer class="sgrsi-footer text-light mt-auto py-3"><p class="text-center mb-0">© 2026 SGRSI</p></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const dialogGestionarIncidencia = document.getElementById("dialogGestionarIncidencia");
+        const idIncidenciaGestionar = document.getElementById("idIncidenciaGestionar");
+        const diagnosticoIncidencia = document.getElementById("diagnosticoIncidencia");
+        const solucionIncidencia = document.getElementById("solucionIncidencia");
+        const estadoIncidencia = document.getElementById("estadoIncidencia");
+
+        const actualizarCamposCierre = () => {
+            const esResuelto = estadoIncidencia.value === "RESUELTO";
+            diagnosticoIncidencia.required = esResuelto;
+            solucionIncidencia.required = esResuelto;
+        };
+
+        document.querySelectorAll(".btnGestionarIncidencia").forEach((boton) => {
+            boton.addEventListener("click", () => {
+                idIncidenciaGestionar.value = boton.dataset.id;
+                estadoIncidencia.value = boton.dataset.estado;
+                diagnosticoIncidencia.value = boton.dataset.diagnostico;
+                solucionIncidencia.value = boton.dataset.solucion;
+                actualizarCamposCierre();
+                dialogGestionarIncidencia.showModal();
+            });
+        });
+
+        estadoIncidencia.addEventListener("change", actualizarCamposCierre);
+        document.getElementById("btnCerrarGestionIncidencia").addEventListener("click", () => dialogGestionarIncidencia.close());
+    </script>
 </body>
 </html>

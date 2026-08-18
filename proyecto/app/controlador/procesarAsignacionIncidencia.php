@@ -5,10 +5,16 @@ require_once RUTA_MODELO . "/AltaDatosIncidencia.php";
 require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";
 
 $datos = [
-"idIncidencia" => trim($_POST["idIncidencia"] ?? ""), 
-"estado" => trim($_POST["estado"] ?? ""),
-"cedulaTecnico" => $_SESSION["cedula"]];
-if (!preg_match("/^INC[A-Z0-9]{5}$/", $datos["idIncidencia"])) {
+    "idIncidencia" => trim($_POST["idIncidencia"] ?? ""),
+    "estado" => trim($_POST["estado"] ?? ""),
+    "diagnostico" => trim($_POST["diagnostico"] ?? ""),
+    "solucion" => trim($_POST["solucion"] ?? ""),
+    "cedulaTecnico" => $_SESSION["cedula"]
+];
+
+if (!preg_match("/^INC[A-Z0-9]{5}$/", $datos["idIncidencia"])
+    || ($datos["estado"] === "RESUELTO"
+        && ($datos["diagnostico"] === "" || $datos["solucion"] === ""))) {
     header("Location: incidencias.php?error=datos_incorrectos"); exit;
 }
 $conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);

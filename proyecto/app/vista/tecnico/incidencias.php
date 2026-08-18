@@ -51,11 +51,11 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
                     <thead class="table-light">
-                        <tr><th>ID</th><th>Apertura</th><th>Docente</th><th>Grupo</th><th>Alumno</th><th>Descripción</th><th>Estado</th><th>Gestión</th></tr>
+                        <tr><th>ID</th><th>Apertura</th><th>Docente</th><th>Grupo</th><th>Alumno</th><th>Descripción</th><th>Diagnóstico</th><th>Solución</th><th>Estado</th><th>Gestión</th></tr>
                     </thead>
                     <tbody>
                         <?php if (empty($incidencias)): ?>
-                            <tr><td colspan="8" class="text-center text-muted py-3">No hay incidencias registradas.</td></tr>
+                            <tr><td colspan="10" class="text-center text-muted py-3">No hay incidencias registradas.</td></tr>
                         <?php else: foreach ($incidencias as $incidencia): ?>
                             <tr>
                                 <td><?= htmlspecialchars($incidencia["idIncidencia"]) ?></td>
@@ -64,10 +64,16 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
                                 <td><?= htmlspecialchars($incidencia["grupo"]) ?></td>
                                 <td><?= htmlspecialchars($incidencia["nombreAlumno"] ?? "") ?></td>
                                 <td><?= htmlspecialchars($incidencia["descripcion"]) ?></td>
+                                <td><?= htmlspecialchars($incidencia["diagnostico"] ?? "Pendiente") ?></td>
+                                <td><?= htmlspecialchars($incidencia["solucion"] ?? "Pendiente") ?></td>
                                 <td><?= htmlspecialchars($incidencia["estado"]) ?></td>
                                 <td><form action="procesarAsignacionIncidencia.php" method="post" class="d-flex gap-1">
                                     <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                                     <input type="hidden" name="idIncidencia" value="<?= htmlspecialchars($incidencia["idIncidencia"]) ?>">
+                                    <textarea name="diagnostico" class="form-control form-control-sm" rows="2"
+                                        placeholder="Diagnóstico"></textarea>
+                                    <textarea name="solucion" class="form-control form-control-sm" rows="2"
+                                        placeholder="Solución aplicada"></textarea>
                                     <select name="estado" class="form-select form-select-sm" aria-label="Estado de la incidencia">
                                         <?php foreach ($estadosTicket as $estadoTicket): ?>
                                             <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>" <?= $incidencia["estado"] === $estadoTicket["codigo"] ? "selected" : "" ?>>

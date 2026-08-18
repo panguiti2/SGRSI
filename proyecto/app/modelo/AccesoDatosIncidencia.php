@@ -26,7 +26,7 @@ class AccesoDatosIncidencia
         $sql = "SELECT t.id AS idIncidencia, t.cedulaSolicitante, t.fechaApertura,
                        t.fechaCierre, t.grupo, t.nombreDocente, t.descripcion,
                        t.turno, t.estado, t.asignatura, t.idLaboratorio, t.numeroDispositivo, i.reportoAlumno,
-                       i.nombreAlumno, t.cedulaTecnico, t.fechaGestion
+                       i.nombreAlumno, i.diagnostico, i.solucion, t.cedulaTecnico, t.fechaGestion
                 FROM TICKET AS t
                 INNER JOIN INCIDENCIA AS i ON i.id = t.id";
         if ($cedulaSolicitante !== null) {

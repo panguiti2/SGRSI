@@ -108,11 +108,11 @@
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
                     <thead class="table-light">
-                        <tr><th>ID</th><th>Apertura</th><th>Grupo</th><th>Descripción</th><th>Estado</th></tr>
+                        <tr><th>ID</th><th>Apertura</th><th>Grupo</th><th>Descripción</th><th>Diagnóstico</th><th>Solución</th><th>Estado</th></tr>
                     </thead>
                     <tbody>
                         <?php if (empty($incidencias)): ?>
-                            <tr><td colspan="5" class="text-center text-muted py-3">Aún no registraste incidencias.</td></tr>
+                            <tr><td colspan="7" class="text-center text-muted py-3">Aún no registraste incidencias.</td></tr>
                         <?php else: ?>
                             <?php foreach ($incidencias as $incidencia): ?>
                                 <tr>
@@ -120,6 +120,8 @@
                                     <td><?= htmlspecialchars($incidencia["fechaApertura"]) ?></td>
                                     <td><?= htmlspecialchars($incidencia["grupo"]) ?></td>
                                     <td><?= htmlspecialchars($incidencia["descripcion"]) ?></td>
+                                    <td><?= htmlspecialchars($incidencia["diagnostico"] ?? "Pendiente") ?></td>
+                                    <td><?= htmlspecialchars($incidencia["solucion"] ?? "Pendiente") ?></td>
                                     <td><?= htmlspecialchars($incidencia["estado"]) ?></td>
                                 </tr>
                             <?php endforeach; ?>

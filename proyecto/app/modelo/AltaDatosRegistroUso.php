@@ -21,6 +21,7 @@ class AltaDatosRegistroUso
     public function registrar(array $registro): bool
     {
         try {
+            $this->conexion->beginTransaction();
             $sql = "
                 INSERT INTO REGISTRO_USO (
                     idRegistro, cedulaSolicitante, idLaboratorio, turno,
@@ -36,8 +37,12 @@ class AltaDatosRegistroUso
             $consulta = $this->conexion->prepare($sql);
             $consulta->execute($registro);
 
-            return true;
+            return $this->conexion->commit();
         } catch (PDOException $error) {
+            if ($this->conexion->inTransaction()) {
+                $this->conexion->rollBack();
+            }
+
             return false;
         }
     }

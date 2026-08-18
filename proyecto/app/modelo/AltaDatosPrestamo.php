@@ -36,6 +36,7 @@ class AltaDatosPrestamo
         string $fechaDevolucion
     ): bool {
         try {
+            $this->conexion->beginTransaction();
             $sql = "
                 INSERT INTO PRESTAMO (
                     idPrestamo, cedulaSolicitante, turno,
@@ -57,8 +58,12 @@ class AltaDatosPrestamo
                 "fechaDevolucion" => $fechaDevolucion
             ]);
 
-            return true;
+            return $this->conexion->commit();
         } catch (PDOException $error) {
+            if ($this->conexion->inTransaction()) {
+                $this->conexion->rollBack();
+            }
+
             return false;
         }
     }

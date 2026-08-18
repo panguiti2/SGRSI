@@ -108,18 +108,25 @@
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
                     <thead class="table-light">
-                        <tr><th>ID</th><th>Apertura</th><th>Cierre</th><th>Grupo</th><th>Descripción</th><th>Diagnóstico</th><th>Solución</th><th>Estado</th></tr>
+                        <tr><th>ID</th><th>Apertura</th><th>Cierre</th><th>Turno</th><th>Docente</th><th>Grupo</th><th>Asignatura</th><th>Laboratorio</th><th>Dispositivo</th><th>Reportó alumno</th><th>Alumno</th><th>Descripción</th><th>Diagnóstico</th><th>Solución</th><th>Estado</th></tr>
                     </thead>
                     <tbody>
                         <?php if (empty($incidencias)): ?>
-                            <tr><td colspan="8" class="text-center text-muted py-3">Aún no registraste incidencias.</td></tr>
+                            <tr><td colspan="15" class="text-center text-muted py-3">Aún no registraste incidencias.</td></tr>
                         <?php else: ?>
                             <?php foreach ($incidencias as $incidencia): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($incidencia["idIncidencia"]) ?></td>
                                     <td><?= htmlspecialchars($incidencia["fechaApertura"]) ?></td>
                                     <td><?= htmlspecialchars($incidencia["fechaCierre"] ?? "Pendiente") ?></td>
+                                    <td><?= htmlspecialchars($incidencia["turno"]) ?></td>
+                                    <td><?= htmlspecialchars($incidencia["nombreDocente"]) ?></td>
                                     <td><?= htmlspecialchars($incidencia["grupo"]) ?></td>
+                                    <td><?= htmlspecialchars($incidencia["asignatura"]) ?></td>
+                                    <td><?= htmlspecialchars($incidencia["idLaboratorio"] ?? "No especificado") ?></td>
+                                    <td><?= htmlspecialchars($incidencia["numeroDispositivo"] ?? "No especificado") ?></td>
+                                    <td><?= $incidencia["reportoAlumno"] ? "Sí" : "No" ?></td>
+                                    <td><?= htmlspecialchars($incidencia["nombreAlumno"] ?? "No corresponde") ?></td>
                                     <td><?= htmlspecialchars($incidencia["descripcion"]) ?></td>
                                     <td><?= htmlspecialchars($incidencia["diagnostico"] ?? "Pendiente") ?></td>
                                     <td><?= htmlspecialchars($incidencia["solucion"] ?? "Pendiente") ?></td>

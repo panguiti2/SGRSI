@@ -139,11 +139,11 @@
             <h2 class="h4 mb-3">Mis solicitudes</h2>
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
-                    <thead class="table-light"><tr><th>ID</th><th>Apertura</th><th>Fecha esperada</th><th>Cierre</th><th>Grupo</th><th>Dispositivo</th><th>Tipo</th><th>Estado</th></tr></thead>
+                    <thead class="table-light"><tr><th>ID</th><th>Apertura</th><th>Fecha esperada</th><th>Cierre</th><th>Turno</th><th>Docente</th><th>Grupo</th><th>Asignatura</th><th>Laboratorio</th><th>Dispositivo</th><th>Tipo</th><th>Descripción</th><th>Estado</th></tr></thead>
                     <tbody>
                         <?php if (empty($solicitudes)): ?>
                             <tr>
-                                <td colspan="8" class="text-center text-muted py-3">Aún no registraste solicitudes.</td>
+                                <td colspan="13" class="text-center text-muted py-3">Aún no registraste solicitudes.</td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($solicitudes as $solicitud): ?>
@@ -152,9 +152,14 @@
                                     <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["fechaEsperada"] ?? "Sin fecha") ?></td>
                                     <td><?= htmlspecialchars($solicitud["fechaCierre"] ?? "Pendiente") ?></td>
+                                    <td><?= htmlspecialchars($solicitud["turno"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["nombreDocente"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
-                                    <td><?= htmlspecialchars($solicitud["idLaboratorio"] . " / " . $solicitud["numeroDispositivo"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["asignatura"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["idLaboratorio"] ?? "No especificado") ?></td>
+                                    <td><?= htmlspecialchars($solicitud["numeroDispositivo"] ?? "No especificado") ?></td>
                                     <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["descripcion"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
                                 </tr>
                             <?php endforeach; ?>

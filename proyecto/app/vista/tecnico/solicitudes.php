@@ -51,20 +51,26 @@ $mensajeExito = ($_GET["exito"] ?? "") === "estado"
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
                     <thead class="table-light">
-                        <tr><th>ID</th><th>Apertura</th><th>Fecha esperada</th><th>Cierre</th><th>Docente</th><th>Grupo</th><th>Tipo</th><th>Estado</th><th>Gestión</th></tr>
+                        <tr><th>ID</th><th>Solicitante</th><th>Apertura</th><th>Fecha esperada</th><th>Cierre</th><th>Turno</th><th>Docente</th><th>Grupo</th><th>Asignatura</th><th>Laboratorio</th><th>Dispositivo</th><th>Tipo</th><th>Descripción</th><th>Estado</th><th>Gestión</th></tr>
                     </thead>
                     <tbody>
                         <?php if (empty($solicitudes)): ?>
-                            <tr><td colspan="9" class="text-center text-muted py-3">No hay solicitudes registradas.</td></tr>
+                            <tr><td colspan="15" class="text-center text-muted py-3">No hay solicitudes registradas.</td></tr>
                         <?php else: foreach ($solicitudes as $solicitud): ?>
                             <tr>
                                 <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["cedulaSolicitante"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["fechaEsperada"] ?? "Sin fecha") ?></td>
                                 <td><?= htmlspecialchars($solicitud["fechaCierre"] ?? "Pendiente") ?></td>
+                                <td><?= htmlspecialchars($solicitud["turno"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["nombreDocente"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["asignatura"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["idLaboratorio"] ?? "No especificado") ?></td>
+                                <td><?= htmlspecialchars($solicitud["numeroDispositivo"] ?? "No especificado") ?></td>
                                 <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["descripcion"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
                                 <td><form action="procesarEstadoSolicitud.php" method="post" class="d-flex gap-1">
                                     <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">

@@ -72,18 +72,9 @@ $mensajeExito = ($_GET["exito"] ?? "") === "estado"
                                 <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["descripcion"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
-                                <td><form action="procesarEstadoSolicitud.php" method="post" class="d-flex gap-1">
-                                    <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
-                                    <input type="hidden" name="idSolicitud" value="<?= htmlspecialchars($solicitud["idSolicitud"]) ?>">
-                                    <select name="estado" class="form-select form-select-sm" aria-label="Estado de la solicitud">
-                                        <?php foreach ($estadosTicket as $estadoTicket): ?>
-                                            <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>" <?= $solicitud["estado"] === $estadoTicket["codigo"] ? "selected" : "" ?>>
-                                                <?= htmlspecialchars($estadoTicket["nombre"]) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <button class="btn btn-sm btn-primary">Guardar</button>
-                                </form></td>
+                                <td><button type="button" class="btn btn-sm btn-primary btnGestionarSolicitud"
+                                    data-id="<?= htmlspecialchars($solicitud["idSolicitud"]) ?>"
+                                    data-estado="<?= htmlspecialchars($solicitud["estado"]) ?>">Gestionar</button></td>
                             </tr>
                         <?php endforeach; endif; ?>
                     </tbody>
@@ -91,7 +82,43 @@ $mensajeExito = ($_GET["exito"] ?? "") === "estado"
             </section>
         </section>
     </main>
+    <dialog id="dialogGestionSolicitud" class="seccionFormulario w-100 p-0 rounded-3 border-0" style="max-width: 500px;">
+        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarGestionSolicitud" type="button" aria-label="Cerrar"></button>
+        <form action="procesarEstadoSolicitud.php" method="post" id="formularioGestionSolicitud" class="p-4">
+            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
+            <input type="hidden" name="idSolicitud" id="idSolicitudGestion">
+            <fieldset>
+                <legend class="h4 mb-4">Gestionar solicitud</legend>
+                <label for="estadoSolicitud" class="form-label">Estado</label>
+                <select name="estado" id="estadoSolicitud" class="form-select" required>
+                    <?php foreach ($estadosTicket as $estadoTicket): ?>
+                        <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>"><?= htmlspecialchars($estadoTicket["nombre"]) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button class="btn btn-primary w-100 mt-4">Guardar cambios</button>
+            </fieldset>
+        </form>
+    </dialog>
     <footer class="sgrsi-footer text-light mt-auto py-3"><p class="text-center mb-0">© 2026 SGRSI</p></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const dialogGestionSolicitud = document.getElementById("dialogGestionSolicitud");
+        const formularioGestionSolicitud = document.getElementById("formularioGestionSolicitud");
+        const idSolicitudGestion = document.getElementById("idSolicitudGestion");
+        const estadoSolicitud = document.getElementById("estadoSolicitud");
+
+        document.querySelectorAll(".btnGestionarSolicitud").forEach((boton) => {
+            boton.addEventListener("click", () => {
+                formularioGestionSolicitud.reset();
+                idSolicitudGestion.value = boton.dataset.id;
+                estadoSolicitud.value = boton.dataset.estado;
+                dialogGestionSolicitud.showModal();
+            });
+        });
+
+        document.getElementById("btnCerrarGestionSolicitud").addEventListener("click", () => {
+            dialogGestionSolicitud.close();
+        });
+    </script>
 </body>
 </html>

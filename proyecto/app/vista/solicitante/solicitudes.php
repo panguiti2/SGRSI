@@ -1,8 +1,3 @@
-<?php
-$rolRequerido = "solicitante";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -40,6 +35,9 @@ verificarAcceso($rolRequerido);
                         <a class="nav-link" href="incidencias.php">Incidencias</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="registroUso.php">Registro de uso</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
                     </li>
                 </ul>
@@ -53,6 +51,7 @@ verificarAcceso($rolRequerido);
             <h1 class="h3 mb-4">Solicitar servicio</h1>
 
             <form action="procesarAltaSolicitud.php" method="post" id="formularioSolicitud">
+                <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
                 <fieldset>
                     <legend class="visually-hidden">Datos de la solicitud</legend>
 
@@ -61,9 +60,11 @@ verificarAcceso($rolRequerido);
                             <label for="turno" class="form-label">Turno</label>
                             <select id="turno" name="turno" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
-                                <option value="MATUTINO">Matutino</option>
-                                <option value="VESPERTINO">Vespertino</option>
-                                <option value="NOCTURNO">Nocturno</option>
+                                <?php foreach ($turnos as $turno): ?>
+                                    <option value="<?= htmlspecialchars($turno["codigo"]) ?>">
+                                        <?= htmlspecialchars($turno["nombre"]) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -85,18 +86,19 @@ verificarAcceso($rolRequerido);
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
-                            <label for="fechaApertura" class="form-label">Fecha y hora solicitada</label>
-                            <input type="datetime-local" id="fechaApertura" name="fechaApertura" class="form-control" required>
+                            <label for="fechaEsperada" class="form-label">Fecha y hora esperada</label>
+                            <input type="datetime-local" id="fechaEsperada" name="fechaEsperada" class="form-control" required>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="tipoServicio" class="form-label">Tipo de servicio</label>
                             <select id="tipoServicio" name="tipoServicio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione</option>
-                                <option value="INSTALACION">Instalación de software</option>
-                                <option value="ACTUALIZACION">Actualización</option>
-                                <option value="CONFIGURACION">Configuración</option>
-                                <option value="OTRO">Otro</option>
+                                <?php foreach ($tiposServicio as $tipoServicio): ?>
+                                    <option value="<?= htmlspecialchars($tipoServicio["codigo"]) ?>">
+                                        <?= htmlspecialchars($tipoServicio["nombre"]) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -104,22 +106,19 @@ verificarAcceso($rolRequerido);
                             <label for="idLaboratorio" class="form-label">Laboratorio</label>
                             <select id="idLaboratorio" name="idLaboratorio" class="form-select" required>
                                 <option value="" disabled selected>Seleccione el laboratorio</option>
-                                <option value="TALL01">Taller 1</option>
-                                <option value="TALL02">Taller 2</option>
-                                <option value="TALL03">Taller 3</option>
-                                <option value="LAB01">Laboratorio 1</option>
-                                <option value="LAB02">Laboratorio 2</option>
-                                <option value="LAB03">Laboratorio 3</option>
-                                <option value="LAB04">Laboratorio 4</option>
-                                <option value="LAB05">Laboratorio 5</option>
-                                <option value="LAB06">Laboratorio 6</option>
+                                <?php foreach ($laboratorios as $laboratorio): ?>
+                                    <option value="<?= htmlspecialchars($laboratorio["idLaboratorio"]) ?>">
+                                        <?= htmlspecialchars($laboratorio["nombre"]) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="numeroDispositivo" class="form-label">Número de dispositivo</label>
-                            <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
-                                placeholder="Ej.: PC-001" required>
+                            <select id="numeroDispositivo" name="numeroDispositivo" class="form-select" disabled required>
+                                <option value="" selected>Primero seleccione el laboratorio</option>
+                            </select>
                         </div>
 
                         <div class="col-12 cajaTextarea">
@@ -140,20 +139,27 @@ verificarAcceso($rolRequerido);
             <h2 class="h4 mb-3">Mis solicitudes</h2>
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
-                    <thead class="table-light"><tr><th>ID</th><th>Fecha</th><th>Grupo</th><th>Dispositivo</th><th>Tipo</th><th>Estado</th></tr></thead>
+                    <thead class="table-light"><tr><th>ID</th><th>Apertura</th><th>Fecha esperada</th><th>Cierre</th><th>Turno</th><th>Docente</th><th>Grupo</th><th>Asignatura</th><th>Laboratorio</th><th>Dispositivo</th><th>Tipo</th><th>Descripción</th><th>Estado</th></tr></thead>
                     <tbody>
                         <?php if (empty($solicitudes)): ?>
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-3">Aún no registraste solicitudes.</td>
+                                <td colspan="13" class="text-center text-muted py-3">Aún no registraste solicitudes.</td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($solicitudes as $solicitud): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["fechaEsperada"] ?? "Sin fecha") ?></td>
+                                    <td><?= htmlspecialchars($solicitud["fechaCierre"] ?? "Pendiente") ?></td>
+                                    <td><?= htmlspecialchars($solicitud["turno"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["nombreDocente"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
-                                    <td><?= htmlspecialchars($solicitud["idLaboratorio"] . " / " . $solicitud["numeroDispositivo"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["asignatura"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["idLaboratorio"] ?? "No especificado") ?></td>
+                                    <td><?= htmlspecialchars($solicitud["numeroDispositivo"] ?? "No especificado") ?></td>
                                     <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
+                                    <td><?= htmlspecialchars($solicitud["descripcion"]) ?></td>
                                     <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -175,6 +181,10 @@ verificarAcceso($rolRequerido);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.dispositivosFormulario = <?= json_encode($dispositivosFormulario, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    </script>
+    <script src="../assets/js/usuario.js"></script>
 </body>
 
 </html>

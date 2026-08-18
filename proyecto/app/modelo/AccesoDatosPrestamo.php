@@ -30,7 +30,9 @@ class AccesoDatosPrestamo
                 p.nombreSolicitante,
                 p.numeroLaptop,
                 p.fechaRetiro,
-                p.fechaDevolucion
+                p.fechaDevolucion,
+                p.fechaDevolucionReal,
+                p.estado
             FROM PRESTAMO AS p
             ORDER BY p.fechaRetiro DESC
         ";

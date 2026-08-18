@@ -24,6 +24,8 @@ CREATE TABLE INCIDENCIA (
     id CHAR(8) NOT NULL,
     reportoAlumno BOOLEAN NOT NULL,
     nombreAlumno VARCHAR(100) NULL,
+    diagnostico VARCHAR(500) NULL,
+    solucion VARCHAR(500) NULL,
     CONSTRAINT pk_incidencia PRIMARY KEY (id),
     CONSTRAINT fk_incidencia_ticket FOREIGN KEY (id) REFERENCES TICKET (id),
     CONSTRAINT chk_incidencia_alumno CHECK (
@@ -35,6 +37,7 @@ CREATE TABLE INCIDENCIA (
 CREATE TABLE SERVICIO (
     idServicio CHAR(8) NOT NULL,
     tipoServicio VARCHAR(50) NOT NULL,
+    fechaEsperada DATETIME NULL,
     CONSTRAINT pk_servicio PRIMARY KEY (idServicio),
     CONSTRAINT fk_servicio_ticket FOREIGN KEY (idServicio) REFERENCES TICKET (id)
 );

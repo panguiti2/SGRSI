@@ -1,6 +1,11 @@
 <?php
 
+require_once __DIR__ . "/../protegerAcceso.php";
+verificarRolPublico("solicitante");
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: solicitudes.php?error=peticion");
+    exit;
+}
+validarTokenCsrf();
 require_once __DIR__ . "/../../config/config.php";
-require_once RUTA_CONTROLADOR . "/verificarAcceso.php";
-verificarAcceso("solicitante");
 require_once RUTA_CONTROLADOR . "/procesarAltaSolicitud.php";

@@ -1,7 +1,14 @@
 <?php
-$rolRequerido = "tecnico";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
+
+$codigoError = $_GET["error"] ?? "";
+$mensajesError = [
+    "datos_incorrectos" => "Los datos de gestión no son válidos.",
+    "estado" => "No se pudo actualizar el estado de la solicitud."
+];
+$error = $mensajesError[$codigoError] ?? "";
+$mensajeExito = ($_GET["exito"] ?? "") === "estado"
+    ? "El estado de la solicitud se actualizó exitosamente."
+    : "";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,35 +33,48 @@ verificarAcceso($rolRequerido);
                     <li class="nav-item"><a class="nav-link" href="incidencias.php">Incidencias</a></li>
                     <li class="nav-item"><a class="nav-link" href="inventario.php">Inventario</a></li>
                     <li class="nav-item"><a class="nav-link" href="prestamos.php">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="registrosUso.php">Registros de uso</a></li>
                     <li class="nav-item"><a class="nav-link" href="../cerrarSesion.php">Cerrar sesión</a></li>
                 </ul>
             </nav>
         </section>
     </header>
     <main class="container-xl flex-grow-1 p-3 p-md-4">
+        <?php if ($mensajeExito !== ""): ?>
+            <p class="alert alert-success"><?= htmlspecialchars($mensajeExito) ?></p>
+        <?php endif; ?>
+        <?php if ($error !== ""): ?>
+            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
         <section class="bg-white rounded p-3 p-md-4 panelTabla">
             <h1 class="h3 mb-3">Solicitudes de servicio</h1>
             <section class="table-responsive">
                 <table class="table table-bordered table-hover table-sm mb-0 small">
                     <thead class="table-light">
-                        <tr><th>ID</th><th>Apertura</th><th>Docente</th><th>Grupo</th><th>Tipo</th><th>Estado</th><th>Gestión</th></tr>
+                        <tr><th>ID</th><th>Solicitante</th><th>Apertura</th><th>Fecha esperada</th><th>Cierre</th><th>Turno</th><th>Docente</th><th>Grupo</th><th>Asignatura</th><th>Laboratorio</th><th>Dispositivo</th><th>Tipo</th><th>Descripción</th><th>Estado</th><th>Gestión</th></tr>
                     </thead>
                     <tbody>
                         <?php if (empty($solicitudes)): ?>
-                            <tr><td colspan="7" class="text-center text-muted py-3">No hay solicitudes registradas.</td></tr>
+                            <tr><td colspan="15" class="text-center text-muted py-3">No hay solicitudes registradas.</td></tr>
                         <?php else: foreach ($solicitudes as $solicitud): ?>
                             <tr>
                                 <td><?= htmlspecialchars($solicitud["idSolicitud"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["cedulaSolicitante"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["fechaApertura"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["fechaEsperada"] ?? "Sin fecha") ?></td>
+                                <td><?= htmlspecialchars($solicitud["fechaCierre"] ?? "Pendiente") ?></td>
+                                <td><?= htmlspecialchars($solicitud["turno"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["nombreDocente"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["grupo"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["asignatura"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["idLaboratorio"] ?? "No especificado") ?></td>
+                                <td><?= htmlspecialchars($solicitud["numeroDispositivo"] ?? "No especificado") ?></td>
                                 <td><?= htmlspecialchars($solicitud["tipoServicio"]) ?></td>
+                                <td><?= htmlspecialchars($solicitud["descripcion"]) ?></td>
                                 <td><?= htmlspecialchars($solicitud["estado"]) ?></td>
-                                <td><form action="procesarEstadoSolicitud.php" method="post" class="d-flex gap-1">
-                                    <input type="hidden" name="idSolicitud" value="<?= htmlspecialchars($solicitud["idSolicitud"]) ?>">
-                                    <select name="estado" class="form-select form-select-sm"><option>PENDIENTE</option><option>EN PROCESO</option><option>RESUELTO</option></select>
-                                    <button class="btn btn-sm btn-primary">Guardar</button>
-                                </form></td>
+                                <td><button type="button" class="btn btn-sm btn-primary btnGestionarSolicitud"
+                                    data-id="<?= htmlspecialchars($solicitud["idSolicitud"]) ?>"
+                                    data-estado="<?= htmlspecialchars($solicitud["estado"]) ?>">Gestionar</button></td>
                             </tr>
                         <?php endforeach; endif; ?>
                     </tbody>
@@ -62,7 +82,43 @@ verificarAcceso($rolRequerido);
             </section>
         </section>
     </main>
+    <dialog id="dialogGestionSolicitud" class="seccionFormulario w-100 p-0 rounded-3 border-0" style="max-width: 500px;">
+        <button class="btn-close position-absolute top-0 end-0 m-2" id="btnCerrarGestionSolicitud" type="button" aria-label="Cerrar"></button>
+        <form action="procesarEstadoSolicitud.php" method="post" id="formularioGestionSolicitud" class="p-4">
+            <input type="hidden" name="csrfToken" value="<?= htmlspecialchars($_SESSION["csrfToken"]) ?>">
+            <input type="hidden" name="idSolicitud" id="idSolicitudGestion">
+            <fieldset>
+                <legend class="h4 mb-4">Gestionar solicitud</legend>
+                <label for="estadoSolicitud" class="form-label">Estado</label>
+                <select name="estado" id="estadoSolicitud" class="form-select" required>
+                    <?php foreach ($estadosTicket as $estadoTicket): ?>
+                        <option value="<?= htmlspecialchars($estadoTicket["codigo"]) ?>"><?= htmlspecialchars($estadoTicket["nombre"]) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button class="btn btn-primary w-100 mt-4">Guardar cambios</button>
+            </fieldset>
+        </form>
+    </dialog>
     <footer class="sgrsi-footer text-light mt-auto py-3"><p class="text-center mb-0">© 2026 SGRSI</p></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const dialogGestionSolicitud = document.getElementById("dialogGestionSolicitud");
+        const formularioGestionSolicitud = document.getElementById("formularioGestionSolicitud");
+        const idSolicitudGestion = document.getElementById("idSolicitudGestion");
+        const estadoSolicitud = document.getElementById("estadoSolicitud");
+
+        document.querySelectorAll(".btnGestionarSolicitud").forEach((boton) => {
+            boton.addEventListener("click", () => {
+                formularioGestionSolicitud.reset();
+                idSolicitudGestion.value = boton.dataset.id;
+                estadoSolicitud.value = boton.dataset.estado;
+                dialogGestionSolicitud.showModal();
+            });
+        });
+
+        document.getElementById("btnCerrarGestionSolicitud").addEventListener("click", () => {
+            dialogGestionSolicitud.close();
+        });
+    </script>
 </body>
 </html>

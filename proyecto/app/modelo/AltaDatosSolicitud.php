@@ -46,12 +46,13 @@ class AltaDatosSolicitud
                 "asignatura" => $solicitud["asignatura"]
             ]);
 
-            $sqlServicio = "INSERT INTO SERVICIO (idServicio, tipoServicio)
-                            VALUES (:idServicio, :tipoServicio)";
+            $sqlServicio = "INSERT INTO SERVICIO (idServicio, tipoServicio, fechaEsperada)
+                            VALUES (:idServicio, :tipoServicio, :fechaEsperada)";
             $consultaServicio = $this->conexion->prepare($sqlServicio);
             $consultaServicio->execute([
                 "idServicio" => $solicitud["idSolicitud"],
-                "tipoServicio" => $solicitud["tipoServicio"]
+                "tipoServicio" => $solicitud["tipoServicio"],
+                "fechaEsperada" => $solicitud["fechaEsperada"]
             ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {
@@ -73,7 +74,10 @@ class AltaDatosSolicitud
         $consulta = $this->conexion->prepare(
             "UPDATE TICKET
              SET estado = :estado,
-                 fechaCierre = CASE WHEN :estadoCierre = 'RESUELTO' THEN NOW() ELSE NULL END
+                 fechaCierre = CASE
+                     WHEN :estadoCierre = 'RESUELTO' THEN GREATEST(NOW(), fechaApertura)
+                     ELSE NULL
+                 END
              WHERE id = :idSolicitud"
         );
         return $consulta->execute([

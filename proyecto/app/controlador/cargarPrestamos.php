@@ -1,13 +1,18 @@
 <?php
 
+/** Controlador que recupera los préstamos y carga su vista. */
+
 require_once __DIR__ . "/../modelo/ConectorPDO.php";
 require_once __DIR__ . "/../modelo/AccesoDatosPrestamo.php";
+require_once __DIR__ . "/../modelo/AccesoDatosCatalogo.php";
 
-$conectorPDO = new ConectorPDO("localhost", "root", "", "test");
+$conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 $conexion = $conectorPDO->establecerConexion();
 
 $accesoDatosPrestamo = new AccesoDatosPrestamo($conexion);
 $prestamos = $accesoDatosPrestamo->listarPrestamos();
+$accesoDatosCatalogo = new AccesoDatosCatalogo($conexion);
+$turnos = $accesoDatosCatalogo->listarTurnos();
 
 $conectorPDO->desconectar();
 

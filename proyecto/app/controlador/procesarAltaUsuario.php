@@ -1,19 +1,10 @@
 
 <?php
 
-require_once __DIR__ . "/../../config/config.php";
+/** Controlador que valida y registra un usuario. */
+
 require_once RUTA_MODELO . "/ConectorPDO.php";
 require_once RUTA_MODELO . "/AltaDatosUsuario.php";
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: usuarios.php?error=peticion" );
-    exit;
-}
 
 $cedula = trim($_POST["cedula"] ?? "");
 $nombre = trim($_POST["nombre"] ?? "");
@@ -52,7 +43,7 @@ if (!in_array($rol, $rolesPermitidos, true)) {
 $claveHash = password_hash($contrasena, PASSWORD_DEFAULT);
 
 
-$conectorPDO = new ConectorPDO("localhost", "root", "", "test");
+$conectorPDO = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
 
 $conexion = $conectorPDO->establecerConexion();
 

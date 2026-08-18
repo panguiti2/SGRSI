@@ -1,7 +1,4 @@
 <?php
-$rolRequerido = "tecnico";
-require_once __DIR__ . "/../../../app/controlador/verificarAcceso.php";
-verificarAcceso($rolRequerido);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -46,6 +43,9 @@ verificarAcceso($rolRequerido);
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="prestamos.php">Préstamos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="registrosUso.php">Registros de uso</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>

@@ -84,6 +84,26 @@ class AltaDatosIncidencia
                 "cedulaTecnico" => $asignacion["cedulaTecnico"],
                 "idIncidencia" => $asignacion["idIncidencia"]
             ]);
+
+            $consultaIncidencia = $this->conexion->prepare(
+                "UPDATE INCIDENCIA
+                 SET diagnostico = CASE
+                     WHEN :estadoDiagnostico = 'RESUELTO' THEN :diagnostico
+                     ELSE NULL
+                 END,
+                 solucion = CASE
+                     WHEN :estadoSolucion = 'RESUELTO' THEN :solucion
+                     ELSE NULL
+                 END
+                 WHERE id = :idIncidencia"
+            );
+            $consultaIncidencia->execute([
+                "estadoDiagnostico" => $asignacion["estado"],
+                "diagnostico" => $asignacion["diagnostico"],
+                "estadoSolucion" => $asignacion["estado"],
+                "solucion" => $asignacion["solucion"],
+                "idIncidencia" => $asignacion["idIncidencia"]
+            ]);
             return $this->conexion->commit();
         } catch (PDOException $error) {
             if ($this->conexion->inTransaction()) {

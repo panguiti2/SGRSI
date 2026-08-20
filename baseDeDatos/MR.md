@@ -7,18 +7,21 @@ USUARIO(
 )
 
 ADMINISTRADOR(
-    cedula PK,
-    FK cedula → USUARIO.cedula
+    cedula PK, FK,
+    
+    cedula es FK de USUARIO(cedula)
 )
 
 TECNICO(
-    cedula PK,
-    FK cedula → USUARIO.cedula
+    cedula PK, FK,
+
+    cedula es FK de USUARIO(cedula)
 )
 
 SOLICITANTE(
-    cedula PK,
-    FK cedula → USUARIO.cedula
+    cedula PK, FK,
+
+    cedula es FK de USUARIO(cedula)
 )
 
 LABORATORIO(
@@ -26,63 +29,92 @@ LABORATORIO(
     nombre
 )
 
+USA(
+    cedulaSolicitante PK, FK,
+    idLaboratorio PK, FK,
+
+    cedulaSolicitante es FK de SOLICITANTE(cedula)
+    idLaboratorio es FK de LABORATORIO(idLaboratorio)
+)
+
 DISPOSITIVO(
-    idLaboratorio PK,
+    idLaboratorio PK, FK,
     numeroDispositivo PK,
     estado,
     ultimoCambio,
     modificaciones,
-    cedulaAdministrador,
 
-    FK idLaboratorio → LABORATORIO.idLaboratorio,
-    FK cedulaAdministrador → ADMINISTRADOR.cedula
+    idLaboratorio es FK de LABORATORIO(idLaboratorio)
+)
+
+CONTROLA(
+    cedulaAdministrador PK, FK,
+    numeroDispositivo PK, FK,
+
+    cedulaAdministrador es FK de ADMINISTRADOR(cedula)
+    numeroDispositivo es FK de DISPOSITIVO(numeroDispositivo, idLaboratorio)
+)    
+
+REGISTROUSO(
+    id PK,
+    fecha,
+    horaEntrada,
+    horaSalida,
+    turno,
+    grupo,
+    asignatura,
+    cedulaSolicitante FK,
+    idLaboratorio FK,
+
+    cedulaSolicitante, idLaboratorio son FK de USA(cedulaSolicitante, idLaboratorio)
 )
 
 PRESTAMO(
     idPrestamo PK,
     numeroLaptop,
-    fechaRetiro,
+    fechaEsperada,
     fechaDevolucion,
-    fechaSolicitud,
-    turno,
-    cedulaSolicitante
+    estado,
+    nombreSolicitanteP,
+    cedulaSolicitanteP,
+    cedulaTecnico FK,
+    fechaRegistro
+
+    cedulaTecnico es FK de TECNICO(cedula)
 )
 
 TICKET(
     id PK,
-    cedulaSolicitante,
-    cedulaTecnico,
-    idLaboratorio,
-    numeroDispositivo,
     fechaApertura,
     fechaCierre,
-    fechaGestion,
-    grupo,
-    nombreDocente,
-    descripcion,
-    turno,
-    estado,
     asignatura,
+    estado,
+    turno,
+    grupo,
+    descripcion,
+    cedulaSolicitante FK,
+    cedulaTecnico FK,
+    numeroDispositivo FK,
+    idLaboratorio FK,
+    fechaGestion
 
-    FK cedulaSolicitante → SOLICITANTE.cedula,
-    FK cedulaTecnico → TECNICO.cedula,
-
-    FK (idLaboratorio, numeroDispositivo)
-        → DISPOSITIVO(idLaboratorio, numeroDispositivo)
+    cedulaSolicitante es FK de SOLICITANTE(cedula)
+    cedulaTecnico es FK de TECNICO(cedula)
+    numeroDispositivo, idLaboratorio son FK de DISPOSITIVO(numeroDispositivo, idLaboratorio)
 )
 
 INCIDENCIA(
-    id PK,
+    idTicket PK, FK,
     reportoAlumno,
     nombreAlumno,
 
-    FK id → TICKET.id
+    idTicket es FK de TICKET(id)
 )
 
 SERVICIO(
-    idServicio PK,
+    idTicket PK, FK,
     tipoServicio,
 
-    FK idServicio → TICKET.id
+    idTicket es FK de TICKET(id)
 )
 

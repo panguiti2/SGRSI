@@ -24,6 +24,14 @@ SOLICITANTE(
     cedula es FK de USUARIO(cedula)
 )
 
+GERENCIAR(
+    cedulaAdministrador PK, FK,
+    cedula PK, FK,
+
+    cedulaAdministrador es FK de ADMINISTRADOR(cedula)
+    cedula es FK de USUARIO(cedula)
+)
+
 LABORATORIO(
     idLaboratorio PK,
     nombre

@@ -1,1 +1,3 @@
-proyecto/.env
+*.env
+vendor/
+composer.phar

@@ -113,11 +113,13 @@ class PrestamoDAO
                 SET fechaDevolucionReal = :fechaDevolucionReal,
                     estado = 'CERRADO'
                 WHERE idPrestamo = :idPrestamo
-                    AND estado = 'ACTIVO'"
+                    AND estado = 'ACTIVO'
+                    AND fechaRetiro <= :fechaVerificar"
             );
             $consulta->execute([
                 "idPrestamo" => $idPrestamo,
-                "fechaDevolucionReal" => $fechaDevolucionReal
+                "fechaDevolucionReal" => $fechaDevolucionReal,
+                "fechaVerificar" => $fechaDevolucionReal
             ]);
 
             return $consulta->rowCount() === 1;

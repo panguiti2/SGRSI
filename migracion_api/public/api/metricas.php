@@ -1,11 +1,11 @@
 <?php
 
 require_once __DIR__ . "/../../config/config.php";
-require_once RUTA_CONTROLADOR . "/DispositivoController.php";
+require_once RUTA_CONTROLADOR . "/MetricasController.php";
 
 session_start();
 
-$controlador = new DispositivoController();
+$controlador = new MetricasController();
 try {
     $controlador->gestionar($_SERVER["REQUEST_METHOD"]);
 } catch (PDOException $error) {

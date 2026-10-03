@@ -17,14 +17,16 @@ class DispositivoController
         if (!isset($_SESSION["cedula"])) {
             RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
         }
-        if (!($_SESSION["administrador"] ?? false)) {
+        // El técnico puede consultar el inventario, pero no modificarlo.
+        $puedeConsultar = $metodo === "GET" && ($_SESSION["tecnico"] ?? false);
+        if (!($_SESSION["administrador"] ?? false) && !$puedeConsultar) {
             RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
         }
 
         match ($metodo) {
             "GET" => $this->listar(),
             "POST" => $this->alta(),
-            "PATCH" => $this->modificar(),
+            "PUT" => $this->modificar(),
             "DELETE" => $this->baja(),
             default => RespuestaJson::error("Método no permitido", 405),
         };
@@ -35,6 +37,21 @@ class DispositivoController
     {
         $conexion = $this->conectar();
         $dao = new DispositivoDAO($conexion);
+        if (isset($_GET["idLaboratorio"]) || isset($_GET["numeroDispositivo"])) {
+            if (!is_string($_GET["idLaboratorio"] ?? "") || !is_string($_GET["numeroDispositivo"] ?? "")) {
+                RespuestaJson::error("Falta identificar el dispositivo", 422);
+            }
+            $idLaboratorio = trim($_GET["idLaboratorio"] ?? "");
+            $numeroDispositivo = trim($_GET["numeroDispositivo"] ?? "");
+            if ($idLaboratorio === "" || $numeroDispositivo === "") {
+                RespuestaJson::error("Falta identificar el dispositivo", 422);
+            }
+            $dispositivo = $dao->listarDispositivo($idLaboratorio, $numeroDispositivo);
+            if ($dispositivo === null) {
+                RespuestaJson::error("El dispositivo no existe", 404);
+            }
+            RespuestaJson::exito($dispositivo);
+        }
         RespuestaJson::exito($dao->listarDispositivos());
     }
 
@@ -56,7 +73,7 @@ class DispositivoController
         }
 
         $ultimoCambio = DateTime::createFromFormat("Y-m-d\\TH:i", $ultimoCambioEntrada);
-        if ($ultimoCambio === false) {
+        if ($ultimoCambio === false || $ultimoCambio->format("Y-m-d\\TH:i") !== $ultimoCambioEntrada) {
             RespuestaJson::error("La fecha no es válida", 422);
         }
 
@@ -96,6 +113,7 @@ class DispositivoController
 
         if ($idLaboratorio === "" || $numeroDispositivo === ""
             || $modificaciones === "" || $ultimoCambio === false
+            || $ultimoCambio->format("Y-m-d\\TH:i") !== $ultimoCambioEntrada
             || !in_array($estado, ["0", "1"], true)) {
             RespuestaJson::error("Los datos del dispositivo no son válidos", 422);
         }
@@ -105,6 +123,9 @@ class DispositivoController
 
         if (!$dao->existeModificacion($modificaciones)) {
             RespuestaJson::error("La modificación no existe", 422);
+        }
+        if ($dao->listarDispositivo($idLaboratorio, $numeroDispositivo) === null) {
+            RespuestaJson::error("El dispositivo no existe", 404);
         }
 
         $resultado = $dao->modificarDispositivo(
@@ -140,7 +161,7 @@ class DispositivoController
         $resultado = $dao->eliminarDispositivo($idLaboratorio, $numeroDispositivo);
 
         if (!$resultado) {
-            RespuestaJson::error("No se pudo eliminar el dispositivo", 400);
+            RespuestaJson::error("No se pudo eliminar el dispositivo. Puede estar asociado a un ticket.", 400);
         }
 
         RespuestaJson::exito(["mensaje" => "Dispositivo eliminado exitosamente"]);
@@ -149,7 +170,16 @@ class DispositivoController
     /** @return array Datos JSON enviados por el cliente. */
     private function recibirDatos(): array
     {
-        return json_decode(file_get_contents("php://input"), true) ?? [];
+        $datos = json_decode(file_get_contents("php://input"), true);
+        if (!is_array($datos)) {
+            RespuestaJson::error("Los datos enviados no son válidos", 422);
+        }
+        foreach ($datos as $valor) {
+            if (!is_string($valor)) {
+                RespuestaJson::error("Los datos enviados no son válidos", 422);
+            }
+        }
+        return $datos;
     }
 
     /** @return void */

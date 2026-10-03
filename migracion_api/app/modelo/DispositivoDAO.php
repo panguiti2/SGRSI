@@ -38,6 +38,29 @@ class DispositivoDAO
     }
 
     /**
+     * Recupera un dispositivo por su laboratorio y número.
+     * @param string $idLaboratorio Identificador del laboratorio.
+     * @param string $numeroDispositivo Número del dispositivo.
+     * @return array|null Dispositivo encontrado o null.
+     */
+    public function listarDispositivo(string $idLaboratorio, string $numeroDispositivo): ?array
+    {
+        $consulta = $this->conexion->prepare(
+            "SELECT idLaboratorio AS idLab, numeroDispositivo,
+                modificaciones, ultimoCambio, estado
+            FROM DISPOSITIVO
+            WHERE idLaboratorio = :idLaboratorio
+                AND numeroDispositivo = :numeroDispositivo"
+        );
+        $consulta->execute([
+            "idLaboratorio" => $idLaboratorio,
+            "numeroDispositivo" => $numeroDispositivo
+        ]);
+        $dispositivo = $consulta->fetch(PDO::FETCH_ASSOC);
+        return $dispositivo === false ? null : $dispositivo;
+    }
+
+    /**
      * Comprueba si existe un laboratorio.
      * @param string $idLaboratorio Identificador del laboratorio.
      * @return bool True si existe.
@@ -98,7 +121,7 @@ class DispositivoDAO
                 "numeroDispositivo" => $numeroDispositivo,
                 "modificaciones" => "N/A",
                 "ultimoCambio" => $ultimoCambio,
-                "estado" => $estado
+                "estado" => $estado ? 1 : 0
             ]);
         } catch (PDOException $error) {
             return false;
@@ -112,7 +135,7 @@ class DispositivoDAO
      * @param string $modificaciones Modificación registrada.
      * @param string $ultimoCambio Fecha y hora de modificación.
      * @param bool $estado Estado del dispositivo.
-     * @return bool True si se modificó una fila.
+     * @return bool True si la consulta se ejecutó correctamente.
      */
     public function modificarDispositivo(
         string $idLaboratorio,
@@ -135,10 +158,10 @@ class DispositivoDAO
                 "numeroDispositivo" => $numeroDispositivo,
                 "modificaciones" => $modificaciones,
                 "ultimoCambio" => $ultimoCambio,
-                "estado" => $estado
+                "estado" => $estado ? 1 : 0
             ]);
 
-            return $consulta->rowCount() === 1;
+            return true;
         } catch (PDOException $error) {
             return false;
         }

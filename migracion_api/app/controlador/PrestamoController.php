@@ -17,14 +17,16 @@ class PrestamoController
         if (!isset($_SESSION["cedula"])) {
             RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
         }
-        if (!($_SESSION["tecnico"] ?? false)) {
+        // Administración puede consultar; las operaciones siguen siendo del técnico.
+        $puedeConsultar = $metodo === "GET" && ($_SESSION["administrador"] ?? false);
+        if (!($_SESSION["tecnico"] ?? false) && !$puedeConsultar) {
             RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
         }
 
         match ($metodo) {
             "GET" => $this->listar(),
             "POST" => $this->alta(),
-            "PATCH" => $this->devolucion(),
+            "PUT" => $this->devolucion(),
             default => RespuestaJson::error("Método no permitido", 405),
         };
     }
@@ -63,7 +65,9 @@ class PrestamoController
         $fechaDevolucion = DateTime::createFromFormat("Y-m-d\\TH:i", $devolucion);
 
         if ($fechaRetiro === false || $fechaDevolucion === false
-            || $fechaDevolucion <= $fechaRetiro) {
+            || $fechaDevolucion <= $fechaRetiro
+            || $fechaRetiro->format("Y-m-d\\TH:i") !== $retiro
+            || $fechaDevolucion->format("Y-m-d\\TH:i") !== $devolucion) {
             RespuestaJson::error("Las fechas no son válidas", 422);
         }
 
@@ -105,7 +109,8 @@ class PrestamoController
         $fechaEntrada = trim($datos["fechaDevolucion"] ?? "");
         $fechaDevolucion = DateTime::createFromFormat("Y-m-d\\TH:i", $fechaEntrada);
 
-        if ($idPrestamo === "" || $fechaDevolucion === false) {
+        if (!preg_match("/^PRE[A-Z0-9]{5}$/", $idPrestamo) || $fechaDevolucion === false
+            || $fechaDevolucion->format("Y-m-d\\TH:i") !== $fechaEntrada) {
             RespuestaJson::error("Los datos de la devolución no son válidos", 422);
         }
 
@@ -126,7 +131,16 @@ class PrestamoController
     /** @return array Datos JSON enviados por el cliente. */
     private function recibirDatos(): array
     {
-        return json_decode(file_get_contents("php://input"), true) ?? [];
+        $datos = json_decode(file_get_contents("php://input"), true);
+        if (!is_array($datos)) {
+            RespuestaJson::error("Los datos enviados no son válidos", 422);
+        }
+        foreach ($datos as $valor) {
+            if (!is_string($valor)) {
+                RespuestaJson::error("Los datos enviados no son válidos", 422);
+            }
+        }
+        return $datos;
     }
 
     /** @return void */

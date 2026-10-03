@@ -1,3 +1,9 @@
 <?php
+
+require_once __DIR__ . "/../../config/config.php";
 require_once __DIR__ . "/../protegerAcceso.php";
-cargarVistaProtegida("administrador", __DIR__ . "/../../app/vista/admin/metricas.php");
+
+verificarRolPublico("administrador");
+
+$vistaMetricas = RUTA_VISTA . "/admin/metricas.php";
+require_once RUTA_CONTROLADOR . "/cargarMetricas.php";

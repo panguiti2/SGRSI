@@ -1,5 +1,3 @@
-<?php
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -51,7 +49,69 @@
     </header>
 
     <main class="flex-grow-1 p-2 p-md-3 p-lg-4">
-        <h1 class="h3 text-center text-md-start">BIENVENIDO A SGRSI</h1>
+        <section class="container-fluid">
+            <h1 class="h3 text-center text-md-start mb-2">Métricas del sistema</h1>
+            <p class="text-secondary mb-4">Resumen actual de la información registrada.</p>
+
+            <section class="row g-3" aria-label="Indicadores principales">
+                <article class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h2 class="h6">Usuarios activos</h2>
+                            <p class="display-6 mb-0"><?= htmlspecialchars((string) ($metricas["usuariosActivos"] ?? 0)) ?></p>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h2 class="h6">Tickets abiertos</h2>
+                            <p class="display-6 mb-0"><?= htmlspecialchars((string) ($metricas["ticketsAbiertos"] ?? 0)) ?></p>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h2 class="h6">Incidencias abiertas</h2>
+                            <p class="display-6 mb-0"><?= htmlspecialchars((string) ($metricas["incidenciasAbiertas"] ?? 0)) ?></p>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h2 class="h6">Solicitudes abiertas</h2>
+                            <p class="display-6 mb-0"><?= htmlspecialchars((string) ($metricas["solicitudesAbiertas"] ?? 0)) ?></p>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h2 class="h6">Préstamos pendientes</h2>
+                            <p class="display-6 mb-0"><?= htmlspecialchars((string) ($metricas["prestamosPendientes"] ?? 0)) ?></p>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h2 class="h6">Dispositivos activos</h2>
+                            <p class="display-6 mb-0"><?= htmlspecialchars((string) ($metricas["dispositivosActivos"] ?? 0)) ?></p>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h2 class="h6">Registros de uso</h2>
+                            <p class="display-6 mb-0"><?= htmlspecialchars((string) ($metricas["registrosUso"] ?? 0)) ?></p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </section>
     </main>
 
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4">

@@ -6,4 +6,8 @@ require_once RUTA_CONTROLADOR . "/DispositivoController.php";
 session_start();
 
 $controlador = new DispositivoController();
-$controlador->gestionar($_SERVER["REQUEST_METHOD"]);
+try {
+    $controlador->gestionar($_SERVER["REQUEST_METHOD"]);
+} catch (PDOException $error) {
+    RespuestaJson::error("No se pudo completar la operación con la base de datos", 500);
+}

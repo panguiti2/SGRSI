@@ -1,0 +1,84 @@
+body.sgrsi-app main.sgrsi-login-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seccionLogin {
+    background-color: var(--blancoPuro);
+    color: var(--medio);
+    font-family: 'Barlow', sans-serif;
+    text-align: center;
+    line-height: 1.7;
+    margin: 0;
+    height: auto;
+}
+
+.seccionLogin h2 {
+    color: var(--azul);
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.seccionLogin form {
+    background-color: var(--blancoPuro);
+    color: var(--oscuro);
+    width: 100%;
+}
+
+.seccionLogin legend {
+    color: var(--azul);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.seccionLogin fieldset {
+    margin-bottom: 1rem;
+}
+
+.seccionLogin label {
+    color: var(--azul);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+.seccionLogin input:not(.form-control) {
+    width: 100%;
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    color: var(--oscuro);
+    background-color: var(--grisClaro);
+}
+
+.seccionLogin input:not(.form-control):focus {
+    background-color: var(--blancoCristal);
+    color: var(--azul);
+}
+
+.seccionLogin button:not(.btn) {
+    background-color: var(--azul);
+    color: var(--blancoCristal);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: 100%;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+}
+
+.seccionLogin button:not(.btn):hover,
+.seccionLogin button:not(.btn):focus {
+    background-color: var(--medio);
+    color: var(--azul);
+}
+
+.seccionLogin button:not(.btn):active {
+    background-color: var(--oscuro);
+    color: var(--blancoCristal);
+}

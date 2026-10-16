@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 $cedula = trim($_POST["cedula"] ?? "");
 $clave = $_POST["clave"] ?? "";
+validarCamposObligatorios([$cedula, $clave], "login.php");
 
 if ($cedula === "" || $clave === "") {
     header("Location: login.php?error=credenciales");

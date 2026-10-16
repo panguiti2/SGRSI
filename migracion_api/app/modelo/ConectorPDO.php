@@ -1,38 +1,53 @@
 <?php
 
-/** Establece la conexión PDO usando la configuración del sistema. */
+/** Una instancia y una conexión PDO por petición. */
 class ConectorPDO
 {
-    private string $servidor;
-    private string $usuario;
-    private string $clave;
-    private string $baseDatos;
+    private static ?self $instancia = null;
     private ?PDO $conexion = null;
 
-    /** Recibe los datos de conexión cargados desde el archivo .env. */
-    public function __construct(string $servidor, string $usuario, string $clave, string $baseDatos)
+    private function __construct() {}
+    private function __clone() {}
+
+    public function __serialize(): array
     {
-        $this->servidor = $servidor;
-        $this->usuario = $usuario;
-        $this->clave = $clave;
-        $this->baseDatos = $baseDatos;
+        throw new LogicException('El conector no puede serializarse');
     }
 
-    /** Devuelve la conexión o lanza una excepción que atenderá el endpoint. */
+    public function __unserialize(array $datos): void
+    {
+        throw new LogicException('El conector no puede deserializarse');
+    }
+
+    public static function obtenerInstancia(): self
+    {
+        if (self::$instancia === null) self::$instancia = new self();
+        return self::$instancia;
+    }
+
     public function establecerConexion(): PDO
     {
-        $this->conexion = new PDO(
-            "mysql:host=$this->servidor;dbname=$this->baseDatos;charset=utf8",
-            $this->usuario,
-            $this->clave
-        );
-        $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if ($this->conexion === null) {
+            $puerto = (int) ($_ENV['DB_PUERTO'] ?? 3306);
+            $dsn = 'mysql:host=' . $_ENV['DB_HOST'] . ';port=' . $puerto
+                . ';dbname=' . $_ENV['DB_NOMBRE'] . ';charset=utf8mb4';
+            $this->conexion = new PDO($dsn, $_ENV['DB_USUARIO'], $_ENV['DB_CLAVE'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]);
+        }
         return $this->conexion;
     }
 
-    /** Libera la conexión mantenida por el conector. */
     public function desconectar(): void
     {
-        $this->conexion = null;
+        try {
+            if ($this->conexion !== null && $this->conexion->inTransaction()) $this->conexion->rollBack();
+        } catch (PDOException $error) {
+            error_log('SGRSI: no se pudo revertir la transacción durante la desconexión');
+        } finally {
+            $this->conexion = null;
+        }
     }
 }

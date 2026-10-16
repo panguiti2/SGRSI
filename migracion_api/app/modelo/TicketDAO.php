@@ -17,7 +17,7 @@ class TicketDAO
         $sql = "SELECT t.id, t.cedulaSolicitante, t.cedulaTecnico,
                 t.idLaboratorio, t.numeroDispositivo, t.fechaApertura,
                 t.fechaCierre, t.fechaGestion, t.grupo, t.nombreDocente,
-                t.descripcion, t.turno, t.estado, t.asignatura,
+                t.descripcion, t.turno, UPPER(t.estado) AS estado, t.asignatura,
                 CASE WHEN i.id IS NOT NULL THEN 'INCIDENCIA' ELSE 'SOLICITUD' END AS tipo,
                 i.reportoAlumno, i.nombreAlumno, i.diagnostico, i.solucion,
                 s.tipoServicio, s.fechaEsperada
@@ -45,7 +45,7 @@ class TicketDAO
         $tabla = $tipo === "INCIDENCIA" ? "INCIDENCIA" : "SERVICIO";
         $clave = $tipo === "INCIDENCIA" ? "id" : "idServicio";
         $consulta = $this->conexion->prepare(
-            "SELECT t.id, t.estado FROM TICKET AS t
+            "SELECT t.id, UPPER(t.estado) AS estado FROM TICKET AS t
             INNER JOIN " . $tabla . " AS detalle ON detalle." . $clave . " = t.id
             WHERE t.id = :id"
         );
@@ -53,6 +53,8 @@ class TicketDAO
         $ticket = $consulta->fetch(PDO::FETCH_ASSOC);
         return $ticket === false ? null : $ticket;
     }
+
+    /** Comprueba catálogos y dispositivo usados por un ticket. */
 
     /** Comprueba catálogos y dispositivo usados por un ticket. */
     public function existenDatosComunes(
@@ -116,7 +118,7 @@ class TicketDAO
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            return false;
+            ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
         }
     }
 
@@ -140,7 +142,7 @@ class TicketDAO
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            return false;
+            ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
         }
     }
 
@@ -176,6 +178,8 @@ class TicketDAO
     public function actualizarSolicitud(string $id, string $estado): bool
     {
         try {
+            $this->conexion->beginTransaction();
+            $this->bloquearTicketAbierto($id);
             $consulta = $this->conexion->prepare(
                 "UPDATE TICKET
                 SET estado = :estado,
@@ -183,9 +187,11 @@ class TicketDAO
                 WHERE id = :id"
             );
             $consulta->execute(["id" => $id, "estado" => $estado, "cierre" => $estado]);
-            return true;
-        } catch (PDOException $error) {
-            return false;
+            return $this->conexion->commit();
+        } catch (Throwable $error) {
+            if ($this->conexion->inTransaction()) $this->conexion->rollBack();
+            if ($error instanceof PDOException) ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
+            throw $error;
         }
     }
 
@@ -194,6 +200,7 @@ class TicketDAO
     {
         try {
             $this->conexion->beginTransaction();
+            $this->bloquearTicketAbierto($datos['id']);
             $consulta = $this->conexion->prepare(
                 "UPDATE TICKET
                 SET estado = :estado, cedulaTecnico = :cedulaTecnico,
@@ -220,11 +227,22 @@ class TicketDAO
             ]);
 
             return $this->conexion->commit();
-        } catch (PDOException $error) {
+        } catch (Throwable $error) {
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            return false;
+            if ($error instanceof PDOException) ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
+            throw $error;
         }
+    }
+
+    /** Conserva el cierre y los datos históricos aun ante peticiones simultáneas. */
+    private function bloquearTicketAbierto(string $id): void
+    {
+        $consulta = $this->conexion->prepare('SELECT estado FROM TICKET WHERE id = :id FOR UPDATE');
+        $consulta->execute(['id' => $id]);
+        $estado = $consulta->fetchColumn();
+        if ($estado === false) throw new ErrorHttp('El ticket no existe', 404);
+        if (strtoupper($estado) === 'RESUELTO') throw new ErrorHttp('No se puede modificar un ticket resuelto', 409);
     }
 }

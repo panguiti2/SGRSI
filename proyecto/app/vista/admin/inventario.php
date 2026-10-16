@@ -3,7 +3,7 @@
 $codigoError = $_GET["error"] ?? "";
 $mensajesError = [
     "peticion" => "La petición no es válida.",
-    "campos_vacios" => "Debe completar todos los campos del dispositivo.",
+    "campos_vacios" => "Existen campos vacios",
     "datos_incorrectos" => "Los datos del dispositivo no son válidos.",
     "conexion" => "No se pudo establecer conexión con la base de datos.",
     "error_dispositivo" => "No se pudo registrar el dispositivo.",
@@ -232,6 +232,7 @@ if (($_GET["exito"] ?? "") === "dispositivo_eliminado") {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/administrador.js"></script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 
 </html>

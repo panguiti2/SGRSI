@@ -12,6 +12,7 @@ $estado = trim($_POST["estado"] ?? "");
 $ultimoCambio = trim($_POST["ultimoCambio"] ?? "");
 
 
+validarCamposObligatorios([$idLab, $numeroDispositivo, $estado, $ultimoCambio], "inventario.php");
 if ($idLab === "" || $numeroDispositivo === "" || $estado === "" || $ultimoCambio === "" ) {
     header("Location: inventario.php?error=campos_vacios");
     exit;

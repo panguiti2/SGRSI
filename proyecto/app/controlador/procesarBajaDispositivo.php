@@ -7,6 +7,7 @@ require_once RUTA_MODELO . "/BajaDatosDispositivo.php";
 
 $idLaboratorio = trim($_POST["idLab"] ?? "");
 $numeroDispositivo = trim($_POST["numeroDispositivo"] ?? "");
+validarCamposObligatorios([$idLaboratorio, $numeroDispositivo], "inventario.php");
 
 if ($idLaboratorio === "" || $numeroDispositivo === "") {
     header("Location: inventario.php?error=datos_incorrectos");

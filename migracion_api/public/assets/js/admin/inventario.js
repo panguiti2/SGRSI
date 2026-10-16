@@ -1,4 +1,4 @@
-const API_DISPOSITIVOS = "../api/dispositivos.php";
+const API_DISPOSITIVOS = "../index.php?ruta=dispositivos";
 const cuerpoTabla = document.getElementById("cuerpoTabla");
 const dialogDispositivo = document.querySelector(".dialogAltaDispositivo");
 const formularioDispositivo = document.getElementById("formularioAltaDispositivo");
@@ -48,89 +48,35 @@ function obtenerDatosFormularioDispositivo() {
 }
 
 async function obtenerDispositivos() {
-    const respuesta = await fetch(API_DISPOSITIVOS);
-    if (!respuesta.ok) {
-        console.error("No se pudieron obtener los dispositivos");
-        return [];
-    }
-    const contenido = await respuesta.json();
-    return contenido.datos;
+    return await obtenerDatosApi(API_DISPOSITIVOS);
 }
 
 async function obtenerDispositivo(idLaboratorio, numeroDispositivo) {
-    const respuesta = await fetch(
-        API_DISPOSITIVOS + "?idLaboratorio=" + encodeURIComponent(idLaboratorio)
+    return await obtenerDatosApi(
+        API_DISPOSITIVOS + "&idLaboratorio=" + encodeURIComponent(idLaboratorio)
         + "&numeroDispositivo=" + encodeURIComponent(numeroDispositivo)
     );
-    if (!respuesta.ok) {
-        const contenido = await respuesta.json();
-        alert(contenido.mensaje);
-        return null;
-    }
-    const contenido = await respuesta.json();
-    return contenido.datos;
 }
 
 async function guardarDispositivo(dispositivo) {
     if (!await formularioListo) return false;
-    const respuesta = await fetch(API_DISPOSITIVOS, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-Token": window.csrfToken
-        },
-        body: JSON.stringify(dispositivo)
-    });
-    if (!respuesta.ok) {
-        const contenido = await respuesta.json();
-        alert(contenido.mensaje);
-        return false;
-    }
-    return true;
+    return await enviarDatosApi(API_DISPOSITIVOS, "POST", dispositivo);
 }
 
 async function modificarDispositivo(dispositivo) {
     if (!await formularioListo) return false;
-    const respuesta = await fetch(API_DISPOSITIVOS, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-Token": window.csrfToken
-        },
-        body: JSON.stringify(dispositivo)
-    });
-    if (!respuesta.ok) {
-        const contenido = await respuesta.json();
-        alert(contenido.mensaje);
-        return false;
-    }
-    return true;
+    return await enviarDatosApi(API_DISPOSITIVOS, "PUT", dispositivo);
 }
 
 async function eliminarDispositivo(idLaboratorio, numeroDispositivo) {
     if (!await formularioListo) return false;
     if (!confirm("¿Desea eliminar este dispositivo?")) return;
     try {
-        const respuesta = await fetch(API_DISPOSITIVOS, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": window.csrfToken
-            },
-            body: JSON.stringify({
-                idLaboratorio: idLaboratorio,
-                numeroDispositivo: numeroDispositivo
-            })
-        });
-        if (!respuesta.ok) {
-            const contenido = await respuesta.json();
-            alert(contenido.mensaje);
-            return;
-        }
+        await enviarDatosApi(API_DISPOSITIVOS, 'DELETE', { idLaboratorio, numeroDispositivo });
         await actualizarTabla();
     } catch (error) {
         console.error(error);
-        alert("No se pudo comunicar con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 
@@ -184,7 +130,7 @@ async function actualizarTabla() {
         }
     } catch (error) {
         console.error(error);
-        alert("No se pudieron cargar los datos. Compruebe la conexión con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 
@@ -210,7 +156,7 @@ async function abrirModificarDispositivo(idLaboratorio, numeroDispositivo) {
         dialogDispositivo.showModal();
     } catch (error) {
         console.error(error);
-        alert("No se pudo comunicar con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 
@@ -229,7 +175,7 @@ async function gestionarDispositivo(eventoFormulario) {
         await actualizarTabla();
     } catch (error) {
         console.error(error);
-        alert("No se pudo comunicar con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 

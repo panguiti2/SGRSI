@@ -12,6 +12,7 @@ $nombreSolicitante = trim($_POST["nombreSolicitante"] ?? "");
 $numeroLaptop = trim($_POST["numeroLaptop"] ?? "");
 $retiro = trim($_POST["retiro"] ?? "");
 $devolucion = trim($_POST["devolucion"] ?? "");
+validarCamposObligatorios([$cedulaSolicitante, $turno, $nombreSolicitante, $numeroLaptop, $retiro, $devolucion], "prestamos.php");
 
 if ($cedulaSolicitante === "" || $turno === "" || $nombreSolicitante === "" || $numeroLaptop === "" || $retiro === "" || $devolucion === "") {
     header("Location: prestamos.php?error=campos_vacios");
@@ -44,6 +45,16 @@ if (!$accesoDatosCatalogo->existeTurno($turno)) {
 }
 
 $altaDatosPrestamo = new AltaDatosPrestamo($conexion);
+
+$consultaPrestamo = $conexion->prepare(
+    "SELECT 1 FROM PRESTAMO WHERE cedulaSolicitante = :cedula AND estado = 'ACTIVO' LIMIT 1"
+);
+$consultaPrestamo->execute(["cedula" => $cedulaSolicitante]);
+if ($consultaPrestamo->fetchColumn() !== false) {
+    $conectorPDO->desconectar();
+    header("Location: prestamos.php?error=prestamo_activo");
+    exit;
+}
 
 $resultado = $altaDatosPrestamo->registrarPrestamo(
     $idPrestamo,

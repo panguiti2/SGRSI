@@ -2,7 +2,8 @@
 $codigoError = $_GET["error"] ?? "";
 $mensajesError = [
     "peticion" => "La petición no es válida.",
-    "campos_vacios" => "Debe completar todos los campos del préstamo.",
+    "campos_vacios" => "Existen campos vacios",
+    "prestamo_activo" => "La cédula ya posee un préstamo activo",
     "datos_incorrectos" => "Los datos del préstamo no son válidos.",
     "error_prestamo" => "No se pudo registrar el préstamo.",
     "error_devolucion" => "No se pudo registrar la devolución."
@@ -215,6 +216,7 @@ if (($_GET["exito"] ?? "") === "devolucion") {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/tecnico.js"></script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 
 </html>

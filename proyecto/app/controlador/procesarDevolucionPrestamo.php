@@ -7,6 +7,7 @@ require_once RUTA_MODELO . "/RegistrarDevolucionPrestamo.php";
 
 $idPrestamo = trim($_POST["idPrestamo"] ?? "");
 $fechaEntrada = trim($_POST["fechaDevolucion"] ?? "");
+validarCamposObligatorios([$idPrestamo, $fechaEntrada], "prestamos.php");
 $fechaDevolucion = DateTime::createFromFormat("Y-m-d\\TH:i", $fechaEntrada);
 
 if ($idPrestamo === "" || $fechaDevolucion === false) {

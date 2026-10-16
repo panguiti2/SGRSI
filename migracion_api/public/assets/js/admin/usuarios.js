@@ -38,14 +38,7 @@ function obtenerDatosFormularioUsuario() {
 }
 
 async function obtenerUsuario(cedula) {
-    const respuesta = await fetch(API_DATOS + "?cedula=" + encodeURIComponent(cedula));
-    if (!respuesta.ok) {
-        const contenido = await respuesta.json();
-        alert(contenido.mensaje);
-        return null;
-    }
-    const contenido = await respuesta.json();
-    return contenido.datos;
+    return await obtenerDatosApi(API_DATOS + "&cedula=" + encodeURIComponent(cedula));
 }
 
 async function abrirModificarUsuario(cedula) {
@@ -64,21 +57,15 @@ async function abrirModificarUsuario(cedula) {
         dialogUsuario.showModal();
     } catch (error) {
         console.error(error);
-        alert("No se pudo comunicar con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 
 const cuerpoTabla = document.getElementById("cuerpoTabla");
-const API_DATOS = "../api/usuarios.php";
+const API_DATOS = "../index.php?ruta=usuarios";
 
 async function obtenerDatos() {
-    const respuesta = await fetch(API_DATOS);
-    if (!respuesta.ok) {
-        console.error("No se pudieron cargar los datos");
-        return [];
-    }
-    const contenido = await respuesta.json();
-    return contenido.datos;
+    return await obtenerDatosApi(API_DATOS);
 }
 
 function agregarFila(dato) {
@@ -135,45 +122,19 @@ async function actualizarTabla() {
         }
     } catch (error) {
         console.error(error);
-        alert("No se pudieron cargar los datos. Compruebe la conexión con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 
 
 async function guardarUsuario(usuario) {
     if (!await formularioListo) return false;
-    const respuesta = await fetch(API_DATOS, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-Token": window.csrfToken
-        },
-        body: JSON.stringify(usuario)
-    });
-    if (!respuesta.ok) {
-        const contenido = await respuesta.json();
-        alert(contenido.mensaje);
-        return false;
-    }
-    return true;
+    return await enviarDatosApi(API_DATOS, "POST", usuario);
 }
 
 async function modificarUsuario(usuario) {
     if (!await formularioListo) return false;
-    const respuesta = await fetch(API_DATOS, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-Token": window.csrfToken
-        },
-        body: JSON.stringify(usuario)
-    });
-    if (!respuesta.ok) {
-        const contenido = await respuesta.json();
-        alert(contenido.mensaje);
-        return false;
-    }
-    return true;
+    return await enviarDatosApi(API_DATOS, "PUT", usuario);
 }
 
 async function cambiarEstadoUsuario(cedula, estado) {
@@ -182,7 +143,7 @@ async function cambiarEstadoUsuario(cedula, estado) {
         if (cambiado) await actualizarTabla();
     } catch (error) {
         console.error(error);
-        alert("No se pudo comunicar con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 
@@ -201,7 +162,7 @@ async function gestionarUsuario(eventoFormulario) {
         await actualizarTabla();
     } catch (error) {
         console.error(error);
-        alert("No se pudo comunicar con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 

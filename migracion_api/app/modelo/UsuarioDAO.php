@@ -46,6 +46,17 @@ class UsuarioDAO
         return $usuario === false ? null : $usuario;
     }
 
+    /** Recupera el hash exclusivamente para verificar el acceso en el servidor. */
+    public function buscarCredenciales(string $cedula): ?array
+    {
+        $usuario = $this->listarUsuario($cedula);
+        if ($usuario === null) return null;
+        $consulta = $this->conexion->prepare('SELECT claveHash FROM USUARIO WHERE cedula = :cedula');
+        $consulta->execute(['cedula' => $cedula]);
+        $usuario['claveHash'] = $consulta->fetchColumn();
+        return $usuario;
+    }
+
     /** Registra un usuario y su único rol. */
     public function registrarUsuario(
         string $cedula,
@@ -54,14 +65,10 @@ class UsuarioDAO
         string $claveHash,
         string $rol
     ): bool {
-        $tablasRol = [
-            "administrador" => "ADMINISTRADOR",
-            "tecnico" => "TECNICO",
-            "solicitante" => "SOLICITANTE"
-        ];
+        $tablasRol = Sesion::TABLAS_ROL;
 
         if (!isset($tablasRol[$rol])) {
-            return false;
+            throw new ErrorHttp('El rol no es válido');
         }
 
         try {
@@ -87,7 +94,7 @@ class UsuarioDAO
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            return false;
+            ErrorSql::traducir($error, 'La cédula ya está registrada');
         }
     }
 
@@ -99,18 +106,31 @@ class UsuarioDAO
         string $claveHash,
         string $rol
     ): bool {
-        $tablasRol = [
-            "administrador" => "ADMINISTRADOR",
-            "tecnico" => "TECNICO",
-            "solicitante" => "SOLICITANTE"
-        ];
+        $tablasRol = Sesion::TABLAS_ROL;
 
         if (!isset($tablasRol[$rol])) {
-            return false;
+            throw new ErrorHttp('El rol no es válido');
         }
 
         try {
             $this->conexion->beginTransaction();
+            $bloqueo = $this->conexion->prepare('SELECT cedula FROM USUARIO WHERE cedula = :cedula FOR UPDATE');
+            $bloqueo->execute(['cedula' => $cedula]);
+            if ($bloqueo->fetchColumn() === false) throw new ErrorHttp('El usuario no existe', 404);
+            $usuario = $this->listarUsuario($cedula);
+            $roles = array_values(array_filter(array_keys($tablasRol), fn($actual) => (bool) $usuario[$actual]));
+            if ($roles !== [$rol]) {
+                foreach ($tablasRol as $actual => $tablaRol) {
+                    if ($usuario[$actual] && $actual !== $rol) {
+                        $this->conexion->prepare('DELETE FROM ' . $tablaRol . ' WHERE cedula = :cedula')
+                            ->execute(['cedula' => $cedula]);
+                    }
+                }
+                if (!$usuario[$rol]) {
+                    $this->conexion->prepare('INSERT INTO ' . $tablasRol[$rol] . ' (cedula) VALUES (:cedula)')
+                        ->execute(['cedula' => $cedula]);
+                }
+            }
             $consulta = $this->conexion->prepare(
                 "UPDATE USUARIO
                 SET nombre = :nombre, apellido = :apellido, claveHash = :claveHash
@@ -123,22 +143,13 @@ class UsuarioDAO
                 "claveHash" => $claveHash
             ]);
 
-            foreach ($tablasRol as $tablaRol) {
-                $this->conexion->prepare(
-                    "DELETE FROM " . $tablaRol . " WHERE cedula = :cedula"
-                )->execute(["cedula" => $cedula]);
-            }
-
-            $this->conexion->prepare(
-                "INSERT INTO " . $tablasRol[$rol] . " (cedula) VALUES (:cedula)"
-            )->execute(["cedula" => $cedula]);
-
             return $this->conexion->commit();
-        } catch (PDOException $error) {
+        } catch (Throwable $error) {
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            return false;
+            if ($error instanceof PDOException) ErrorSql::traducir($error, 'La cédula ya está registrada');
+            throw $error;
         }
     }
 
@@ -153,7 +164,7 @@ class UsuarioDAO
 
             return true;
         } catch (PDOException $error) {
-            return false;
+            throw $error;
         }
     }
 }

@@ -10,12 +10,7 @@ class UsuarioController
     /** Selecciona la operación según el método HTTP. */
     public function gestionar(string $metodo): void
     {
-        if (!isset($_SESSION["cedula"])) {
-            RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
-        }
-        if (!($_SESSION["administrador"] ?? false)) {
-            RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
-        }
+        Sesion::verificarRoles(["administrador"]);
 
         match ($metodo) {
             "GET" => $this->listar(),
@@ -28,16 +23,16 @@ class UsuarioController
     /** Devuelve todos los usuarios. */
     private function listar(): void
     {
-        $dao = new UsuarioDAO($this->conectar());
+        $dao = new UsuarioDAO(Conexion::conectar());
         if (isset($_GET["cedula"])) {
-            if (!is_string($_GET["cedula"]) || !preg_match("/^[1-9][0-9]{7}$/", $_GET["cedula"])) {
-                RespuestaJson::error("La cédula no es válida", 422);
-            }
-            $usuario = $dao->listarUsuario($_GET["cedula"]);
+            $datos = Peticion::recibirConsulta(['cedula']);
+            Peticion::validarCedula($datos['cedula']);
+            $usuario = $dao->listarUsuario($datos['cedula']);
             if ($usuario === null) {
                 RespuestaJson::error("El usuario no existe", 404);
             }
             RespuestaJson::exito($usuario);
+            return;
         }
         RespuestaJson::exito($dao->listarUsuarios());
     }
@@ -45,8 +40,8 @@ class UsuarioController
     /** Registra un usuario. */
     private function alta(): void
     {
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
         $cedula = trim($datos["cedula"] ?? "");
         $nombre = trim($datos["nombre"] ?? "");
         $apellido = trim($datos["apellido"] ?? "");
@@ -54,17 +49,16 @@ class UsuarioController
         $confirmarClave = $datos["confirmarClave"] ?? "";
         $rol = trim($datos["rol"] ?? "");
 
-        if ($cedula === "" || $nombre === "" || $apellido === ""
-            || $clave === "" || $confirmarClave === "" || $rol === "") {
-            RespuestaJson::error("Existen campos vacíos", 422);
-        }
-        if (!preg_match("/^[1-9][0-9]{7}$/", $cedula)
-            || !in_array($rol, ["administrador", "tecnico", "solicitante"], true)
-            || strlen($clave) < 12 || $clave !== $confirmarClave) {
-            RespuestaJson::error("Los datos del usuario no son válidos", 422);
-        }
+        Peticion::validarCamposObligatorios([$cedula, $nombre, $apellido, $clave, $confirmarClave, $rol]);
+        Peticion::validarLongitudes(['nombre' => $nombre, 'apellido' => $apellido], ['nombre' => 50, 'apellido' => 50]);
+        Peticion::validarCedula($cedula);
+        Peticion::validarClave($clave, $confirmarClave);
+        Sesion::validarRol($rol);
 
-        $dao = new UsuarioDAO($this->conectar());
+        $dao = new UsuarioDAO(Conexion::conectar());
+        if ($dao->listarUsuario($cedula) !== null) {
+            RespuestaJson::error("La cédula ya está registrada", 409);
+        }
         $resultado = $dao->registrarUsuario(
             $cedula,
             $nombre,
@@ -82,21 +76,21 @@ class UsuarioController
     /** Modifica los datos o el estado de un usuario. */
     private function modificar(): void
     {
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
         $cedula = trim($datos["cedula"] ?? "");
 
-        if (!preg_match("/^[1-9][0-9]{7}$/", $cedula)) {
-            RespuestaJson::error("La cédula no es válida", 422);
-        }
+        Peticion::validarCamposObligatorios([$cedula]);
+        Peticion::validarCedula($cedula);
 
-        $dao = new UsuarioDAO($this->conectar());
+        $dao = new UsuarioDAO(Conexion::conectar());
 
         if ($dao->listarUsuario($cedula) === null) {
             RespuestaJson::error("El usuario no existe", 404);
         }
         if (array_key_exists("estado", $datos)) {
             $estado = (string) $datos["estado"];
+            Peticion::validarCamposObligatorios([$estado]);
             if (!in_array($estado, ["0", "1"], true)) {
                 RespuestaJson::error("El estado no es válido", 422);
             }
@@ -108,10 +102,10 @@ class UsuarioController
             $confirmarClave = $datos["confirmarClave"] ?? "";
             $rol = trim($datos["rol"] ?? "");
 
-            if ($nombre === "" || $apellido === "" || strlen($clave) < 12 || $clave !== $confirmarClave
-                || !in_array($rol, ["administrador", "tecnico", "solicitante"], true)) {
-                RespuestaJson::error("Los datos del usuario no son válidos", 422);
-            }
+            Peticion::validarCamposObligatorios([$nombre, $apellido, $clave, $confirmarClave, $rol]);
+            Peticion::validarLongitudes(['nombre' => $nombre, 'apellido' => $apellido], ['nombre' => 50, 'apellido' => 50]);
+            Peticion::validarClave($clave, $confirmarClave);
+            Sesion::validarRol($rol);
             $resultado = $dao->modificarUsuario(
                 $cedula,
                 $nombre,
@@ -127,37 +121,4 @@ class UsuarioController
         RespuestaJson::exito(["mensaje" => "Usuario modificado exitosamente"]);
     }
 
-    /** Lee el cuerpo JSON de la petición. */
-    private function recibirDatos(): array
-    {
-        $datos = json_decode(file_get_contents("php://input"), true);
-        if (!is_array($datos)) {
-            RespuestaJson::error("Los datos enviados no son válidos", 422);
-        }
-        foreach ($datos as $valor) {
-            if (!is_string($valor)) {
-                RespuestaJson::error("Los datos enviados no son válidos", 422);
-            }
-        }
-        return $datos;
-    }
-
-    /** Comprueba el token enviado en la cabecera. */
-    private function verificarCsrf(): void
-    {
-        $token = $_SERVER["HTTP_X_CSRF_TOKEN"] ?? "";
-        if (!isset($_SESSION["csrfToken"])
-            || !hash_equals($_SESSION["csrfToken"], $token)) {
-            RespuestaJson::error("Solicitud rechazada", 403);
-        }
-    }
-
-    /** Crea y devuelve la conexión PDO. */
-    private function conectar(): PDO
-    {
-        return (new ConectorPDO(
-            $_ENV["DB_HOST"], $_ENV["DB_USUARIO"],
-            $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]
-        ))->establecerConexion();
-    }
 }

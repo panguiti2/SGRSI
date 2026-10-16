@@ -17,6 +17,10 @@ $reportoAlumno = trim($_POST["reportoAlumno"] ?? "");
 $nombreAlumno = trim($_POST["nombreAlumno"] ?? "");
 $descripcion = trim($_POST["descripcion"] ?? "");
 $fechaHora = new DateTime();
+validarCamposObligatorios([$turno, $nombreDocente, $grupo, $asignatura, $idLaboratorio, $numeroDispositivo, $reportoAlumno, $descripcion], "incidencias.php");
+if ($reportoAlumno === "SI") {
+    validarCamposObligatorios([$nombreAlumno], "incidencias.php");
+}
 
 $validos = !in_array("", [$turno, $nombreDocente, $grupo, $asignatura, $idLaboratorio, $numeroDispositivo, $reportoAlumno, $descripcion], true)
     && in_array($reportoAlumno, ["SI", "NO"], true)

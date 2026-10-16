@@ -120,5 +120,6 @@ $mensajeExito = ($_GET["exito"] ?? "") === "estado"
             dialogGestionSolicitud.close();
         });
     </script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 </html>

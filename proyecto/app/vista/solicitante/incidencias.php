@@ -165,6 +165,7 @@
             });
         });
     </script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 
 </html>

@@ -154,5 +154,6 @@ $mensajeExito = ($_GET["exito"] ?? "") === "asignacion"
         estadoIncidencia.addEventListener("change", actualizarCamposCierre);
         document.getElementById("btnCerrarGestionIncidencia").addEventListener("click", () => dialogGestionarIncidencia.close());
     </script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@ $numeroDispositivo = trim($_POST["numeroDispositivo"] ?? "");
 $modificaciones = trim($_POST["modificaciones"] ?? "");
 $estado = $_POST["estado"] ?? "";
 $ultimoCambioEntrada = trim($_POST["ultimoCambio"] ?? "");
+validarCamposObligatorios([$idLaboratorio, $numeroDispositivo, $modificaciones, $estado, $ultimoCambioEntrada], "inventario.php");
 $ultimoCambio = DateTime::createFromFormat("Y-m-d\\TH:i", $ultimoCambioEntrada);
 
 if (

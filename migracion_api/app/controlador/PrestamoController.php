@@ -14,14 +14,7 @@ class PrestamoController
      */
     public function gestionar(string $metodo): void
     {
-        if (!isset($_SESSION["cedula"])) {
-            RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
-        }
-        // Administración puede consultar; las operaciones siguen siendo del técnico.
-        $puedeConsultar = $metodo === "GET" && ($_SESSION["administrador"] ?? false);
-        if (!($_SESSION["tecnico"] ?? false) && !$puedeConsultar) {
-            RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
-        }
+        Sesion::verificarRoles($metodo === 'GET' ? ['administrador', 'tecnico'] : ['tecnico']);
 
         match ($metodo) {
             "GET" => $this->listar(),
@@ -34,7 +27,7 @@ class PrestamoController
     /** @return void */
     private function listar(): void
     {
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new PrestamoDAO($conexion);
         RespuestaJson::exito($dao->listarPrestamos());
     }
@@ -42,8 +35,8 @@ class PrestamoController
     /** @return void */
     private function alta(): void
     {
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
 
         $cedulaSolicitante = trim($datos["cedulaSolicitante"] ?? "");
         $turno = trim($datos["turno"] ?? "");
@@ -52,30 +45,28 @@ class PrestamoController
         $retiro = trim($datos["retiro"] ?? "");
         $devolucion = trim($datos["devolucion"] ?? "");
 
-        if ($cedulaSolicitante === "" || $turno === ""
-            || $nombreSolicitante === "" || $numeroLaptop === ""
-            || $retiro === "" || $devolucion === "") {
-            RespuestaJson::error("Existen campos vacíos", 422);
-        }
+        Peticion::validarCamposObligatorios([$cedulaSolicitante, $turno, $nombreSolicitante, $numeroLaptop, $retiro, $devolucion]);
+        Peticion::validarLongitudes($datos, ['nombreSolicitante' => 100, 'numeroLaptop' => 20]);
         if (!preg_match("/^[1-9][0-9]{7}$/", $cedulaSolicitante)) {
             RespuestaJson::error("La cédula no es válida", 422);
         }
 
-        $fechaRetiro = DateTime::createFromFormat("Y-m-d\\TH:i", $retiro);
-        $fechaDevolucion = DateTime::createFromFormat("Y-m-d\\TH:i", $devolucion);
+        $fechaRetiro = Peticion::fecha($retiro);
+        $fechaDevolucion = Peticion::fecha($devolucion);
 
-        if ($fechaRetiro === false || $fechaDevolucion === false
-            || $fechaDevolucion <= $fechaRetiro
-            || $fechaRetiro->format("Y-m-d\\TH:i") !== $retiro
-            || $fechaDevolucion->format("Y-m-d\\TH:i") !== $devolucion) {
+        if ($fechaDevolucion <= $fechaRetiro) {
             RespuestaJson::error("Las fechas no son válidas", 422);
         }
 
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new PrestamoDAO($conexion);
 
         if (!$dao->existeTurno($turno)) {
             RespuestaJson::error("El turno no existe", 422);
+        }
+
+        if ($dao->tienePrestamoActivo($cedulaSolicitante)) {
+            RespuestaJson::error("La cédula ya posee un préstamo activo", 409);
         }
 
         $idPrestamo = "PRE" . strtoupper(substr(uniqid(), -5));
@@ -102,19 +93,22 @@ class PrestamoController
     /** @return void */
     private function devolucion(): void
     {
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
 
+        if (($datos['accion'] ?? '') === 'editar') {
+            throw new ErrorHttp('No se permite editar los datos de tickets o préstamos', 405);
+        }
         $idPrestamo = trim($datos["idPrestamo"] ?? "");
         $fechaEntrada = trim($datos["fechaDevolucion"] ?? "");
-        $fechaDevolucion = DateTime::createFromFormat("Y-m-d\\TH:i", $fechaEntrada);
+        Peticion::validarCamposObligatorios([$idPrestamo, $fechaEntrada]);
+        $fechaDevolucion = Peticion::fecha($fechaEntrada);
 
-        if (!preg_match("/^PRE[A-Z0-9]{5}$/", $idPrestamo) || $fechaDevolucion === false
-            || $fechaDevolucion->format("Y-m-d\\TH:i") !== $fechaEntrada) {
+        if (!preg_match("/^PRE[A-Z0-9]{5}$/", $idPrestamo)) {
             RespuestaJson::error("Los datos de la devolución no son válidos", 422);
         }
 
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new PrestamoDAO($conexion);
         $resultado = $dao->registrarDevolucion(
             $idPrestamo,
@@ -128,41 +122,5 @@ class PrestamoController
         RespuestaJson::exito(["mensaje" => "Devolución registrada exitosamente"]);
     }
 
-    /** @return array Datos JSON enviados por el cliente. */
-    private function recibirDatos(): array
-    {
-        $datos = json_decode(file_get_contents("php://input"), true);
-        if (!is_array($datos)) {
-            RespuestaJson::error("Los datos enviados no son válidos", 422);
-        }
-        foreach ($datos as $valor) {
-            if (!is_string($valor)) {
-                RespuestaJson::error("Los datos enviados no son válidos", 422);
-            }
-        }
-        return $datos;
-    }
 
-    /** @return void */
-    private function verificarCsrf(): void
-    {
-        $token = $_SERVER["HTTP_X_CSRF_TOKEN"] ?? "";
-        if (!isset($_SESSION["csrfToken"])
-            || !hash_equals($_SESSION["csrfToken"], $token)) {
-            RespuestaJson::error("Solicitud rechazada", 403);
-        }
-    }
-
-    /** @return PDO Conexión activa. */
-    private function conectar(): PDO
-    {
-        $conector = new ConectorPDO(
-            $_ENV["DB_HOST"],
-            $_ENV["DB_USUARIO"],
-            $_ENV["DB_CLAVE"],
-            $_ENV["DB_NOMBRE"]
-        );
-
-        return $conector->establecerConexion();
-    }
 }

@@ -2,6 +2,7 @@
 
 $codigoError = $_GET["error"] ?? "";
 $mensajesError = [
+    "campos_vacios" => "Existen campos vacios",
     "credenciales" => "La cédula o la contraseña son incorrectas.",
     "inactivo" => "El usuario se encuentra inactivo.",
     "sin_roles" => "El usuario no tiene roles habilitados.",
@@ -96,6 +97,7 @@ $error = $mensajesError[$codigoError] ?? "";
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/validacionCampos.js"></script>
 </body>
 
 </html>

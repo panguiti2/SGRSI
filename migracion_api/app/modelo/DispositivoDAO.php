@@ -124,7 +124,7 @@ class DispositivoDAO
                 "estado" => $estado ? 1 : 0
             ]);
         } catch (PDOException $error) {
-            return false;
+            ErrorSql::traducir($error, 'El dispositivo ya está registrado');
         }
     }
 
@@ -163,7 +163,7 @@ class DispositivoDAO
 
             return true;
         } catch (PDOException $error) {
-            return false;
+            ErrorSql::traducir($error, 'El dispositivo ya está registrado');
         }
     }
 
@@ -188,9 +188,10 @@ class DispositivoDAO
                 "numeroDispositivo" => $numeroDispositivo
             ]);
 
-            return $consulta->rowCount() === 1;
+            if ($consulta->rowCount() !== 1) throw new ErrorHttp('El dispositivo no existe', 404);
+            return true;
         } catch (PDOException $error) {
-            return false;
+            ErrorSql::traducir($error, 'El dispositivo ya está registrado');
         }
     }
 }

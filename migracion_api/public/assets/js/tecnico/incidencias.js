@@ -29,16 +29,10 @@ function configurarOperaciones() {
 }
 
 const cuerpoTabla = document.getElementById("cuerpoTabla");
-const API_DATOS = "../api/tickets.php?tipo=INCIDENCIA";
+const API_DATOS = "../index.php?ruta=tickets&tipo=INCIDENCIA";
 
 async function obtenerDatos() {
-    const respuesta = await fetch(API_DATOS);
-    if (!respuesta.ok) {
-        console.error("No se pudieron cargar los datos");
-        return [];
-    }
-    const contenido = await respuesta.json();
-    return contenido.datos;
+    return await obtenerDatosApi(API_DATOS);
 }
 
 function agregarFila(dato) {
@@ -121,6 +115,8 @@ function agregarFila(dato) {
     botonGestionarIncidencia.setAttribute("data-solucion", (dato.solucion ?? ""));
     campoOperaciones.appendChild(botonGestionarIncidencia);
     botonGestionarIncidencia.textContent = "Gestionar";
+    botonGestionarIncidencia.disabled = dato.estado === 'RESUELTO';
+    if (botonGestionarIncidencia.disabled) botonGestionarIncidencia.title = 'El ticket resuelto conserva su historial';
     fila.appendChild(campoOperaciones);
 
     cuerpoTabla.appendChild(fila);
@@ -145,7 +141,7 @@ async function actualizarTabla() {
         if (typeof configurarOperaciones === "function") configurarOperaciones();
     } catch (error) {
         console.error(error);
-        alert("No se pudieron cargar los datos. Compruebe la conexión con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 
@@ -153,20 +149,7 @@ actualizarTabla();
 
 async function modificarTicket(ticket) {
     if (!await formularioListo) return false;
-    const respuesta = await fetch(API_DATOS, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-Token": window.csrfToken
-        },
-        body: JSON.stringify(ticket)
-    });
-    if (!respuesta.ok) {
-        const contenido = await respuesta.json();
-        alert(contenido.mensaje);
-        return false;
-    }
-    return true;
+    return await enviarDatosApi(API_DATOS, "PUT", ticket);
 }
 
 async function gestionarTicket(eventoFormulario) {
@@ -185,7 +168,7 @@ async function gestionarTicket(eventoFormulario) {
         await actualizarTabla();
     } catch (error) {
         console.error(error);
-        alert("No se pudo comunicar con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 

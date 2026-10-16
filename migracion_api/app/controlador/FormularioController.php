@@ -10,14 +10,14 @@ class FormularioController
     /** Comprueba el método, la sesión y el rol antes de devolver las opciones. */
     public function gestionar(string $metodo): void
     {
-        if (!isset($_SESSION["cedula"])) {
-            RespuestaJson::error("Debe iniciar sesión", 401);
-        }
+        Sesion::verificarRoles(['administrador', 'tecnico', 'solicitante']);
+
         if ($metodo !== "GET") {
             RespuestaJson::error("Método no permitido", 405);
         }
-        $rol = $_GET["rol"] ?? "";
-        $seccion = $_GET["seccion"] ?? "";
+        $consulta = Peticion::recibirConsulta(['rol', 'seccion']);
+        $rol = $consulta['rol'];
+        $seccion = $consulta['seccion'];
         $paginas = [
             "administrador" => ["inicio", "usuarios", "inventario", "incidencias", "metricas"],
             "tecnico" => ["inicio", "inventario", "incidencias", "solicitudes", "prestamos", "registrosUso", "metricas"],
@@ -28,16 +28,12 @@ class FormularioController
             || !in_array($seccion, $paginas[$rol], true)) {
             RespuestaJson::error("No tiene autorización para acceder a este panel", 403);
         }
-        if (!isset($_SESSION["csrfToken"])) {
-            $_SESSION["csrfToken"] = bin2hex(random_bytes(32));
-        }
-        $datos = ["csrfToken" => $_SESSION["csrfToken"]];
+        $datos = ["csrfToken" => Token::generarTokenCSRF()];
         $tieneFormulario = ($rol === "solicitante" && $seccion !== "inicio")
             || ($rol === "administrador" && $seccion === "inventario")
             || ($rol === "tecnico" && in_array($seccion, ["incidencias", "solicitudes", "prestamos"], true));
         if ($tieneFormulario) {
-            $conector = new ConectorPDO($_ENV["DB_HOST"], $_ENV["DB_USUARIO"], $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]);
-            $dao = new FormularioDAO($conector->establecerConexion());
+            $dao = new FormularioDAO(Conexion::conectar());
             if ($rol === "solicitante" || $seccion === "inventario") {
                 $datos["laboratorios"] = $dao->listarLaboratorios();
             }

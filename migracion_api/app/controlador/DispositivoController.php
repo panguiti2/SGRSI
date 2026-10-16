@@ -14,14 +14,7 @@ class DispositivoController
      */
     public function gestionar(string $metodo): void
     {
-        if (!isset($_SESSION["cedula"])) {
-            RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
-        }
-        // El técnico puede consultar el inventario, pero no modificarlo.
-        $puedeConsultar = $metodo === "GET" && ($_SESSION["tecnico"] ?? false);
-        if (!($_SESSION["administrador"] ?? false) && !$puedeConsultar) {
-            RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
-        }
+        Sesion::verificarRoles($metodo === 'GET' ? ['administrador', 'tecnico'] : ['administrador']);
 
         match ($metodo) {
             "GET" => $this->listar(),
@@ -35,22 +28,19 @@ class DispositivoController
     /** @return void */
     private function listar(): void
     {
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new DispositivoDAO($conexion);
         if (isset($_GET["idLaboratorio"]) || isset($_GET["numeroDispositivo"])) {
-            if (!is_string($_GET["idLaboratorio"] ?? "") || !is_string($_GET["numeroDispositivo"] ?? "")) {
-                RespuestaJson::error("Falta identificar el dispositivo", 422);
-            }
-            $idLaboratorio = trim($_GET["idLaboratorio"] ?? "");
-            $numeroDispositivo = trim($_GET["numeroDispositivo"] ?? "");
-            if ($idLaboratorio === "" || $numeroDispositivo === "") {
-                RespuestaJson::error("Falta identificar el dispositivo", 422);
-            }
+            $datos = Peticion::recibirConsulta(['idLaboratorio', 'numeroDispositivo']);
+            $idLaboratorio = $datos['idLaboratorio'];
+            $numeroDispositivo = $datos['numeroDispositivo'];
+            Peticion::validarLongitudes($datos, ['idLaboratorio' => 8, 'numeroDispositivo' => 8]);
             $dispositivo = $dao->listarDispositivo($idLaboratorio, $numeroDispositivo);
             if ($dispositivo === null) {
                 RespuestaJson::error("El dispositivo no existe", 404);
             }
             RespuestaJson::exito($dispositivo);
+            return;
         }
         RespuestaJson::exito($dao->listarDispositivos());
     }
@@ -58,26 +48,25 @@ class DispositivoController
     /** @return void */
     private function alta(): void
     {
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
 
         $idLaboratorio = trim($datos["idLaboratorio"] ?? "");
         $numeroDispositivo = trim($datos["numeroDispositivo"] ?? "");
         $estado = $datos["estado"] ?? "";
         $ultimoCambioEntrada = trim($datos["ultimoCambio"] ?? "");
 
+        Peticion::validarCamposObligatorios([$idLaboratorio, $numeroDispositivo, $estado, $ultimoCambioEntrada]);
+        Peticion::validarLongitudes(['idLaboratorio' => $idLaboratorio, 'numeroDispositivo' => $numeroDispositivo], ['idLaboratorio' => 8, 'numeroDispositivo' => 8]);
         if ($idLaboratorio === "" || $numeroDispositivo === ""
             || !in_array($estado, ["0", "1"], true)
             || $ultimoCambioEntrada === "") {
             RespuestaJson::error("Los datos del dispositivo no son válidos", 422);
         }
 
-        $ultimoCambio = DateTime::createFromFormat("Y-m-d\\TH:i", $ultimoCambioEntrada);
-        if ($ultimoCambio === false || $ultimoCambio->format("Y-m-d\\TH:i") !== $ultimoCambioEntrada) {
-            RespuestaJson::error("La fecha no es válida", 422);
-        }
+        $ultimoCambio = Peticion::fecha($ultimoCambioEntrada);
 
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new DispositivoDAO($conexion);
 
         if (!$dao->existeLaboratorio($idLaboratorio)) {
@@ -101,24 +90,25 @@ class DispositivoController
     /** @return void */
     private function modificar(): void
     {
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
 
         $idLaboratorio = trim($datos["idLaboratorio"] ?? "");
         $numeroDispositivo = trim($datos["numeroDispositivo"] ?? "");
         $modificaciones = trim($datos["modificaciones"] ?? "");
         $estado = $datos["estado"] ?? "";
         $ultimoCambioEntrada = trim($datos["ultimoCambio"] ?? "");
-        $ultimoCambio = DateTime::createFromFormat("Y-m-d\\TH:i", $ultimoCambioEntrada);
+        Peticion::validarCamposObligatorios([$idLaboratorio, $numeroDispositivo, $modificaciones, $estado, $ultimoCambioEntrada]);
+        Peticion::validarLongitudes($datos, ['idLaboratorio' => 8, 'numeroDispositivo' => 8, 'modificaciones' => 255]);
+        $ultimoCambio = Peticion::fecha($ultimoCambioEntrada);
 
         if ($idLaboratorio === "" || $numeroDispositivo === ""
-            || $modificaciones === "" || $ultimoCambio === false
-            || $ultimoCambio->format("Y-m-d\\TH:i") !== $ultimoCambioEntrada
+            || $modificaciones === ""
             || !in_array($estado, ["0", "1"], true)) {
             RespuestaJson::error("Los datos del dispositivo no son válidos", 422);
         }
 
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new DispositivoDAO($conexion);
 
         if (!$dao->existeModificacion($modificaciones)) {
@@ -146,17 +136,16 @@ class DispositivoController
     /** @return void */
     private function baja(): void
     {
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
 
         $idLaboratorio = trim($datos["idLaboratorio"] ?? "");
         $numeroDispositivo = trim($datos["numeroDispositivo"] ?? "");
 
-        if ($idLaboratorio === "" || $numeroDispositivo === "") {
-            RespuestaJson::error("Falta identificar el dispositivo", 422);
-        }
+        Peticion::validarCamposObligatorios([$idLaboratorio, $numeroDispositivo]);
+        Peticion::validarLongitudes($datos, ['idLaboratorio' => 8, 'numeroDispositivo' => 8]);
 
-        $conexion = $this->conectar();
+        $conexion = Conexion::conectar();
         $dao = new DispositivoDAO($conexion);
         $resultado = $dao->eliminarDispositivo($idLaboratorio, $numeroDispositivo);
 
@@ -167,41 +156,4 @@ class DispositivoController
         RespuestaJson::exito(["mensaje" => "Dispositivo eliminado exitosamente"]);
     }
 
-    /** @return array Datos JSON enviados por el cliente. */
-    private function recibirDatos(): array
-    {
-        $datos = json_decode(file_get_contents("php://input"), true);
-        if (!is_array($datos)) {
-            RespuestaJson::error("Los datos enviados no son válidos", 422);
-        }
-        foreach ($datos as $valor) {
-            if (!is_string($valor)) {
-                RespuestaJson::error("Los datos enviados no son válidos", 422);
-            }
-        }
-        return $datos;
-    }
-
-    /** @return void */
-    private function verificarCsrf(): void
-    {
-        $token = $_SERVER["HTTP_X_CSRF_TOKEN"] ?? "";
-        if (!isset($_SESSION["csrfToken"])
-            || !hash_equals($_SESSION["csrfToken"], $token)) {
-            RespuestaJson::error("Solicitud rechazada", 403);
-        }
-    }
-
-    /** @return PDO Conexión activa. */
-    private function conectar(): PDO
-    {
-        $conector = new ConectorPDO(
-            $_ENV["DB_HOST"],
-            $_ENV["DB_USUARIO"],
-            $_ENV["DB_CLAVE"],
-            $_ENV["DB_NOMBRE"]
-        );
-
-        return $conector->establecerConexion();
-    }
 }

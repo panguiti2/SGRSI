@@ -14,6 +14,10 @@ $datos = [
     "cedulaTecnico" => $_SESSION["cedula"]
 ];
 
+validarCamposObligatorios([$datos["idIncidencia"], $datos["estado"]], "incidencias.php");
+if ($datos["estado"] === "RESUELTO") {
+    validarCamposObligatorios([$datos["diagnostico"], $datos["solucion"]], "incidencias.php");
+}
 if (!preg_match("/^INC[A-Z0-9]{5}$/", $datos["idIncidencia"])
     || ($datos["estado"] === "RESUELTO"
         && ($datos["diagnostico"] === "" || $datos["solucion"] === ""))) {

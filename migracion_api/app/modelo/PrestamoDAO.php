@@ -50,6 +50,19 @@ class PrestamoDAO
         return $consulta->fetchColumn() !== false;
     }
 
+    /** Comprueba si la cédula ya tiene un préstamo pendiente de devolución. */
+    public function tienePrestamoActivo(string $cedulaSolicitante): bool
+    {
+        $consulta = $this->conexion->prepare(
+            "SELECT 1 FROM PRESTAMO
+            WHERE cedulaSolicitante = :cedulaSolicitante AND estado = 'ACTIVO'
+            LIMIT 1"
+        );
+        $consulta->execute(["cedulaSolicitante" => $cedulaSolicitante]);
+
+        return $consulta->fetchColumn() !== false;
+    }
+
     /**
      * Registra un préstamo activo.
      * @param string $idPrestamo Identificador del préstamo.
@@ -70,7 +83,17 @@ class PrestamoDAO
         string $fechaRetiro,
         string $fechaDevolucion
     ): bool {
+        $bloqueo = 'SGRSI_PRESTAMO_' . $cedulaSolicitante;
+        $consultaBloqueo = $this->conexion->prepare('SELECT GET_LOCK(:nombre, 5)');
+        $consultaBloqueo->execute(['nombre' => $bloqueo]);
+        if ((int) $consultaBloqueo->fetchColumn() !== 1) {
+            throw new ErrorHttp('La operación está en curso. Intente nuevamente', 409);
+        }
         try {
+            // El control se repite dentro del bloqueo para altas simultáneas.
+            if ($this->tienePrestamoActivo($cedulaSolicitante)) {
+                throw new ErrorHttp('La cédula ya posee un préstamo activo', 409);
+            }
             $consulta = $this->conexion->prepare(
                 "INSERT INTO PRESTAMO (
                     idPrestamo, cedulaSolicitante, turno,
@@ -93,12 +116,16 @@ class PrestamoDAO
                 "fechaDevolucion" => $fechaDevolucion
             ]);
         } catch (PDOException $error) {
-            return false;
+            ErrorSql::traducir($error, 'El identificador del préstamo ya existe. Intente nuevamente');
+        } finally {
+            $liberar = $this->conexion->prepare('SELECT RELEASE_LOCK(:nombre)');
+            $liberar->execute(['nombre' => $bloqueo]);
         }
     }
 
     /**
      * Registra la devolución real y cierra el préstamo.
+     * Los registros cerrados quedan conservados como historial.
      * @param string $idPrestamo Identificador del préstamo.
      * @param string $fechaDevolucionReal Fecha y hora real de devolución.
      * @return bool True si se cerró un préstamo activo.
@@ -108,6 +135,13 @@ class PrestamoDAO
         string $fechaDevolucionReal
     ): bool {
         try {
+            $this->conexion->beginTransaction();
+            $original = $this->conexion->prepare('SELECT estado, fechaRetiro FROM PRESTAMO WHERE idPrestamo = :id FOR UPDATE');
+            $original->execute(['id' => $idPrestamo]);
+            $prestamo = $original->fetch(PDO::FETCH_ASSOC);
+            if (!$prestamo) throw new ErrorHttp('El préstamo no existe', 404);
+            if (strtoupper($prestamo['estado']) !== 'ACTIVO') throw new ErrorHttp('El préstamo ya está cerrado', 409);
+            if ($fechaDevolucionReal < $prestamo['fechaRetiro']) throw new ErrorHttp('La devolución no puede ser anterior al retiro');
             $consulta = $this->conexion->prepare(
                 "UPDATE PRESTAMO
                 SET fechaDevolucionReal = :fechaDevolucionReal,
@@ -122,9 +156,12 @@ class PrestamoDAO
                 "fechaVerificar" => $fechaDevolucionReal
             ]);
 
-            return $consulta->rowCount() === 1;
-        } catch (PDOException $error) {
-            return false;
+            return $this->conexion->commit();
+        } catch (Throwable $error) {
+            if ($this->conexion->inTransaction()) $this->conexion->rollBack();
+            if ($error instanceof PDOException) ErrorSql::traducir($error, 'El identificador del préstamo ya existe. Intente nuevamente');
+            throw $error;
         }
     }
+
 }

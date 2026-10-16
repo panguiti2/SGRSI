@@ -1,14 +1,8 @@
 const cuerpoTabla = document.getElementById("cuerpoTabla");
-const API_DATOS = "../api/tickets.php?tipo=INCIDENCIA";
+const API_DATOS = "../index.php?ruta=tickets&tipo=INCIDENCIA";
 
 async function obtenerDatos() {
-    const respuesta = await fetch(API_DATOS);
-    if (!respuesta.ok) {
-        console.error("No se pudieron cargar los datos");
-        return [];
-    }
-    const contenido = await respuesta.json();
-    return contenido.datos;
+    return await obtenerDatosApi(API_DATOS);
 }
 
 function agregarFila(dato) {
@@ -107,7 +101,7 @@ async function actualizarTabla() {
         if (typeof configurarOperaciones === "function") configurarOperaciones();
     } catch (error) {
         console.error(error);
-        alert("No se pudieron cargar los datos. Compruebe la conexión con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 

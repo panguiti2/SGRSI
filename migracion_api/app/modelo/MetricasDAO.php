@@ -28,6 +28,16 @@ class MetricasDAO
         );
 
         $metricas = $consulta->fetch(PDO::FETCH_ASSOC);
-        return $metricas === false ? [] : $metricas;
+        $metricas = $metricas === false ? [] : $metricas;
+        $consultaLaboratorios = $this->conexion->query(
+            "SELECT l.idLaboratorio, l.nombre,
+                (SELECT COUNT(*) FROM DISPOSITIVO d WHERE d.idLaboratorio = l.idLaboratorio AND d.estado = TRUE) AS dispositivosActivos,
+                (SELECT COUNT(*) FROM TICKET t INNER JOIN INCIDENCIA i ON i.id = t.id WHERE t.idLaboratorio = l.idLaboratorio AND t.estado <> 'RESUELTO') AS incidenciasAbiertas,
+                (SELECT COUNT(*) FROM TICKET t INNER JOIN SERVICIO s ON s.idServicio = t.id WHERE t.idLaboratorio = l.idLaboratorio AND t.estado <> 'RESUELTO') AS solicitudesAbiertas,
+                (SELECT COUNT(*) FROM REGISTRO_USO r WHERE r.idLaboratorio = l.idLaboratorio) AS registrosUso
+            FROM LABORATORIO l ORDER BY l.idLaboratorio"
+        );
+        $metricas['porLaboratorio'] = $consultaLaboratorios->fetchAll(PDO::FETCH_ASSOC);
+        return $metricas;
     }
 }

@@ -8,6 +8,7 @@ require_once RUTA_MODELO . "/AccesoDatosCatalogo.php";
 
 $idSolicitud = trim($_POST["idSolicitud"] ?? "");
 $estado = trim($_POST["estado"] ?? "");
+validarCamposObligatorios([$idSolicitud, $estado], "solicitudes.php");
 if (!preg_match("/^SOL[A-Z0-9]{5}$/", $idSolicitud)) {
     header("Location: solicitudes.php?error=datos_incorrectos");
     exit;

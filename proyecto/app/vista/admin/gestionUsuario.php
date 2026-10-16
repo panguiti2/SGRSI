@@ -5,7 +5,8 @@ $mensajesError = [
     "credenciales" => "La cédula o la contraseña son incorrectas.",
     "peticion" => "La petición de ingreso no es válida.",
     "contraseña" => "Las contraseñas ingresadas no coinciden.",
-    "campos_vacios" => "No se pudo registrar el empleado: existen campos vacíos.",
+    "campos_vacios" => "Existen campos vacios",
+    "cedula_duplicada" => "La cédula ya está registrada",
     "cedula_incorrecta" => "No se pudo registrar el empleado: cédula incorrecta.",
     "datos_incorrectos" => "Los datos del usuario no son válidos.",
     "contraseña_corta" => "La contraseña debe contener al menos 12 caracteres.",
@@ -230,6 +231,7 @@ if (($_GET["exito"] ?? "") === "estado_usuario") {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/administrador.js"></script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 
 </html>

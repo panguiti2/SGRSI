@@ -10,14 +10,8 @@ class TicketController
     /** Selecciona la operación según el método HTTP. */
     public function gestionar(string $metodo): void
     {
-        if (!isset($_SESSION["cedula"])) {
-            RespuestaJson::error("Acceso denegado: sesión no iniciada", 401);
-        }
-        if (!($_SESSION["administrador"] ?? false)
-            && !($_SESSION["tecnico"] ?? false)
-            && !($_SESSION["solicitante"] ?? false)) {
-            RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
-        }
+        Sesion::verificarRoles(["administrador", "tecnico", "solicitante"]);
+
 
         match ($metodo) {
             "GET" => $this->listar(),
@@ -37,18 +31,16 @@ class TicketController
         $cedula = ($_SESSION["solicitante"] ?? false)
             ? $_SESSION["cedula"]
             : null;
-        $dao = new TicketDAO($this->conectar());
+        $dao = new TicketDAO(Conexion::conectar());
         RespuestaJson::exito($dao->listarTickets($cedula, $tipo));
     }
 
     /** Registra una solicitud o incidencia. */
     private function alta(): void
     {
-        if (!($_SESSION["solicitante"] ?? false)) {
-            RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
-        }
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Sesion::verificarRoles(["solicitante"]);
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
         $tipo = strtoupper(trim($datos["tipo"] ?? ""));
 
         $comunes = [
@@ -61,12 +53,15 @@ class TicketController
             "descripcion" => trim($datos["descripcion"] ?? "")
         ];
 
-        if (!in_array($tipo, ["SOLICITUD", "INCIDENCIA"], true)
-            || in_array("", $comunes, true)) {
+        Peticion::validarCamposObligatorios([$tipo, ...array_values($comunes)]);
+        Peticion::validarLongitudes($comunes, ['nombreDocente' => 100, 'grupo' => 50, 'asignatura' => 100, 'descripcion' => 500]);
+        Peticion::validarLongitudes($datos, ['nombreAlumno' => 100]);
+
+        if (!in_array($tipo, ["SOLICITUD", "INCIDENCIA"], true)) {
             RespuestaJson::error("Los datos del ticket no son válidos", 422);
         }
 
-        $dao = new TicketDAO($this->conectar());
+        $dao = new TicketDAO(Conexion::conectar());
         if (!$dao->existenDatosComunes(
             $comunes["turno"],
             $comunes["idLaboratorio"],
@@ -85,19 +80,21 @@ class TicketController
         if ($tipo === "SOLICITUD") {
             $ticket["tipoServicio"] = trim($datos["tipoServicio"] ?? "");
             $ticket["fechaEsperada"] = trim($datos["fechaEsperada"] ?? "");
+            Peticion::validarCamposObligatorios([$ticket["tipoServicio"], $ticket["fechaEsperada"]]);
             if ($ticket["tipoServicio"] === "" || $ticket["fechaEsperada"] === ""
                 || !$dao->existeTipoServicio($ticket["tipoServicio"])) {
                 RespuestaJson::error("Los datos del servicio no son válidos", 422);
             }
-            $fechaEsperada = DateTime::createFromFormat("Y-m-d\\TH:i", $ticket["fechaEsperada"]);
-            if ($fechaEsperada === false || $fechaEsperada->format("Y-m-d\\TH:i") !== $ticket["fechaEsperada"]) {
-                RespuestaJson::error("La fecha esperada no es válida", 422);
-            }
+            $fechaEsperada = Peticion::fecha($ticket["fechaEsperada"]);
             $ticket["fechaEsperada"] = $fechaEsperada->format("Y-m-d H:i:s");
             $resultado = $dao->registrarSolicitud($ticket);
         } else {
             $reportoAlumno = $datos["reportoAlumno"] ?? "";
             $nombreAlumno = trim($datos["nombreAlumno"] ?? "");
+            Peticion::validarCamposObligatorios([$reportoAlumno]);
+            if ($reportoAlumno === "SI") {
+                Peticion::validarCamposObligatorios([$nombreAlumno]);
+            }
             if (!in_array($reportoAlumno, ["SI", "NO"], true)
                 || ($reportoAlumno === "SI" && $nombreAlumno === "")) {
                 RespuestaJson::error("Los datos de la incidencia no son válidos", 422);
@@ -119,15 +116,17 @@ class TicketController
     /** Gestiona una solicitud o incidencia. */
     private function modificar(): void
     {
-        if (!($_SESSION["tecnico"] ?? false)) {
-            RespuestaJson::error("Acceso denegado: rol incorrecto", 403);
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
+        if (($datos['accion'] ?? '') === 'editar') {
+            throw new ErrorHttp('No se permite editar los datos de tickets o préstamos', 405);
         }
-        $this->verificarCsrf();
-        $datos = $this->recibirDatos();
+        Sesion::verificarRoles(["tecnico"]);
         $id = trim($datos["id"] ?? "");
         $tipo = strtoupper(trim($datos["tipo"] ?? ""));
-        $estado = trim($datos["estado"] ?? "");
-        $dao = new TicketDAO($this->conectar());
+        $estado = strtoupper(trim($datos["estado"] ?? ""));
+        Peticion::validarCamposObligatorios([$id, $tipo, $estado]);
+        $dao = new TicketDAO(Conexion::conectar());
 
         if (!preg_match("/^(SOL|INC)[A-Z0-9]{5}$/", $id)
             || !in_array($tipo, ["SOLICITUD", "INCIDENCIA"], true)
@@ -143,8 +142,9 @@ class TicketController
         } else {
             $diagnostico = trim($datos["diagnostico"] ?? "");
             $solucion = trim($datos["solucion"] ?? "");
-            if ($estado === "RESUELTO" && ($diagnostico === "" || $solucion === "")) {
-                RespuestaJson::error("Debe ingresar diagnóstico y solución", 422);
+            Peticion::validarLongitudes(['diagnostico' => $diagnostico, 'solucion' => $solucion], ['diagnostico' => 500, 'solucion' => 500]);
+            if ($estado === "RESUELTO") {
+                Peticion::validarCamposObligatorios([$diagnostico, $solucion]);
             }
             $resultado = $dao->gestionarIncidencia([
                 "id" => $id,
@@ -161,37 +161,4 @@ class TicketController
         RespuestaJson::exito(["mensaje" => "Ticket gestionado exitosamente"]);
     }
 
-    /** Lee y comprueba el cuerpo JSON enviado por el formulario. */
-    private function recibirDatos(): array
-    {
-        $datos = json_decode(file_get_contents("php://input"), true);
-        if (!is_array($datos)) {
-            RespuestaJson::error("Los datos enviados no son válidos", 422);
-        }
-        foreach ($datos as $valor) {
-            if (!is_string($valor)) {
-                RespuestaJson::error("Los datos enviados no son válidos", 422);
-            }
-        }
-        return $datos;
-    }
-
-    /** Compara el token recibido con el token de la sesión. */
-    private function verificarCsrf(): void
-    {
-        $token = $_SERVER["HTTP_X_CSRF_TOKEN"] ?? "";
-        if (!isset($_SESSION["csrfToken"])
-            || !hash_equals($_SESSION["csrfToken"], $token)) {
-            RespuestaJson::error("Solicitud rechazada", 403);
-        }
-    }
-
-    /** Establece la conexión utilizando la configuración del sistema. */
-    private function conectar(): PDO
-    {
-        return (new ConectorPDO(
-            $_ENV["DB_HOST"], $_ENV["DB_USUARIO"],
-            $_ENV["DB_CLAVE"], $_ENV["DB_NOMBRE"]
-        ))->establecerConexion();
-    }
 }

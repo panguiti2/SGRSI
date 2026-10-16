@@ -7,8 +7,8 @@
     <title>Solicitudes</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../../proyecto/public/assets/css/global.css">
-    <link rel="stylesheet" href="../../../proyecto/public/assets/css/formularios.css">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/formularios.css">
 
 </head>
 
@@ -16,7 +16,7 @@
 
     <header class="navbar navbar-expand-md navbar-dark sgrsi-navbar sticky-top">
         <section class="container-fluid">
-            <a class="navbar-brand fw-bold" href="inicio.php"><img src="../../../proyecto/public/assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
+            <a class="navbar-brand fw-bold" href="inicio.html"><img src="../assets/img/logoITI.png" alt="Logo ITI" class="sgrsi-navbar-logo">SGRSI</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
                 aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
@@ -26,19 +26,19 @@
             <nav class="collapse navbar-collapse" id="menuPrincipal">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="inicio.php">Inicio</a>
+                        <a class="nav-link" href="inicio.html">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="solicitudes.php">Solicitudes</a>
+                        <a class="nav-link active" href="solicitudes.html">Solicitudes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="incidencias.php">Incidencias</a>
+                        <a class="nav-link" href="incidencias.html">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="registroUso.php">Registro de uso</a>
+                        <a class="nav-link" href="registroUso.html">Registro de uso</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../cerrarSesion.php">Cerrar Sesión</a>
+                        <a class="nav-link" href="#" data-cerrar-sesion>Cerrar Sesión</a>
                     </li>
                 </ul>
             </nav>
@@ -51,7 +51,7 @@
         <section class="seccionFormulario bg-white rounded p-3 p-md-4 mb-4">
             <h1 class="h3 mb-4">Solicitar servicio</h1>
 
-            <form action="#" method="post" id="formularioSolicitud">
+            <form method="post" id="formularioSolicitud">
                 <input type="hidden" name="csrfToken" value="">
                 <fieldset>
                     <legend class="visually-hidden">Datos de la solicitud</legend>
@@ -68,18 +68,18 @@
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="nombreDocente" class="form-label">Docente</label>
                             <input type="text" id="nombreDocente" name="nombreDocente" class="form-control" required
-                                placeholder="Ingrese su nombre">
+                                placeholder="Ingrese su nombre" maxlength="100">
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="asignatura" class="form-label">Asignatura</label>
                             <input type="text" id="asignatura" name="asignatura" class="form-control"
-                                placeholder="Nombre de la asignatura" required>
+                                placeholder="Nombre de la asignatura" required maxlength="100">
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
                             <label for="grupo" class="form-label">Grupo</label>
-                            <input type="text" id="grupo" name="grupo" class="form-control" placeholder="Ej.: 3° BD" required>
+                            <input type="text" id="grupo" name="grupo" class="form-control" placeholder="Ej.: 3° BD" required maxlength="50">
                         </div>
 
                         <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -113,7 +113,7 @@
                         <div class="col-12 cajaTextarea">
                             <label for="descripcion" class="form-label">Descripción / uso en clase</label>
                             <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required
-                                placeholder="Describa su solicitud.."></textarea>
+                                placeholder="Describa su solicitud.." maxlength="500"></textarea>
                         </div>
 
                         <div class="col-12">
@@ -147,11 +147,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/navegacion.js"></script>
     <script src="../assets/js/formulario.js"></script>
 
     <script src="../assets/js/usuario.js"></script>
 
     <script src="../assets/js/solicitante/solicitudes.js"></script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 
 </html>

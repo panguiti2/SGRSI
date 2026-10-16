@@ -22,6 +22,7 @@ $camposObligatorios = [
     $grupo, $asignatura, $usoMaquinas, $huboIncidencias
 ];
 
+validarCamposObligatorios($camposObligatorios, "registroUso.php");
 if ($fechaHora === false
     || in_array("", $camposObligatorios, true)
     || !in_array($usoMaquinas, ["SI", "NO"], true)

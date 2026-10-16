@@ -112,5 +112,6 @@ $mensajeExito = ($_GET["exito"] ?? "") === "registro"
     </main>
     <footer class="sgrsi-footer text-light mt-auto py-3 py-md-4"><p class="text-center mb-0">© 2026 SGRSI</p></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/validacionCampos.js"></script>
 </body>
 </html>

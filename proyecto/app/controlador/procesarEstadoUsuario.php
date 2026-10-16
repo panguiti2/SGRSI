@@ -7,6 +7,7 @@ require_once RUTA_MODELO . "/ModificarEstadoUsuario.php";
 
 $cedula = trim($_POST["cedula"] ?? "");
 $estado = $_POST["estado"] ?? "";
+validarCamposObligatorios([$cedula, $estado], "usuarios.php");
 
 if (!preg_match("/^[1-9][0-9]{7}$/", $cedula) || !in_array($estado, ["0", "1"], true)) {
     header("Location: usuarios.php?error=datos_incorrectos");

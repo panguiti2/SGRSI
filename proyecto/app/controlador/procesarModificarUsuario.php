@@ -12,6 +12,7 @@ $rol = trim($_POST["rol"] ?? "");
 $contrasena = $_POST["contrasena"] ?? "";
 $confirmarContrasena = $_POST["confirmarContrasena"] ?? "";
 
+validarCamposObligatorios([$cedula, $nombre, $apellido, $rol, $contrasena, $confirmarContrasena], "usuarios.php");
 if ($cedula === "" || $nombre === "" || $apellido === "" || $rol === "" || $contrasena === "" || $confirmarContrasena === "") {
     header("Location: usuarios.php?error=campos_vacios");
     exit;

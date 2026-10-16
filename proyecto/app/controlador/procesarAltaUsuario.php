@@ -12,6 +12,7 @@ $apellido = trim($_POST["apellido"] ?? "");
 $contrasena = $_POST["contrasena"] ?? "";
 $confirmarContrasena = $_POST["confirmarContrasena"] ?? "";
 $rol = trim($_POST["rol"] ?? "");
+validarCamposObligatorios([$cedula, $nombre, $apellido, $contrasena, $confirmarContrasena, $rol], "usuarios.php");
 
 if ($cedula === "" || $nombre === "" || $apellido === "" || $contrasena === "" || $confirmarContrasena === "" || $rol === "" ) {
     header("Location: usuarios.php?error=campos_vacios");
@@ -53,6 +54,14 @@ if ($conexion === null) {
 }
 
 $altaDatosUsuario = new AltaDatosUsuario($conexion);
+
+$consultaUsuario = $conexion->prepare("SELECT 1 FROM USUARIO WHERE cedula = :cedula");
+$consultaUsuario->execute(["cedula" => $cedula]);
+if ($consultaUsuario->fetchColumn() !== false) {
+    $conectorPDO->desconectar();
+    header("Location: usuarios.php?error=cedula_duplicada");
+    exit;
+}
 
 $resultado = $altaDatosUsuario->registrarUsuario($cedula, $nombre, $apellido, $claveHash, $rol);
 

@@ -1,12 +1,8 @@
-const API_METRICAS = "../api/metricas.php";
+const API_METRICAS = "../index.php?ruta=metricas";
 
 async function obtenerMetricas() {
-    const respuesta = await fetch(API_METRICAS);
+    const respuesta = await peticionApi(API_METRICAS);
 
-    if (!respuesta.ok) {
-        console.error("No se pudieron obtener las métricas");
-        return null;
-    }
 
     const contenido = await respuesta.json();
 
@@ -31,9 +27,22 @@ async function actualizarMetricas() {
         document.getElementById("prestamosPendientes").textContent = metricas.prestamosPendientes;
         document.getElementById("dispositivosActivos").textContent = metricas.dispositivosActivos;
         document.getElementById("registrosUso").textContent = metricas.registrosUso;
+        const tabla = document.getElementById("metricasLaboratorios");
+        if (tabla) {
+            tabla.replaceChildren();
+            for (const laboratorio of metricas.porLaboratorio) {
+                const fila = document.createElement("tr");
+                for (const campo of ["nombre", "dispositivosActivos", "incidenciasAbiertas", "solicitudesAbiertas", "registrosUso"]) {
+                    const celda = document.createElement("td");
+                    celda.textContent = laboratorio[campo];
+                    fila.appendChild(celda);
+                }
+                tabla.appendChild(fila);
+            }
+        }
     } catch (error) {
         console.error(error);
-        alert("No se pudieron cargar los datos. Compruebe la conexión con el servidor.");
+        mostrarErrorApi(error);
     }
 }
 

@@ -66,7 +66,7 @@ class RegistroUsoDAO
             );
             return $consulta->execute($registro);
         } catch (PDOException $error) {
-            return false;
+            ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
         }
     }
 }

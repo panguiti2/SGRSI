@@ -1,45 +1,35 @@
-/**
- * Controla el acceso simulado al sistema según el primer dígito de la cédula.
- * @file
- */
-
-/**
- * Formulario de ingreso al sistema.
- * @type {HTMLFormElement|null}
- */
-
 const formularioLogin = document.getElementById("formLogin");
-
-/**
- * Campo donde se ingresa la cédula.
- * @type {HTMLInputElement|null}
- */
-
-const entradaCedula = document.getElementById("cedula");
-
-/**
- * Procesa el ingreso y redirige a la pantalla correspondiente al rol.
- * @param {SubmitEvent} evento Evento de envío del formulario.
- * @returns {void}
- */
-
-formularioLogin.addEventListener("submit", function (evento) {
+const mensajeLogin = document.getElementById("mensajeLogin");
+const mensajesLogin = {
+    sin_sesion: "Debe iniciar sesión para acceder a esa página.",
+    no_autorizado: "No tiene autorización para acceder a ese panel."
+};
+const errorLogin = new URLSearchParams(window.location.search).get("error");
+if (mensajesLogin[errorLogin]) {
+    mensajeLogin.textContent = mensajesLogin[errorLogin];
+    mensajeLogin.hidden = false;
+}
+formularioLogin.addEventListener("submit", async (evento) => {
     evento.preventDefault();
-
-    const cedula = entradaCedula.value.trim();
-    const primerDigito = cedula.charAt(0);
-
-    switch (primerDigito) {
-        case "1":
-            window.location.href = "pages/admin/admin.html";
-            break;
-
-        case "2":
-            window.location.href = "pages/tecnico/tecnico.html";
-            break;
-
-        case "3":
-            window.location.href = "pages/user/user.html";
-            break;
+    const boton = formularioLogin.querySelector('button[type="submit"]');
+    boton.disabled = true;
+    try {
+        const respuesta = await peticionApi("index.php?ruta=login", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                cedula: document.getElementById("cedula").value.trim(),
+                clave: document.getElementById("clave").value
+            })
+        });
+        const { datos } = await respuesta.json();
+        if (!datos.csrfToken || !datos.roles.length) throw new Error("La API no devolvió una sesión válida.");
+        sessionStorage.setItem("csrfToken", datos.csrfToken);
+        const carpetas = { administrador: "admin", tecnico: "tecnico", solicitante: "solicitante" };
+        window.location.replace(carpetas[datos.roles[0]] + "/inicio.html");
+    } catch (error) {
+        mensajeLogin.textContent = error.message;
+        mensajeLogin.hidden = false;
+    } finally {
+        boton.disabled = false;
     }
 });

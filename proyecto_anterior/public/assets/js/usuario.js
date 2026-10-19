@@ -1,4 +1,8 @@
-
+/**
+ * Actualiza el selector de dispositivos de los formularios del solicitante.
+ * La colección llega desde PHP en window.dispositivosFormulario.
+ * @file
+ */
 
 const selectorLaboratorio = document.getElementById("idLaboratorio");
 const selectorDispositivo = document.getElementById("numeroDispositivo");

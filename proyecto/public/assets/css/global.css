@@ -60,6 +60,21 @@ h6 {
   gap: 0.5rem;
 }
 
+.sgrsi-navbar .navbar-collapse {
+  min-width: 0;
+}
+
+.sgrsi-navbar .navbar-nav {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 100%;
+}
+
+main .sgrsi-section > .d-flex {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .sgrsi-navbar-logo {
   display: none;
   width: 2rem;
@@ -266,6 +281,10 @@ footer.sgrsi-footer {
 
 
 @media (min-width: 768px) {
+  .sgrsi-navbar .navbar-collapse {
+    flex: 1 1 0%;
+  }
+
   body.sgrsi-app {
     font-size: 1rem;
   }

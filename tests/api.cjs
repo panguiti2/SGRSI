@@ -3,7 +3,7 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const entorno = {console: {error() {}}, document: {body:{dataset:{}}}, window:{location:{replace(){}}}, fetch: null};
 vm.createContext(entorno);
-vm.runInContext(fs.readFileSync('migracion_api/public/assets/js/api.js', 'utf8'), entorno);
+vm.runInContext(fs.readFileSync('proyecto/public/assets/js/api.js', 'utf8'), entorno);
 (async () => {
     for (const [cuerpo, estado, mensaje] of [['',200,'sin cuerpo'],['<html>',500,'no devolvió JSON'],['{"mensaje":"Conflicto"}',409,'Conflicto'],['{}',200,'datos esperados']]) {
         entorno.fetch = async () => new Response(cuerpo,{status:estado});

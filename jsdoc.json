@@ -1,6 +1,6 @@
 {
     "source": {
-        "include": ["assets/js"],
+        "include": ["proyecto/public/assets/js"],
         "includePattern": ".+\\.js$"
     },
     "opts": {

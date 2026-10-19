@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../migracion_api/app/modelo/PrestamoDAO.php';
+require_once __DIR__ . '/../proyecto/app/modelo/PrestamoDAO.php';
 
 // Dobles de PDO: esta prueba no se conecta ni modifica bases de datos.
 class ConsultaPrestamoPrueba extends PDOStatement

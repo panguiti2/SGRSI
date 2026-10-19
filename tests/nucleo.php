@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../migracion_api/config/config.php';
+require_once __DIR__ . '/../proyecto/config/config.php';
 $total = 0;
 function comprobar(bool $condicion): void {
     global $total;

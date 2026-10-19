@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../migracion_api/app/nucleo/ErrorHttp.php';
-require_once __DIR__ . '/../migracion_api/app/nucleo/Peticion.php';
+require_once __DIR__ . '/../proyecto/app/nucleo/ErrorHttp.php';
+require_once __DIR__ . '/../proyecto/app/nucleo/Peticion.php';
 
 // Ejecutar por separado: las respuestas de error finalizan la petición.
 $casos = [

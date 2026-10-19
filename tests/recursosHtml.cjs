@@ -1,7 +1,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 const assert=require('node:assert/strict');
-const raiz=path.resolve('migracion_api/public');
+const raiz=path.resolve('proyecto/public');
 let paginas=0,referencias=0;
 function revisar(carpeta) {
     for(const entrada of fs.readdirSync(carpeta,{withFileTypes:true})) {

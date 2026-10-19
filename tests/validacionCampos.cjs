@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 
-for (const raiz of ['proyecto', 'migracion_api']) {
+for (const raiz of ['proyecto']) {
     const entorno = { document: { forms: [] }, window: { location: { search: '' } }, URLSearchParams };
     vm.createContext(entorno);
     vm.runInContext(fs.readFileSync(`${raiz}/public/assets/js/validacionCampos.js`, 'utf8'), entorno);

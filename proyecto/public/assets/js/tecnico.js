@@ -1,8 +1,4 @@
-/**
- * Controla los diálogos de alta y devolución de préstamos.
- * Las tablas y las operaciones se realizan mediante PHP y PDO.
- * @file
- */
+
 
 const dialogPrestamos = document.querySelector(".dialogPrestamos");
 const formularioPrestamos = document.getElementById("formularioPrestamos");
@@ -31,12 +27,7 @@ const formularioDevolucion = document.getElementById("formularioDevolucionPresta
 const idPrestamoDevolucion = document.getElementById("idPrestamoDevolucion");
 const btnCerrarDevolucion = document.getElementById("btnCerrarDevolucionPrestamo");
 
-document.querySelectorAll(".btnRegistrarDevolucion").forEach((boton) => {
-    boton.addEventListener("click", () => {
-        if (idPrestamoDevolucion) idPrestamoDevolucion.value = boton.dataset.id;
-        if (dialogDevolucion) dialogDevolucion.showModal();
-    });
-});
+
 
 function cerrarDialogoDevolucion() {
     if (formularioDevolucion) formularioDevolucion.reset();
@@ -49,4 +40,13 @@ if (btnCerrarDevolucion) {
 
 if (dialogDevolucion) {
     dialogDevolucion.addEventListener("cancel", () => formularioDevolucion?.reset());
+}
+
+function configurarOperaciones() {
+    document.querySelectorAll(".btnRegistrarDevolucion").forEach((boton) => {
+        boton.addEventListener("click", () => {
+            if (idPrestamoDevolucion) idPrestamoDevolucion.value = boton.dataset.id;
+            if (dialogDevolucion) dialogDevolucion.showModal();
+        });
+});
 }

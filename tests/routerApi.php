@@ -2,7 +2,7 @@
 // Servidor de verificación: jamás usa el nombre ni las credenciales de producción.
 $ruta = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (isset($_GET['dialogo']) && in_array($ruta, ['/admin/usuarios.html','/admin/inventario.html','/tecnico/prestamos.html','/tecnico/incidencias.html','/tecnico/solicitudes.html'], true)) {
-    $html = file_get_contents(__DIR__ . '/../migracion_api/public' . $ruta);
+    $html = file_get_contents(__DIR__ . '/../proyecto/public' . $ruta);
     $mostrar = '<script>formularioListo.then(async listo => {
         if (!listo) return;
         await actualizarTabla();
@@ -23,7 +23,7 @@ if ($ruta === '/_derPrueba.svg') {
     return true;
 }
 if (!in_array($ruta, ['/index.php', '/_sesionPrueba'], true)) return false;
-require_once __DIR__ . '/../migracion_api/config/config.php';
+require_once __DIR__ . '/../proyecto/config/config.php';
 $_ENV['DB_HOST'] = '127.0.0.1';
 $_ENV['DB_PUERTO'] = '3317';
 $_ENV['DB_USUARIO'] = 'root';
@@ -44,4 +44,4 @@ if ($ruta === '/_sesionPrueba') {
     header('Location: /' . $carpeta . '/' . $pagina . '.html' . $dialogo);
     return true;
 }
-require __DIR__ . '/../migracion_api/public/index.php';
+require __DIR__ . '/../proyecto/public/index.php';

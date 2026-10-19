@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../migracion_api/config/config.php';
+require_once __DIR__ . '/../proyecto/config/config.php';
 require_once RUTA_MODELO . '/PrestamoDAO.php';
 $opciones = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false];
 $dsn = 'mysql:host=127.0.0.1;port=3317;dbname=sgrsi_api_prueba;charset=utf8mb4';

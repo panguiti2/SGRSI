@@ -38,6 +38,7 @@ async function actualizarTabla() {
             agregarFila(dato);
         }
         if (typeof configurarOperaciones === "function") configurarOperaciones();
+        actualizarControlesTabla('tablaRegistros1');
     } catch (error) {
         console.error(error);
         mostrarErrorApi(error);

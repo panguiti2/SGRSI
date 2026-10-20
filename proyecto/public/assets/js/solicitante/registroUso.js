@@ -49,7 +49,6 @@ async function actualizarTabla() {
         for (const dato of datos) {
             agregarFila(dato);
         }
-        if (typeof configurarOperaciones === "function") configurarOperaciones();
     } catch (error) {
         console.error(error);
         mostrarErrorApi(error);
@@ -75,7 +74,7 @@ function obtenerDatosFormulario() {
 
 async function guardarDatos(datos) {
     if (!await formularioListo) return false;
-    return await enviarDatosApi(API_DATOS, "POST", datos);
+    return await enviarDatosApi(API_DATOS, 'POST', datos);
 }
 
 async function gestionarAlta(eventoFormulario) {

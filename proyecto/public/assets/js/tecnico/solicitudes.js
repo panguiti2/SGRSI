@@ -85,14 +85,10 @@ function agregarFila(dato) {
     campoEstado.textContent = dato.estado;
     fila.appendChild(campoEstado);
 
-    const campoOperaciones = document.createElement("td");
-    const botonGestionarSolicitud = document.createElement("button");
-    botonGestionarSolicitud.setAttribute("type", "button");
-    botonGestionarSolicitud.setAttribute("class", "btn btn-sm btn-primary btnGestionarSolicitud");
+    const campoOperaciones = document.getElementById("operacionSolicitud").content.cloneNode(true);
+    const botonGestionarSolicitud = campoOperaciones.querySelector("button");
     botonGestionarSolicitud.setAttribute("data-id", (dato.id));
     botonGestionarSolicitud.setAttribute("data-estado", (dato.estado));
-    campoOperaciones.appendChild(botonGestionarSolicitud);
-    botonGestionarSolicitud.textContent = "Gestionar";
     botonGestionarSolicitud.disabled = dato.estado === 'RESUELTO';
     if (botonGestionarSolicitud.disabled) botonGestionarSolicitud.title = 'El ticket resuelto conserva su historial';
     fila.appendChild(campoOperaciones);
@@ -117,6 +113,7 @@ async function actualizarTabla() {
             cuerpoTabla.appendChild(fila);
         }
         if (typeof configurarOperaciones === "function") configurarOperaciones();
+        actualizarControlesTabla('tablaRegistros1');
     } catch (error) {
         console.error(error);
         mostrarErrorApi(error);

@@ -21,7 +21,7 @@ formularioLogin.addEventListener("submit", async (evento) => {
                 clave: document.getElementById("clave").value
             })
         });
-        const { datos } = await respuesta.json();
+        const datos = respuesta.data;
         if (!datos.csrfToken || !datos.roles.length) throw new Error("La API no devolvió una sesión válida.");
         sessionStorage.setItem("csrfToken", datos.csrfToken);
         const carpetas = { administrador: "admin", tecnico: "tecnico", solicitante: "solicitante" };

@@ -16,6 +16,7 @@ class UsuarioController
             "GET" => $this->listar(),
             "POST" => $this->alta(),
             "PUT" => $this->modificar(),
+            "DELETE" => $this->eliminar(),
             default => RespuestaJson::error("Método no permitido", 405),
         };
     }
@@ -91,10 +92,10 @@ class UsuarioController
         if (array_key_exists("estado", $datos)) {
             $estado = (string) $datos["estado"];
             Peticion::validarCamposObligatorios([$estado]);
-            if (!in_array($estado, ["0", "1"], true)) {
-                RespuestaJson::error("El estado no es válido", 422);
+            if ($estado !== "1") {
+                RespuestaJson::error("Para desactivar un usuario utilice DELETE. PUT permite activar con estado 1", 422);
             }
-            $resultado = $dao->cambiarEstado($cedula, $estado === "1");
+            $resultado = $dao->cambiarEstado($cedula, true);
         } else {
             $nombre = trim($datos["nombre"] ?? "");
             $apellido = trim($datos["apellido"] ?? "");
@@ -102,15 +103,15 @@ class UsuarioController
             $confirmarClave = $datos["confirmarClave"] ?? "";
             $rol = trim($datos["rol"] ?? "");
 
-            Peticion::validarCamposObligatorios([$nombre, $apellido, $clave, $confirmarClave, $rol]);
+            Peticion::validarCamposObligatorios([$nombre, $apellido, $rol]);
             Peticion::validarLongitudes(['nombre' => $nombre, 'apellido' => $apellido], ['nombre' => 50, 'apellido' => 50]);
-            Peticion::validarClave($clave, $confirmarClave);
+            if ($clave !== '' || $confirmarClave !== '') Peticion::validarClave($clave, $confirmarClave);
             Sesion::validarRol($rol);
             $resultado = $dao->modificarUsuario(
                 $cedula,
                 $nombre,
                 $apellido,
-                password_hash($clave, PASSWORD_DEFAULT),
+                $clave === '' ? '' : password_hash($clave, PASSWORD_DEFAULT),
                 $rol
             );
         }
@@ -121,4 +122,20 @@ class UsuarioController
         RespuestaJson::exito(["mensaje" => "Usuario modificado exitosamente"]);
     }
 
+    /** Baja lógica: conserva el usuario, sus roles y todos sus registros asociados. */
+    private function eliminar(): void
+    {
+        Token::verificarCsrf();
+        $datos = Peticion::recibirDatos();
+        $cedula = trim($datos["cedula"] ?? "");
+        Peticion::validarCedula($cedula);
+        $dao = new UsuarioDAO(Conexion::conectar());
+        if ($dao->listarUsuario($cedula) === null) {
+            throw new ErrorHttp("El usuario no existe", 404);
+        }
+        if (!$dao->cambiarEstado($cedula, false)) {
+            throw new ErrorHttp("No se pudo desactivar el usuario", 400);
+        }
+        RespuestaJson::exito(["mensaje" => "Usuario desactivado exitosamente"]);
+    }
 }

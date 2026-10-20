@@ -2,11 +2,4 @@
 vendor/
 composer.phar
 
-# Archivos locales que no forman parte de esta entrega de código.
-/docs/
-/output/
-/outputs/
-/tmp/
-/test/
-/tests/
 

@@ -1,12 +1,7 @@
 const API_METRICAS = "../index.php?ruta=metricas";
 
 async function obtenerMetricas() {
-    const respuesta = await peticionApi(API_METRICAS);
-
-
-    const contenido = await respuesta.json();
-
-    return contenido.datos;
+    return await obtenerDatosApi(API_METRICAS);
 }
 
 async function actualizarMetricas() {

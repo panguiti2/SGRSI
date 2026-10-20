@@ -11,6 +11,7 @@ const campoUltimoCambio = document.getElementById("ultimoCambio");
 const grupoModificaciones = document.getElementById("grupoModificaciones");
 const tituloDispositivo = document.getElementById("tituloFormularioDispositivo");
 const botonGuardarDispositivo = document.getElementById("botonGuardarDispositivo");
+const verDispositivosBaja = document.getElementById('verDispositivosBaja');
 
 let dispositivoEnEdicion = false;
 
@@ -48,7 +49,7 @@ function obtenerDatosFormularioDispositivo() {
 }
 
 async function obtenerDispositivos() {
-    return await obtenerDatosApi(API_DISPOSITIVOS);
+    return await obtenerDatosApi(API_DISPOSITIVOS + '&retirados=' + (verDispositivosBaja.checked ? '1' : '0'));
 }
 
 async function obtenerDispositivo(idLaboratorio, numeroDispositivo) {
@@ -70,7 +71,7 @@ async function modificarDispositivo(dispositivo) {
 
 async function eliminarDispositivo(idLaboratorio, numeroDispositivo) {
     if (!await formularioListo) return false;
-    if (!confirm("¿Desea eliminar este dispositivo?")) return;
+    if (!confirm("¿Desea dar de baja este dispositivo? Sus tickets e historial se conservarán y podrá restaurarlo después.")) return;
     try {
         await enviarDatosApi(API_DISPOSITIVOS, 'DELETE', { idLaboratorio, numeroDispositivo });
         await actualizarTabla();
@@ -89,29 +90,23 @@ function agregarFila(dispositivo) {
     const campoModificacionesTabla = document.createElement("td");
     campoModificacionesTabla.textContent = dispositivo.modificaciones;
     const campoEstadoTabla = document.createElement("td");
-    campoEstadoTabla.textContent = dispositivo.estado == 1 ? "Activo" : "Inactivo";
+    campoEstadoTabla.textContent = verDispositivosBaja.checked ? 'Dado de baja' : dispositivo.estado == 1 ? "Activo" : "Inactivo";
     const campoFecha = document.createElement("td");
     campoFecha.textContent = dispositivo.ultimoCambio;
-    const campoOperaciones = document.createElement("td");
-    const cajaOperaciones = document.createElement("div");
-    cajaOperaciones.className = "cajaOperaciones";
-    const botonModificar = document.createElement("button");
-    botonModificar.type = "button";
-    botonModificar.className = "btnOperacion btnModificarDispositivo";
-    botonModificar.textContent = "Modificar";
+    const campoOperaciones = document.getElementById('operacionesDispositivo').content.cloneNode(true);
+    const botonModificar = campoOperaciones.querySelector('[data-modificar]');
     botonModificar.addEventListener("click", () => abrirModificarDispositivo(
         dispositivo.idLab, dispositivo.numeroDispositivo
     ));
-    const botonEliminar = document.createElement("button");
-    botonEliminar.type = "button";
-    botonEliminar.className = "btnOperacion btnDesactivar";
-    botonEliminar.textContent = "Eliminar";
+    const botonEliminar = campoOperaciones.querySelector('[data-baja]');
     botonEliminar.addEventListener("click", () => eliminarDispositivo(
         dispositivo.idLab, dispositivo.numeroDispositivo
     ));
-    cajaOperaciones.appendChild(botonModificar);
-    cajaOperaciones.appendChild(botonEliminar);
-    campoOperaciones.appendChild(cajaOperaciones);
+    const botonRestaurar = campoOperaciones.querySelector('[data-restaurar]');
+    botonModificar.hidden = verDispositivosBaja.checked;
+    botonEliminar.hidden = verDispositivosBaja.checked;
+    botonRestaurar.hidden = !verDispositivosBaja.checked;
+    botonRestaurar.addEventListener('click', () => restaurarDispositivo(dispositivo.idLab, dispositivo.numeroDispositivo));
     fila.appendChild(campoLaboratorioTabla);
     fila.appendChild(campoNumero);
     fila.appendChild(campoModificacionesTabla);
@@ -122,16 +117,33 @@ function agregarFila(dispositivo) {
 }
 
 async function actualizarTabla() {
+    verDispositivosBaja.disabled = true;
+    document.getElementById('tituloInventario').textContent = verDispositivosBaja.checked ? 'Dispositivos dados de baja' : 'Datos de dispositivo';
+    document.getElementById('ayudaRestauracion').hidden = !verDispositivosBaja.checked;
     try {
         const dispositivos = await obtenerDispositivos();
         cuerpoTabla.replaceChildren();
         for (const dispositivo of dispositivos) {
             agregarFila(dispositivo);
         }
+        actualizarControlesTabla('tablaRegistros1');
     } catch (error) {
         console.error(error);
         mostrarErrorApi(error);
+    } finally {
+        verDispositivosBaja.disabled = false;
     }
+}
+
+async function restaurarDispositivo(idLaboratorio, numeroDispositivo) {
+    if (!await formularioListo) return;
+    if (!confirm('¿Restaurar este dispositivo como inactivo? Se conservarán sus datos y su historial.')) return;
+    try {
+        await enviarDatosApi(API_DISPOSITIVOS, 'PUT', {accion:'restaurar', idLaboratorio, numeroDispositivo});
+        verDispositivosBaja.checked = false;
+        await actualizarTabla();
+        alert('Dispositivo restaurado como inactivo. Revíselo y actívelo desde Modificar para permitir nuevos tickets.');
+    } catch (error) { mostrarErrorApi(error); }
 }
 
 async function abrirModificarDispositivo(idLaboratorio, numeroDispositivo) {
@@ -183,4 +195,8 @@ formularioDispositivo.addEventListener("submit", gestionarDispositivo);
 document.getElementById("btnAltaDispositivo").addEventListener("click", abrirAltaDispositivo);
 document.getElementById("btnCerrarAltaDispositivo").addEventListener("click", cerrarGestionDispositivo);
 dialogDispositivo.addEventListener("cancel", limpiarEstadoDispositivo);
+verDispositivosBaja.addEventListener('change', function () {
+    document.querySelector('form[data-tabla="tablaRegistros1"]').reset();
+    actualizarTabla();
+});
 actualizarTabla();

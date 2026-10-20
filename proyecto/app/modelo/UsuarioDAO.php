@@ -118,6 +118,9 @@ class UsuarioDAO
             $bloqueo->execute(['cedula' => $cedula]);
             if ($bloqueo->fetchColumn() === false) throw new ErrorHttp('El usuario no existe', 404);
             $usuario = $this->listarUsuario($cedula);
+            if (!(bool) $usuario['estado']) {
+                throw new ErrorHttp('No se puede modificar un usuario inactivo. Actívelo antes de editar sus datos', 409);
+            }
             $roles = array_values(array_filter(array_keys($tablasRol), fn($actual) => (bool) $usuario[$actual]));
             if ($roles !== [$rol]) {
                 foreach ($tablasRol as $actual => $tablaRol) {
@@ -131,24 +134,27 @@ class UsuarioDAO
                         ->execute(['cedula' => $cedula]);
                 }
             }
-            $consulta = $this->conexion->prepare(
-                "UPDATE USUARIO
-                SET nombre = :nombre, apellido = :apellido, claveHash = :claveHash
-                WHERE cedula = :cedula"
-            );
-            $consulta->execute([
+            $parametros = [
                 "cedula" => $cedula,
                 "nombre" => $nombre,
-                "apellido" => $apellido,
-                "claveHash" => $claveHash
-            ]);
+                "apellido" => $apellido
+            ];
+            $sql = 'UPDATE USUARIO SET nombre = :nombre, apellido = :apellido';
+            if ($claveHash !== '') {
+                $sql .= ', claveHash = :claveHash';
+                $parametros['claveHash'] = $claveHash;
+            }
+            $consulta = $this->conexion->prepare($sql . ' WHERE cedula = :cedula');
+            $consulta->execute($parametros);
 
             return $this->conexion->commit();
         } catch (Throwable $error) {
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            if ($error instanceof PDOException) ErrorSql::traducir($error, 'La cédula ya está registrada');
+            if ($error instanceof PDOException) {
+                ErrorSql::traducir($error, 'La cédula ya está registrada', 'No se puede cambiar el rol del usuario porque tiene registros asociados. Conserve su rol actual');
+            }
             throw $error;
         }
     }

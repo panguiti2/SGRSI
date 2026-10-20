@@ -3,9 +3,15 @@
 /** Lectura y validación común de entradas, independiente del módulo. */
 class Peticion
 {
+    public static function validarMetodo(string $metodo, array $permitidos): void
+    {
+        header('Allow: ' . implode(', ', $permitidos));
+        if (!in_array($metodo, $permitidos, true)) throw new ErrorHttp('Método no permitido', 405);
+    }
+
     public static function recibirDatos(): array
     {
-        $tipo = strtolower(explode(';', $_SERVER['CONTENT_TYPE'] ?? '')[0]);
+        $tipo = strtolower(trim(explode(';', $_SERVER['CONTENT_TYPE'] ?? '')[0]));
         if ($tipo !== 'application/json') throw new ErrorHttp('La petición debe enviar JSON', 415);
         $entrada = file_get_contents('php://input', false, null, 0, 65537);
         if (strlen($entrada) > 65536) throw new ErrorHttp('La petición excede el tamaño permitido', 413);

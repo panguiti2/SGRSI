@@ -59,8 +59,11 @@ class RegistroUsoController
             RespuestaJson::error("El laboratorio o turno no existe", 422);
         }
 
-        $resultado = $dao->registrar([
-            "idRegistro" => "REG" . strtoupper(substr(uniqid(), -5)),
+        $id = "REG" . strtoupper(substr(uniqid(), -5));
+        Peticion::validarCamposObligatorios([$id]);
+        Peticion::validarLongitudes(['idRegistro'=>$id], ['idRegistro'=>8]);
+        $registro = [
+            "idRegistro" => $id,
             "cedulaSolicitante" => $_SESSION["cedula"],
             "idLaboratorio" => $laboratorio,
             "turno" => $turno,
@@ -70,12 +73,13 @@ class RegistroUsoController
             "asignatura" => $asignatura,
             "usoMaquinas" => $usoMaquinas === "SI",
             "huboIncidencias" => $huboIncidencias === "SI"
-        ]);
+        ];
+        $resultado = $dao->registrar($registro);
 
         if (!$resultado) {
             RespuestaJson::error("No se pudo registrar el uso", 400);
         }
-        RespuestaJson::exito(["mensaje" => "Uso registrado exitosamente"], 201);
+        RespuestaJson::exito(["idRegistro"=>$id, "mensaje" => 'Uso registrado exitosamente'], 201);
     }
 
 }

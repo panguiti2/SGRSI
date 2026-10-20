@@ -14,4 +14,4 @@ CREATE TABLE REGISTRO_USO (
     CONSTRAINT fk_registro_uso_solicitante FOREIGN KEY (cedulaSolicitante) REFERENCES SOLICITANTE (cedula),
     CONSTRAINT fk_registro_uso_laboratorio FOREIGN KEY (idLaboratorio) REFERENCES LABORATORIO (idLaboratorio),
     CONSTRAINT fk_registro_uso_turno FOREIGN KEY (turno) REFERENCES TURNO (codigoTurno)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

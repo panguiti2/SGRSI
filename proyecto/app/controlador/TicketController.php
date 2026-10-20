@@ -61,6 +61,12 @@ class TicketController
             RespuestaJson::error("Los datos del ticket no son válidos", 422);
         }
 
+        $camposDetalle = $tipo === 'SOLICITUD' ? ['tipoServicio', 'fechaEsperada'] : ['reportoAlumno'];
+        foreach ($camposDetalle as $campo) Peticion::validarCamposObligatorios([$datos[$campo] ?? '']);
+        if ($tipo === 'INCIDENCIA' && ($datos['reportoAlumno'] ?? '') === 'SI') {
+            Peticion::validarCamposObligatorios([$datos['nombreAlumno'] ?? '']);
+        }
+
         $dao = new TicketDAO(Conexion::conectar());
         if (!$dao->existenDatosComunes(
             $comunes["turno"],
@@ -80,7 +86,6 @@ class TicketController
         if ($tipo === "SOLICITUD") {
             $ticket["tipoServicio"] = trim($datos["tipoServicio"] ?? "");
             $ticket["fechaEsperada"] = trim($datos["fechaEsperada"] ?? "");
-            Peticion::validarCamposObligatorios([$ticket["tipoServicio"], $ticket["fechaEsperada"]]);
             if ($ticket["tipoServicio"] === "" || $ticket["fechaEsperada"] === ""
                 || !$dao->existeTipoServicio($ticket["tipoServicio"])) {
                 RespuestaJson::error("Los datos del servicio no son válidos", 422);
@@ -91,10 +96,6 @@ class TicketController
         } else {
             $reportoAlumno = $datos["reportoAlumno"] ?? "";
             $nombreAlumno = trim($datos["nombreAlumno"] ?? "");
-            Peticion::validarCamposObligatorios([$reportoAlumno]);
-            if ($reportoAlumno === "SI") {
-                Peticion::validarCamposObligatorios([$nombreAlumno]);
-            }
             if (!in_array($reportoAlumno, ["SI", "NO"], true)
                 || ($reportoAlumno === "SI" && $nombreAlumno === "")) {
                 RespuestaJson::error("Los datos de la incidencia no son válidos", 422);

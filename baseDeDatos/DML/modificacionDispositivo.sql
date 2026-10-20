@@ -2,5 +2,5 @@ UPDATE DISPOSITIVO
 SET modificaciones = :modificaciones,
     ultimoCambio = :ultimoCambio,
     estado = :estado
-WHERE idLaboratorio = :idLaboratorio
+WHERE eliminado = FALSE AND idLaboratorio = :idLaboratorio
     AND numeroDispositivo = :numeroDispositivo;

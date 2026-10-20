@@ -21,7 +21,8 @@ class FormularioDAO
     /** Recupera los dispositivos para seleccionar por laboratorio. */
     public function listarDispositivos(): array
     {
-        $consulta = $this->conexion->query("SELECT idLaboratorio, numeroDispositivo FROM DISPOSITIVO ORDER BY idLaboratorio, numeroDispositivo");
+        $sql = 'SELECT idLaboratorio, numeroDispositivo FROM DISPOSITIVO WHERE eliminado = FALSE AND estado = TRUE';
+        $consulta = $this->conexion->query($sql . ' ORDER BY idLaboratorio, numeroDispositivo');
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 

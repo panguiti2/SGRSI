@@ -40,12 +40,10 @@ function agregarFila(dato) {
 
     const campoOperaciones = document.createElement("td");
     if (dato.estado === "ACTIVO") {
-        const botonDevolucion = document.createElement("button");
-        botonDevolucion.setAttribute("type", "button");
-        botonDevolucion.setAttribute("class", "btnOperacion btnRegistrarDevolucion");
+        const operacion = document.getElementById("operacionPrestamo").content.cloneNode(true);
+        const botonDevolucion = operacion.querySelector("button");
         botonDevolucion.setAttribute("data-id", (dato.idPrestamo));
-        campoOperaciones.appendChild(botonDevolucion);
-        botonDevolucion.textContent = "Registrar devolución";
+        campoOperaciones.appendChild(operacion);
     }
     fila.appendChild(campoOperaciones);
 
@@ -59,6 +57,7 @@ async function actualizarTabla() {
         for (const dato of datos) {
             agregarFila(dato);
         }
+        actualizarControlesTabla('tablaRegistros1');
         if (typeof configurarOperaciones === "function") configurarOperaciones();
     } catch (error) {
         console.error(error);

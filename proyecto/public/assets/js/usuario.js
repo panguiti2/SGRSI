@@ -17,7 +17,7 @@ if (selectorLaboratorio && selectorDispositivo && Array.isArray(window.dispositi
         opcionInicial.selected = true;
         opcionInicial.disabled = true;
         opcionInicial.textContent = dispositivos.length === 0
-            ? "No hay dispositivos registrados"
+            ? "No hay dispositivos activos disponibles"
             : "Seleccione el dispositivo";
         selectorDispositivo.appendChild(opcionInicial);
 

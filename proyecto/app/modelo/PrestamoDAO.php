@@ -63,6 +63,17 @@ class PrestamoDAO
         return $consulta->fetchColumn() !== false;
     }
 
+    /** Compara identificadores normalizados sin confundir mayúsculas o espacios exteriores. */
+    public function laptopTienePrestamoActivo(string $numeroLaptop): bool
+    {
+        $consulta = $this->conexion->prepare(
+            "SELECT 1 FROM PRESTAMO WHERE BINARY UPPER(TRIM(numeroLaptop)) = BINARY :numeroLaptop
+            AND estado = 'ACTIVO' LIMIT 1"
+        );
+        $consulta->execute(['numeroLaptop' => mb_strtoupper(trim($numeroLaptop), 'UTF-8')]);
+        return $consulta->fetchColumn() !== false;
+    }
+
     /**
      * Registra un préstamo activo.
      * @param string $idPrestamo Identificador del préstamo.
@@ -83,16 +94,24 @@ class PrestamoDAO
         string $fechaRetiro,
         string $fechaDevolucion
     ): bool {
-        $bloqueo = 'SGRSI_PRESTAMO_' . $cedulaSolicitante;
-        $consultaBloqueo = $this->conexion->prepare('SELECT GET_LOCK(:nombre, 5)');
-        $consultaBloqueo->execute(['nombre' => $bloqueo]);
-        if ((int) $consultaBloqueo->fetchColumn() !== 1) {
-            throw new ErrorHttp('La operación está en curso. Intente nuevamente', 409);
-        }
+        $numeroLaptop = mb_strtoupper(trim($numeroLaptop), 'UTF-8');
+        $bloqueos = ['SGRSI_PRESTAMO_' . $cedulaSolicitante,
+            'SGRSI_LAPTOP_' . substr(hash('sha256', $numeroLaptop), 0, 40)];
+        $adquiridos = [];
         try {
-            // El control se repite dentro del bloqueo para altas simultáneas.
+            foreach ($bloqueos as $nombre) {
+                $consultaBloqueo = $this->conexion->prepare('SELECT GET_LOCK(:nombre, 5)');
+                $consultaBloqueo->execute(['nombre' => $nombre]);
+                if ((int) $consultaBloqueo->fetchColumn() !== 1) {
+                    throw new ErrorHttp('La operación está en curso. Intente nuevamente', 409);
+                }
+                $adquiridos[] = $nombre;
+            }
             if ($this->tienePrestamoActivo($cedulaSolicitante)) {
                 throw new ErrorHttp('La cédula ya posee un préstamo activo', 409);
+            }
+            if ($this->laptopTienePrestamoActivo($numeroLaptop)) {
+                throw new ErrorHttp('La laptop ya posee un préstamo activo. Registre su devolución antes de volver a prestarla', 409);
             }
             $consulta = $this->conexion->prepare(
                 "INSERT INTO PRESTAMO (
@@ -118,8 +137,10 @@ class PrestamoDAO
         } catch (PDOException $error) {
             ErrorSql::traducir($error, 'El identificador del préstamo ya existe. Intente nuevamente');
         } finally {
-            $liberar = $this->conexion->prepare('SELECT RELEASE_LOCK(:nombre)');
-            $liberar->execute(['nombre' => $bloqueo]);
+            foreach (array_reverse($adquiridos) as $nombre) {
+                $liberar = $this->conexion->prepare('SELECT RELEASE_LOCK(:nombre)');
+                $liberar->execute(['nombre' => $nombre]);
+            }
         }
     }
 

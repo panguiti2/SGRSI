@@ -20,7 +20,7 @@
                     <li class="nav-item"><a class="nav-link" href="metricas.html">Métricas</a></li>
                     <li class="nav-item"><a class="nav-link" href="inventario.html">Inventario</a></li>
                     <li class="nav-item"><a class="nav-link" href="prestamos.html">Préstamos</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="registrosUso.html">Registros de uso</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="registrosUso.html">Registros de uso</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" data-cerrar-sesion>Cerrar sesión</a></li>
                 </ul>
             </nav>
@@ -30,8 +30,19 @@
         <div id="mensajePagina" class="alert" role="alert" hidden></div>
         <section class="bg-white rounded p-3 p-md-4 panelTabla">
             <h1 class="h3 mb-3">Registros de uso de laboratorios</h1>
-            <section class="table-responsive">
-                <table class="table table-bordered table-hover table-sm mb-0">
+                <form class="sgrsi-herramientas-tabla" data-tabla="tablaRegistros1" aria-label="Buscar y ordenar registros">
+                <div class="sgrsi-busqueda-tabla">
+                    <label><span>Buscar</span><input type="search" name="busqueda" class="form-control form-control-sm" placeholder="Ej.: cédula, equipo o estado"></label>
+                    <label><span>Buscar en</span><select name="columna" class="form-select form-select-sm"><option value="">Todas las columnas</option><option value="0">Solicitante</option><option value="1">Laboratorio</option><option value="2">Turno</option><option value="3">Fecha y hora</option><option value="4">Docente</option><option value="5">Grupo</option><option value="6">Asignatura</option><option value="7">Máquinas</option><option value="8">Incidencias</option></select></label>
+                    <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+                </div>
+                <label><span>Ordenar por</span><select name="orden" class="form-select form-select-sm"><option value="">Orden original</option><option value="0">Solicitante</option><option value="1">Laboratorio</option><option value="2">Turno</option><option value="3">Fecha y hora</option><option value="4">Docente</option><option value="5">Grupo</option><option value="6">Asignatura</option><option value="7">Máquinas</option><option value="8">Incidencias</option></select></label>
+                <label><span>Sentido</span><select name="direccion" class="form-select form-select-sm"><option value="asc">Ascendente</option><option value="desc">Descendente</option></select></label>
+                <button type="button" name="ordenar" class="btn btn-primary btn-sm">Ordenar</button>
+                <button type="button" name="limpiar" class="btn btn-secondary btn-sm">Limpiar</button>
+            </form>
+            <p class="sgrsi-resultado-tabla" data-resultado="tablaRegistros1" role="status" aria-live="polite"></p>
+            <section class="table-responsive"><table id="tablaRegistros1" class="table table-bordered table-hover table-sm mb-0">
                     <thead class="table-light"><tr><th>Solicitante</th><th>Laboratorio</th><th>Turno</th><th>Fecha y hora</th><th>Docente</th><th>Grupo</th><th>Asignatura</th><th>Máquinas</th><th>Incidencias</th></tr></thead>
                     <tbody id="cuerpoTabla"></tbody>
                 </table>
@@ -42,8 +53,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="../assets/js/api.js"></script>
-    <script src="../assets/js/navegacion.js"></script>
+    <script src="../assets/js/tablas.js"></script>
     <script src="../assets/js/formulario.js"></script>
+    <script src="../assets/js/sesion.js"></script>
 
     <script src="../assets/js/tecnico/registrosUso.js"></script>
 </body>

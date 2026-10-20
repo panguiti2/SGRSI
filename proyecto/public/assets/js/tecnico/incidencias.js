@@ -105,16 +105,12 @@ function agregarFila(dato) {
     campoEstado.textContent = dato.estado;
     fila.appendChild(campoEstado);
 
-    const campoOperaciones = document.createElement("td");
-    const botonGestionarIncidencia = document.createElement("button");
-    botonGestionarIncidencia.setAttribute("type", "button");
-    botonGestionarIncidencia.setAttribute("class", "btn btn-sm btn-primary btnGestionarIncidencia");
+    const campoOperaciones = document.getElementById("operacionIncidencia").content.cloneNode(true);
+    const botonGestionarIncidencia = campoOperaciones.querySelector("button");
     botonGestionarIncidencia.setAttribute("data-id", (dato.id));
     botonGestionarIncidencia.setAttribute("data-estado", (dato.estado));
     botonGestionarIncidencia.setAttribute("data-diagnostico", (dato.diagnostico ?? ""));
     botonGestionarIncidencia.setAttribute("data-solucion", (dato.solucion ?? ""));
-    campoOperaciones.appendChild(botonGestionarIncidencia);
-    botonGestionarIncidencia.textContent = "Gestionar";
     botonGestionarIncidencia.disabled = dato.estado === 'RESUELTO';
     if (botonGestionarIncidencia.disabled) botonGestionarIncidencia.title = 'El ticket resuelto conserva su historial';
     fila.appendChild(campoOperaciones);
@@ -139,6 +135,7 @@ async function actualizarTabla() {
             cuerpoTabla.appendChild(fila);
         }
         if (typeof configurarOperaciones === "function") configurarOperaciones();
+        actualizarControlesTabla('tablaRegistros1');
     } catch (error) {
         console.error(error);
         mostrarErrorApi(error);

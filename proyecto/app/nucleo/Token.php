@@ -12,7 +12,7 @@ class Token
     {
         $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
         if (!isset($_SESSION['csrfToken']) || !hash_equals($_SESSION['csrfToken'], $token)) {
-            throw new ErrorHttp('Solicitud rechazada', 403);
+            throw new ErrorHttp('El token de seguridad es inválido o ya no está disponible. Recargue la página e intente nuevamente', 403);
         }
     }
 }

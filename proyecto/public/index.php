@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../app/nucleo/ErrorHttp.php';
+require_once __DIR__ . '/../app/nucleo/ErrorServidor.php';
 require_once __DIR__ . '/../app/vista/RespuestaJson.php';
 
 try {
@@ -36,11 +37,8 @@ try {
         $rutaError = is_string($_GET['ruta'] ?? null) ? $_GET['ruta'] : 'ruta inválida';
         error_log('SGRSI ' . $rutaError . ': ' . $error->getMessage());
     }
-    http_response_code($previsto ? $error->getCode() : 500);
-    header('Content-Type: application/json; charset=utf-8');
-    header('Cache-Control: no-store');
-    header('X-Content-Type-Options: nosniff');
-    echo json_encode(['mensaje' => $previsto ? $error->getMessage() : 'Error interno del servidor'], JSON_UNESCAPED_UNICODE);
+    $respuestaError = ErrorServidor::respuesta($error);
+    RespuestaJson::enviarError($respuestaError['mensaje'], $respuestaError['estado']);
 } finally {
     unset($controlador, $usuarioSesion);
     if (class_exists('Conexion')) Conexion::desconectar();

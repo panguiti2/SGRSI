@@ -1,8 +1,12 @@
 *.env
 vendor/
 composer.phar
-/tmp/pantallas-api/
-/tmp/mariadb-api-prueba/
-/tmp/php-prueba.*
-/tmp/mariadb-prueba.*
-/tmp/metricas-lectura/
+
+# Archivos locales que no forman parte de esta entrega de código.
+/docs/
+/output/
+/outputs/
+/tmp/
+/test/
+/tests/
+

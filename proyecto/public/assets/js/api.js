@@ -1,28 +1,35 @@
-/** Transporte común, basado en fetch y en la lectura de respuestas del profesor. */
+
 async function peticionApi(url, opciones = {}) {
     const metodo = opciones.method || "GET";
     try {
-        const respuesta = await fetch(url, { credentials: "same-origin", ...opciones });
-        const texto = await respuesta.clone().text();
+        const respuesta = await fetch(url, { credentials: "same-origin", ...opciones,
+            headers: { Accept: 'application/json', ...opciones.headers } });
+        const texto = await respuesta.text();
         if (!texto.trim()) throw new Error(`La API respondió sin cuerpo (HTTP ${respuesta.status}).`);
+        const tipo = (respuesta.headers.get('Content-Type') || '').split(';')[0].trim().toLowerCase();
+        if (tipo !== 'application/json') {
+            throw new Error(`HTTP ${respuesta.status}: La API no devolvió JSON con Content-Type application/json.`);
+        }
         let contenido;
         try {
             contenido = JSON.parse(texto);
         } catch {
             throw new Error(`HTTP ${respuesta.status}: La API no devolvió JSON.`);
         }
+        if (contenido === null || typeof contenido !== 'object' || Array.isArray(contenido)) {
+            throw new Error('La API no devolvió los datos esperados.');
+        }
+        if (contenido.status !== respuesta.status || typeof contenido.message !== 'string'
+            || !Object.prototype.hasOwnProperty.call(contenido, "data")
+            || (!respuesta.ok && contenido.data !== null)) {
+            throw new Error("La API no devolvió los datos esperados.");
+        }
         if (!respuesta.ok) {
-            const error = new Error(contenido?.mensaje || 'La solicitud no se pudo completar.');
+            const error = new Error(contenido.message);
             error.estado = respuesta.status;
             throw error;
         }
-        if (contenido === null || typeof contenido !== 'object') {
-            throw new Error('La API no devolvió los datos esperados.');
-        }
-        if (!Object.prototype.hasOwnProperty.call(contenido, "datos")) {
-            throw new Error("La API no devolvió los datos esperados.");
-        }
-        return respuesta;
+        return contenido;
     } catch (error) {
         error.metodo = metodo;
         console.error("API", metodo, url, error.estado || "red/formato", error.message);
@@ -38,7 +45,7 @@ async function peticionApi(url, opciones = {}) {
 
 async function obtenerDatosApi(url, opciones = {}) {
     const respuesta = await peticionApi(url, opciones);
-    return (await respuesta.json()).datos;
+    return respuesta.data;
 }
 
 async function enviarDatosApi(url, metodo, datos) {

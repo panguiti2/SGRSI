@@ -7,28 +7,28 @@ CREATE TABLE USUARIO (
 
     CONSTRAINT pk_usuario
         PRIMARY KEY (cedula)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE ADMINISTRADOR (
     cedula CHAR(8) NOT NULL,
 
     CONSTRAINT pk_administrador
         PRIMARY KEY (cedula)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE TECNICO (
     cedula CHAR(8) NOT NULL,
 
     CONSTRAINT pk_tecnico
         PRIMARY KEY (cedula)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE SOLICITANTE (
     cedula CHAR(8) NOT NULL,
 
     CONSTRAINT pk_solicitante
         PRIMARY KEY (cedula)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 ALTER TABLE ADMINISTRADOR

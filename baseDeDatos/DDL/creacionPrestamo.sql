@@ -15,4 +15,4 @@ CREATE TABLE PRESTAMO (
         AND (fechaDevolucionReal IS NULL OR fechaDevolucionReal >= fechaRetiro)
     ),
     CONSTRAINT chk_prestamo_estado CHECK (estado IN ('ACTIVO', 'CERRADO'))
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

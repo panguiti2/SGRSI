@@ -18,7 +18,7 @@ CREATE TABLE TICKET (
     CONSTRAINT fk_ticket_tecnico FOREIGN KEY (cedulaTecnico) REFERENCES TECNICO (cedula),
     CONSTRAINT fk_ticket_dispositivo FOREIGN KEY (idLaboratorio, numeroDispositivo) REFERENCES DISPOSITIVO (idLaboratorio, numeroDispositivo),
     CONSTRAINT chk_ticket_fechas CHECK (fechaCierre IS NULL OR fechaCierre >= fechaApertura)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE INCIDENCIA (
     id CHAR(8) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE INCIDENCIA (
         (reportoAlumno = TRUE AND nombreAlumno IS NOT NULL AND TRIM(nombreAlumno) <> '')
         OR (reportoAlumno = FALSE AND nombreAlumno IS NULL)
     )
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE SERVICIO (
     idServicio CHAR(8) NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE SERVICIO (
     fechaEsperada DATETIME NULL,
     CONSTRAINT pk_servicio PRIMARY KEY (idServicio),
     CONSTRAINT fk_servicio_ticket FOREIGN KEY (idServicio) REFERENCES TICKET (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ALTER TABLE DISPOSITIVO
     ADD CONSTRAINT fk_dispositivo_administrador

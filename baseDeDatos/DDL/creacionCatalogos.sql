@@ -2,22 +2,22 @@ CREATE TABLE IF NOT EXISTS TURNO (
     codigoTurno VARCHAR(20) NOT NULL,
     nombre VARCHAR(30) NOT NULL,
     CONSTRAINT pk_turno PRIMARY KEY (codigoTurno)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS TIPO_SERVICIO (
     codigoTipoServicio VARCHAR(20) NOT NULL,
     nombre VARCHAR(50) NOT NULL,
     CONSTRAINT pk_tipo_servicio PRIMARY KEY (codigoTipoServicio)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS MODIFICACION_DISPOSITIVO (
     codigoModificacion VARCHAR(20) NOT NULL,
     nombre VARCHAR(50) NOT NULL,
     CONSTRAINT pk_modificacion_dispositivo PRIMARY KEY (codigoModificacion)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS ESTADO_TICKET (
     codigoEstado VARCHAR(15) NOT NULL,
     nombre VARCHAR(30) NOT NULL,
     CONSTRAINT pk_estado_ticket PRIMARY KEY (codigoEstado)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

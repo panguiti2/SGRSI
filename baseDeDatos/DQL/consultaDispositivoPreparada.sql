@@ -11,4 +11,5 @@ SELECT
 FROM DISPOSITIVO AS d
 INNER JOIN LABORATORIO AS l
     ON l.idLaboratorio = d.idLaboratorio
+WHERE d.eliminado = FALSE
 ORDER BY d.idLaboratorio, d.numeroDispositivo;

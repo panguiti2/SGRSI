@@ -26,7 +26,7 @@ class RegistroUsoDAO
         if ($cedula !== null) {
             $sql .= " WHERE r.cedulaSolicitante = :cedula";
         }
-        $sql .= " ORDER BY r.fechaHora DESC";
+        $sql .= " ORDER BY r.fechaHora DESC, r.idRegistro DESC";
 
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute($cedula === null ? [] : ["cedula" => $cedula]);

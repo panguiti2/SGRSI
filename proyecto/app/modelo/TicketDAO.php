@@ -32,7 +32,7 @@ class TicketDAO
             $sql .= $cedula !== null ? " AND " : " WHERE ";
             $sql .= $tipo === "INCIDENCIA" ? "i.id IS NOT NULL" : "s.idServicio IS NOT NULL";
         }
-        $sql .= " ORDER BY t.fechaApertura DESC";
+        $sql .= " ORDER BY t.fechaApertura DESC, t.id DESC";
 
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute($cedula === null ? [] : ["cedula" => $cedula]);
@@ -55,8 +55,6 @@ class TicketDAO
     }
 
     /** Comprueba catálogos y dispositivo usados por un ticket. */
-
-    /** Comprueba catálogos y dispositivo usados por un ticket. */
     public function existenDatosComunes(
         string $turno,
         string $laboratorio,
@@ -68,7 +66,7 @@ class TicketDAO
             INNER JOIN DISPOSITIVO AS d
                 ON d.idLaboratorio = :laboratorio
                 AND d.numeroDispositivo = :dispositivo
-            WHERE tu.codigoTurno = :turno"
+            WHERE tu.codigoTurno = :turno AND d.eliminado = FALSE"
         );
         $consulta->execute([
             "turno" => $turno,
@@ -114,11 +112,12 @@ class TicketDAO
                 "fechaEsperada" => $datos["fechaEsperada"]
             ]);
             return $this->conexion->commit();
-        } catch (PDOException $error) {
+        } catch (Throwable $error) {
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
+            if ($error instanceof PDOException) ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
+            throw $error;
         }
     }
 
@@ -138,17 +137,30 @@ class TicketDAO
                 "nombreAlumno" => $datos["nombreAlumno"]
             ]);
             return $this->conexion->commit();
-        } catch (PDOException $error) {
+        } catch (Throwable $error) {
             if ($this->conexion->inTransaction()) {
                 $this->conexion->rollBack();
             }
-            ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
+            if ($error instanceof PDOException) ErrorSql::traducir($error, 'El identificador del registro ya existe. Intente nuevamente');
+            throw $error;
         }
     }
 
     /** Inserta los datos compartidos por ambos tipos de ticket. */
     private function insertarTicket(array $datos): void
     {
+        $dispositivo = $this->conexion->prepare(
+            'SELECT eliminado, estado FROM DISPOSITIVO WHERE idLaboratorio = :laboratorio
+            AND numeroDispositivo = :dispositivo FOR UPDATE'
+        );
+        $dispositivo->execute(['laboratorio' => $datos['idLaboratorio'], 'dispositivo' => $datos['numeroDispositivo']]);
+        $equipo = $dispositivo->fetch(PDO::FETCH_ASSOC);
+        if ($equipo === false || (bool) $equipo['eliminado']) {
+            throw new ErrorHttp('El dispositivo ya no está disponible en el inventario. Actualice el formulario', 409);
+        }
+        if (!(bool) $equipo['estado']) {
+            throw new ErrorHttp('No se pueden registrar incidencias ni solicitudes de servicio para un dispositivo desactivado. Actívelo antes de registrar un ticket', 409);
+        }
         $consulta = $this->conexion->prepare(
             "INSERT INTO TICKET (
                 id, cedulaSolicitante, idLaboratorio, numeroDispositivo,

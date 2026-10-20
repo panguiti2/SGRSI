@@ -12,6 +12,12 @@ function limpiarEstadoUsuario() {
     usuarioEnEdicion = false;
     formularioUsuario.reset();
     campoCedulaUsuario.readOnly = false;
+    campoClaveUsuario.required = true;
+    campoConfirmarClaveUsuario.required = true;
+    campoClaveUsuario.placeholder = "";
+    campoConfirmarClaveUsuario.placeholder = "";
+    campoClaveUsuario.setCustomValidity("");
+    campoConfirmarClaveUsuario.setCustomValidity("");
     document.getElementById("tituloFormularioUsuario").textContent = "Gestión de usuarios";
     document.getElementById("botonGuardarUsuario").textContent = "Guardar usuario";
 }
@@ -47,6 +53,10 @@ async function abrirModificarUsuario(cedula) {
         if (usuario === null) return;
         limpiarEstadoUsuario();
         usuarioEnEdicion = true;
+        campoClaveUsuario.required = false;
+        campoConfirmarClaveUsuario.required = false;
+        campoClaveUsuario.placeholder = "Dejar vacía para conservar la contraseña";
+        campoConfirmarClaveUsuario.placeholder = "Completar solo si cambia la contraseña";
         campoCedulaUsuario.value = usuario.cedula;
         campoCedulaUsuario.readOnly = true;
         campoNombreUsuario.value = usuario.nombre;
@@ -92,22 +102,15 @@ function agregarFila(dato) {
     campoEstado.textContent = dato.estado == 1 ? "Activo" : "Inactivo";
     fila.appendChild(campoEstado);
 
-    const campoOperaciones = document.createElement("td");
-    const cajaOperaciones = document.createElement("div");
-    cajaOperaciones.className = "cajaOperaciones";
-    const botonModificar = document.createElement("button");
-    botonModificar.type = "button";
-    botonModificar.className = "btnOperacion btnModificarUsuario";
-    botonModificar.textContent = "Modificar";
+    const campoOperaciones = document.getElementById("operacionesUsuario").content.cloneNode(true);
+    const botonModificar = campoOperaciones.querySelector("[data-modificar]");
     botonModificar.addEventListener("click", () => abrirModificarUsuario(dato.cedula));
-    const botonEstado = document.createElement("button");
-    botonEstado.type = "button";
-    botonEstado.className = dato.estado == 1 ? "btnOperacion btnDesactivar" : "btnOperacion btnActivar";
-    botonEstado.textContent = dato.estado == 1 ? "Desactivar" : "Activar";
-    botonEstado.addEventListener("click", () => cambiarEstadoUsuario(dato.cedula, dato.estado == 1 ? "0" : "1"));
-    cajaOperaciones.appendChild(botonModificar);
-    cajaOperaciones.appendChild(botonEstado);
-    campoOperaciones.appendChild(cajaOperaciones);
+    const botonDesactivar = campoOperaciones.querySelector("[data-desactivar]");
+    const botonActivar = campoOperaciones.querySelector("[data-activar]");
+    botonDesactivar.hidden = dato.estado != 1;
+    botonActivar.hidden = dato.estado == 1;
+    botonDesactivar.addEventListener("click", () => cambiarEstadoUsuario(dato.cedula, "0"));
+    botonActivar.addEventListener("click", () => cambiarEstadoUsuario(dato.cedula, "1"));
     fila.appendChild(campoOperaciones);
 
     cuerpoTabla.appendChild(fila);
@@ -120,6 +123,7 @@ async function actualizarTabla() {
         for (const dato of datos) {
             agregarFila(dato);
         }
+        actualizarControlesTabla('tablaRegistros1');
     } catch (error) {
         console.error(error);
         mostrarErrorApi(error);
@@ -139,7 +143,10 @@ async function modificarUsuario(usuario) {
 
 async function cambiarEstadoUsuario(cedula, estado) {
     try {
-        const cambiado = await modificarUsuario({cedula: cedula, estado: estado});
+        if (!await formularioListo) return;
+        const cambiado = estado === "0"
+            ? await enviarDatosApi(API_DATOS, "DELETE", {cedula: cedula})
+            : await modificarUsuario({cedula: cedula, estado: "1"});
         if (cambiado) await actualizarTabla();
     } catch (error) {
         console.error(error);

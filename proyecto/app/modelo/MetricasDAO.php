@@ -23,7 +23,7 @@ class MetricasDAO
                 (SELECT COUNT(*) FROM TICKET AS t INNER JOIN SERVICIO AS s ON s.idServicio = t.id
                     WHERE t.estado <> 'RESUELTO') AS solicitudesAbiertas,
                 (SELECT COUNT(*) FROM PRESTAMO WHERE estado = 'ACTIVO') AS prestamosPendientes,
-                (SELECT COUNT(*) FROM DISPOSITIVO WHERE estado = TRUE) AS dispositivosActivos,
+                (SELECT COUNT(*) FROM DISPOSITIVO WHERE estado = TRUE AND eliminado = FALSE) AS dispositivosActivos,
                 (SELECT COUNT(*) FROM REGISTRO_USO) AS registrosUso"
         );
 
@@ -31,7 +31,7 @@ class MetricasDAO
         $metricas = $metricas === false ? [] : $metricas;
         $consultaLaboratorios = $this->conexion->query(
             "SELECT l.idLaboratorio, l.nombre,
-                (SELECT COUNT(*) FROM DISPOSITIVO d WHERE d.idLaboratorio = l.idLaboratorio AND d.estado = TRUE) AS dispositivosActivos,
+                (SELECT COUNT(*) FROM DISPOSITIVO d WHERE d.idLaboratorio = l.idLaboratorio AND d.estado = TRUE AND d.eliminado = FALSE) AS dispositivosActivos,
                 (SELECT COUNT(*) FROM TICKET t INNER JOIN INCIDENCIA i ON i.id = t.id WHERE t.idLaboratorio = l.idLaboratorio AND t.estado <> 'RESUELTO') AS incidenciasAbiertas,
                 (SELECT COUNT(*) FROM TICKET t INNER JOIN SERVICIO s ON s.idServicio = t.id WHERE t.idLaboratorio = l.idLaboratorio AND t.estado <> 'RESUELTO') AS solicitudesAbiertas,
                 (SELECT COUNT(*) FROM REGISTRO_USO r WHERE r.idLaboratorio = l.idLaboratorio) AS registrosUso

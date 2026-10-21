@@ -99,15 +99,8 @@ class DispositivoController
     {
         Token::verificarCsrf();
         $datos = Peticion::recibirDatos();
-        if (($datos['accion'] ?? '') === 'restaurar') {
-            $laboratorio = trim($datos['idLaboratorio'] ?? '');
-            $numero = trim($datos['numeroDispositivo'] ?? '');
-            Peticion::validarCamposObligatorios([$laboratorio, $numero]);
-            Peticion::validarLongitudes(['laboratorio'=>$laboratorio, 'numero'=>$numero], ['laboratorio'=>8, 'numero'=>8]);
-            $dao = new DispositivoDAO(Conexion::conectar(), $_SESSION['cedula']);
-            $dao->restaurarDispositivo($laboratorio, $numero);
-            RespuestaJson::exito(['mensaje'=>'Dispositivo restaurado. Revíselo y actívelo desde Modificar para permitir nuevos tickets']);
-            return;
+        if (isset($datos['accion'])) {
+            throw new ErrorHttp('Acción no permitida. Los dispositivos dados de baja no pueden recuperarse', 409);
         }
 
         $idLaboratorio = trim($datos["idLaboratorio"] ?? "");
@@ -170,7 +163,7 @@ class DispositivoController
             RespuestaJson::error("No se pudo dar de baja el dispositivo. Puede estar asociado a un ticket.", 400);
         }
 
-        RespuestaJson::exito(["mensaje" => "Dispositivo dado de baja correctamente"]);
+        RespuestaJson::exito(["mensaje" => "Dispositivo dado de baja definitivamente. Se conservan sus tickets e historial"]);
     }
 
 }

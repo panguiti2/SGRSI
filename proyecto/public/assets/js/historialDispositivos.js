@@ -18,7 +18,7 @@ if (botonHistorialDispositivos) {
             for (const dato of datos) {
                 const fila = cuerpo.insertRow();
                 for (const valor of [dato.fecha, dato.idLaboratorio, dato.numeroDispositivo,
-                    dato.operacion === 'RESTAURACION' ? 'Restauración (inactivo)' : dato.operacion === 'BAJA' ? 'Baja del inventario' : dato.operacion === 'ALTA' ? 'Alta' : 'Modificación',
+                    dato.operacion === 'RESTAURACION' ? 'Restauración anterior' : dato.operacion === 'BAJA' ? 'Baja del inventario' : dato.operacion === 'ALTA' ? 'Alta' : 'Modificación',
                     dato.cedulaActor || 'Sin cuenta registrada', dato.modificacionAnterior ?? 'No corresponde',
                     dato.modificacionNueva ?? 'No corresponde', nombreEstado(dato.estadoAnterior), nombreEstado(dato.estadoNuevo),
                     dato.fechaAnterior ?? 'No corresponde', dato.fechaNueva ?? 'No corresponde']) {

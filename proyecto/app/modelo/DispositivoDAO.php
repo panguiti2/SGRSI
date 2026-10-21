@@ -116,7 +116,7 @@ class DispositivoDAO
             $retirado = $existente->fetchColumn();
             if ($retirado !== false) {
                 throw new ErrorHttp((bool) $retirado
-                    ? 'El dispositivo está dado de baja. Puede recuperarlo desde «Ver dispositivos dados de baja»'
+                    ? 'El dispositivo fue dado de baja definitivamente. No puede recuperarse ni reutilizarse su identificación en este laboratorio. Para un equipo nuevo utilice otra identificación, por ejemplo PC016.1 (máximo 8 caracteres)'
                     : 'El dispositivo ya está registrado', 409);
             }
             $consulta = $this->conexion->prepare(
@@ -193,7 +193,7 @@ class DispositivoDAO
     }
 
     /**
-     * Retira del inventario un dispositivo sin tickets abiertos y conserva su historial.
+     * Retira definitivamente del inventario un dispositivo sin tickets abiertos y conserva su historial.
      * @param string $idLaboratorio Laboratorio del dispositivo.
      * @param string $numeroDispositivo Número del dispositivo.
      * @return bool True si se registró la baja lógica.
@@ -236,34 +236,14 @@ class DispositivoDAO
         }
     }
 
-    /** Recupera el registro original sin habilitarlo para nuevos tickets. */
-    public function restaurarDispositivo(string $laboratorio, string $numero): void
-    {
-        try {
-            $this->conexion->beginTransaction();
-            $antes = $this->bloquearDispositivo($laboratorio, $numero, true);
-            if (!(bool) $antes['eliminado']) throw new ErrorHttp('El dispositivo ya pertenece al inventario. No necesita restaurarlo', 409);
-            $consulta = $this->conexion->prepare('UPDATE DISPOSITIVO SET eliminado=FALSE, estado=FALSE, ultimoCambio=ultimoCambio
-                WHERE idLaboratorio=:laboratorio AND numeroDispositivo=:numero');
-            $consulta->execute(['laboratorio'=>$laboratorio, 'numero'=>$numero]);
-            $despues = $antes;
-            $despues['estado'] = false;
-            $despues['eliminado'] = false;
-            (new HistorialDispositivoDAO($this->conexion))->registrar($laboratorio, $numero, 'RESTAURACION', $this->actor, $antes, $despues);
-            $this->conexion->commit();
-        } catch (Throwable $error) {
-            if ($this->conexion->inTransaction()) $this->conexion->rollBack();
-            throw $error;
-        }
-    }
-
-    private function bloquearDispositivo(string $laboratorio, string $numero, bool $incluirRetirado = false): array
+    private function bloquearDispositivo(string $laboratorio, string $numero): array
     {
         $consulta = $this->conexion->prepare('SELECT modificaciones,estado,eliminado,ultimoCambio FROM DISPOSITIVO
             WHERE idLaboratorio=:laboratorio AND numeroDispositivo=:numero FOR UPDATE');
         $consulta->execute(['laboratorio' => $laboratorio, 'numero' => $numero]);
         $equipo = $consulta->fetch(PDO::FETCH_ASSOC);
-        if ($equipo === false || (!$incluirRetirado && (bool) $equipo['eliminado'])) throw new ErrorHttp('El dispositivo no existe', 404);
+        if ($equipo === false) throw new ErrorHttp('El dispositivo no existe', 404);
+        if ((bool) $equipo['eliminado']) throw new ErrorHttp('El dispositivo fue dado de baja definitivamente y no admite cambios', 409);
         return $equipo;
     }
 }

@@ -7,7 +7,7 @@ Lo desarrollamos como proyecto de egreso del Instituto Tecnológico de Informát
 ## Funcionalidades
 
 - Gestión de usuarios con roles de administrador, técnico y solicitante.
-- Alta, modificación, desactivación, baja lógica y restauración de dispositivos.
+- Alta, modificación, activación, desactivación y baja definitiva de dispositivos, conservando sus registros.
 - Historial de cambios del inventario.
 - Registro y seguimiento de incidencias y solicitudes de servicio.
 - Registro de préstamos y devoluciones de laptops.
@@ -21,7 +21,7 @@ Lo desarrollamos como proyecto de egreso del Instituto Tecnológico de Informát
 ### Administrador
 
 - Registra, consulta, modifica, activa y desactiva usuarios.
-- Gestiona los dispositivos del inventario y recupera los dados de baja.
+- Gestiona los dispositivos del inventario y consulta los dados de baja, sin posibilidad de recuperarlos.
 - Consulta incidencias, historial de inventario y métricas.
 
 ### Técnico
@@ -44,7 +44,9 @@ Los permisos se verifican en el servidor. Acceder a una dirección o cambiar dat
 - Los usuarios se desactivan, no se borran físicamente. Se conservan sus roles y registros asociados.
 - Para editar los datos de un usuario inactivo, primero se debe activar.
 - El cambio de rol se bloquea cuando existen referencias que impiden retirar el rol anterior.
-- Los dispositivos dados de baja se conservan y el administrador puede restaurarlos como inactivos.
+- Los dispositivos dados de baja se conservan para consulta histórica, pero no pueden recuperarse ni modificarse desde la aplicación.
+- Inactivar un dispositivo es temporal y reversible; darlo de baja es definitivo. La baja también lo deja inactivo.
+- La identificación de un equipo dado de baja no puede reutilizarse en el mismo laboratorio. Un equipo nuevo debe tener otra identificación (por ejemplo, PC016.1), de hasta 8 caracteres.
 - No se permite dar de baja un dispositivo con tickets sin resolver.
 - No se admiten nuevos tickets sobre dispositivos inactivos o dados de baja.
 - Los tickets y préstamos no permiten eliminación ni edición libre de sus datos originales. El técnico gestiona la atención y registra las devoluciones.

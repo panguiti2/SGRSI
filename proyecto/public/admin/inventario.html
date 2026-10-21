@@ -59,7 +59,7 @@
 
 
             <label class="form-check mb-3"><input class="form-check-input" type="checkbox" id="verDispositivosBaja"> <span class="form-check-label">Ver dispositivos dados de baja</span></label>
-            <p class="text-secondary" id="ayudaRestauracion" hidden>Al restaurar un dispositivo, volverá al inventario como inactivo. Revíselo y actívelo desde Modificar para permitir nuevos tickets.</p>
+            <p class="text-secondary" id="ayudaBajaDefinitiva" hidden>Consulta histórica: la baja es definitiva y no permite modificar ni recuperar el dispositivo. Su identificación no puede reutilizarse en el mismo laboratorio; para otro equipo utilice una diferente, por ejemplo PC016.1 (máximo 8 caracteres).</p>
             <form class="sgrsi-herramientas-tabla" data-tabla="tablaRegistros1" aria-label="Buscar y ordenar registros">
                 <div class="sgrsi-busqueda-tabla">
                     <label><span>Buscar</span><input type="search" name="busqueda" class="form-control form-control-sm" placeholder="Ej.: cédula, equipo o estado"></label>
@@ -109,7 +109,8 @@
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
                         <label for="numeroDispositivo" class="form-label">N° Dispositivo</label>
                         <input type="text" id="numeroDispositivo" name="numeroDispositivo" class="form-control"
-                            placeholder="Ej.: PC-001" required maxlength="8">
+                            placeholder="Ej.: PC-001" required maxlength="8" aria-describedby="ayudaIdentificacionDispositivo">
+                        <small id="ayudaIdentificacionDispositivo" class="form-text">Máximo 8 caracteres. No reutilice la identificación de un equipo dado de baja en el mismo laboratorio. Ejemplo para otro equipo: PC016.1.</small>
                     </div>
 
                     <div class="col-12 col-md-6 cajaEntradaDeDatos">
@@ -148,7 +149,8 @@
             </fieldset>
         </form>
     </dialog>
-    <template id="operacionesDispositivo"><td><div class="cajaOperaciones"><button type="button" class="btnOperacion btnModificarDispositivo" data-modificar>Modificar</button><button type="button" class="btnOperacion btnDesactivar" data-baja>Dar de baja</button><button type="button" class="btnOperacion btnModificarDispositivo" data-restaurar hidden>Restaurar dispositivo</button></div></td></template>
+    <template id="operacionesDispositivo"><td><div class="cajaOperaciones"><button type="button" class="btnOperacion btnModificarDispositivo" data-modificar>Modificar</button><button type="button" class="btnOperacion btnDesactivar" data-baja>Dar de baja</button></div></td></template>
+    <template id="operacionesDispositivoBaja"><td>Solo consulta</td></template>
     <dialog id="dialogoHistorialDispositivos" class="sgrsi-dialog-historial" aria-labelledby="tituloHistorialDispositivos">
         <div class="d-flex justify-content-between align-items-center gap-3">
             <h2 id="tituloHistorialDispositivos" class="h4">Historial de dispositivos</h2>

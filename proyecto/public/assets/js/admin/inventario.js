@@ -71,7 +71,7 @@ async function modificarDispositivo(dispositivo) {
 
 async function eliminarDispositivo(idLaboratorio, numeroDispositivo) {
     if (!await formularioListo) return false;
-    if (!confirm("¿Desea dar de baja este dispositivo? Sus tickets e historial se conservarán y podrá restaurarlo después.")) return;
+    if (!confirm("La baja es definitiva. El dispositivo no podrá reactivarse ni reutilizarse su identificación en este laboratorio. Sus tickets e historial se conservarán. ¿Desea continuar?")) return;
     try {
         await enviarDatosApi(API_DISPOSITIVOS, 'DELETE', { idLaboratorio, numeroDispositivo });
         await actualizarTabla();
@@ -93,20 +93,17 @@ function agregarFila(dispositivo) {
     campoEstadoTabla.textContent = verDispositivosBaja.checked ? 'Dado de baja' : dispositivo.estado == 1 ? "Activo" : "Inactivo";
     const campoFecha = document.createElement("td");
     campoFecha.textContent = dispositivo.ultimoCambio;
-    const campoOperaciones = document.getElementById('operacionesDispositivo').content.cloneNode(true);
-    const botonModificar = campoOperaciones.querySelector('[data-modificar]');
-    botonModificar.addEventListener("click", () => abrirModificarDispositivo(
-        dispositivo.idLab, dispositivo.numeroDispositivo
-    ));
-    const botonEliminar = campoOperaciones.querySelector('[data-baja]');
-    botonEliminar.addEventListener("click", () => eliminarDispositivo(
-        dispositivo.idLab, dispositivo.numeroDispositivo
-    ));
-    const botonRestaurar = campoOperaciones.querySelector('[data-restaurar]');
-    botonModificar.hidden = verDispositivosBaja.checked;
-    botonEliminar.hidden = verDispositivosBaja.checked;
-    botonRestaurar.hidden = !verDispositivosBaja.checked;
-    botonRestaurar.addEventListener('click', () => restaurarDispositivo(dispositivo.idLab, dispositivo.numeroDispositivo));
+    const campoOperaciones = document.getElementById(verDispositivosBaja.checked ? 'operacionesDispositivoBaja' : 'operacionesDispositivo').content.cloneNode(true);
+    if (!verDispositivosBaja.checked) {
+        const botonModificar = campoOperaciones.querySelector('[data-modificar]');
+        botonModificar.addEventListener("click", () => abrirModificarDispositivo(
+            dispositivo.idLab, dispositivo.numeroDispositivo
+        ));
+        const botonEliminar = campoOperaciones.querySelector('[data-baja]');
+        botonEliminar.addEventListener("click", () => eliminarDispositivo(
+            dispositivo.idLab, dispositivo.numeroDispositivo
+        ));
+    }
     fila.appendChild(campoLaboratorioTabla);
     fila.appendChild(campoNumero);
     fila.appendChild(campoModificacionesTabla);
@@ -119,7 +116,7 @@ function agregarFila(dispositivo) {
 async function actualizarTabla() {
     verDispositivosBaja.disabled = true;
     document.getElementById('tituloInventario').textContent = verDispositivosBaja.checked ? 'Dispositivos dados de baja' : 'Datos de dispositivo';
-    document.getElementById('ayudaRestauracion').hidden = !verDispositivosBaja.checked;
+    document.getElementById('ayudaBajaDefinitiva').hidden = !verDispositivosBaja.checked;
     try {
         const dispositivos = await obtenerDispositivos();
         cuerpoTabla.replaceChildren();
@@ -133,17 +130,6 @@ async function actualizarTabla() {
     } finally {
         verDispositivosBaja.disabled = false;
     }
-}
-
-async function restaurarDispositivo(idLaboratorio, numeroDispositivo) {
-    if (!await formularioListo) return;
-    if (!confirm('¿Restaurar este dispositivo como inactivo? Se conservarán sus datos y su historial.')) return;
-    try {
-        await enviarDatosApi(API_DISPOSITIVOS, 'PUT', {accion:'restaurar', idLaboratorio, numeroDispositivo});
-        verDispositivosBaja.checked = false;
-        await actualizarTabla();
-        alert('Dispositivo restaurado como inactivo. Revíselo y actívelo desde Modificar para permitir nuevos tickets.');
-    } catch (error) { mostrarErrorApi(error); }
 }
 
 async function abrirModificarDispositivo(idLaboratorio, numeroDispositivo) {
